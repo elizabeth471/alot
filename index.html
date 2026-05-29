@@ -1,548 +1,754 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>alot</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Abril+Fatface&family=Playfair+Display:ital,wght@1,900&family=Righteous&family=Syne:wght@800&family=Permanent+Marker&family=Lobster&family=Pacifico&family=Black+Han+Sans&family=Titan+One&family=Alfa+Slab+One&family=Big+Shoulders+Display:wght@900&family=Unbounded:wght@900&family=Boogaloo&display=swap">
-    <style>
-        /* ===== RESET & BASE ===== */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>alot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        :root {
-          --bg: #0f0e17;
-          --surface: #1a1827;
-          --surface2: #221f35;
-          --border: rgba(255,255,255,0.07);
-          --accent: #c49a3c;
-          --accent2: #9b6fd4;
-          --text: #e8e4f0;
-          --text-muted: #8a849e;
-          --on: #c49a3c;
-          --off: #3a3750;
-          --danger: #e05c7a;
-          --green: #4caf88;
-          --radius: 12px;
-          --radius-sm: 8px;
-          --shadow: 0 4px 24px rgba(0,0,0,0.4);
-        }
+    /* ── DESIGN TOKENS ── */
+    :root {
+      --bg:       #faf8f5;
+      --surface:  #f3ede8;
+      --surface2: #ebe4dd;
+      --card:     #ffffff;
+      --accent:   #7a9e7e;
+      --accent2:  #a8b8a0;
+      --text:     #2a2a2a;
+      --text-mid: #555555;
+      --text-muted: #8a8a8a;
+      --border:   rgba(0,0,0,0.08);
+      --shadow:   0 2px 16px rgba(0,0,0,0.07);
+      --radius:   14px;
+    }
 
-        body {
-          font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-          background: var(--bg);
-          color: var(--text);
-          min-height: 100vh;
-          font-size: 14px;
-          line-height: 1.5;
-        }
+    /* ── BASE ── */
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.5;
+    }
 
-        html { scroll-behavior: smooth; }
+    /* ── TOP ACCENT BAR ── */
+    #topBar {
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), #c8b8a0);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    }
 
-        /* ===== TOP ACCENT BAR ===== */
-        #topAccent {
-          height: 3px;
-          background: linear-gradient(90deg, #9b6fd4, #c49a3c, #9b6fd4);
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          z-index: 1000;
-        }
+    /* ── HEADER ── */
+    #header {
+      text-align: center;
+      padding: 32px 20px 16px;
+    }
+    #header .app-label {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    #header .brand {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(48px, 10vw, 72px);
+      color: var(--accent);
+      line-height: 1;
+    }
 
-        /* ===== APP SHELL ===== */
-        #appShell {
-          max-width: 1100px;
-          margin: 0 auto;
-          padding: 0 24px 60px;
-        }
+    /* ── TRANSPORT BAR ── */
+    #transport {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px 20px;
+      flex-wrap: wrap;
+    }
+    .t-btn {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .t-btn:hover { background: var(--surface); }
+    #bpmDisplay {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      min-width: 48px;
+      text-align: center;
+    }
+    #playBtn {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      padding: 8px 20px;
+    }
+    #playBtn:hover { background: #698a6d; }
+    #stopBtn { background: var(--surface2); }
+    #transportTime { font-size: 13px; color: var(--text-mid); min-width: 44px; }
+    #transportStatus { font-size: 12px; color: var(--text-muted); }
 
-        /* ===== TOPBAR HEADER ===== */
-        .topbar {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          padding: 32px 0 20px;
-          border-bottom: 1px solid var(--border);
-          margin-bottom: 24px;
-          text-align: center;
-          gap: 0;
-        }
+    /* ── MAIN CONTENT ── */
+    #main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 16px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
 
-        #appTypeLabel {
-          font-size: 9px;
-          letter-spacing: 5px;
-          text-transform: uppercase;
-          color: var(--text-muted);
-          margin-bottom: 12px;
-          font-weight: 600;
-          opacity: 0.5;
-        }
+    /* ── DEV PANEL ── */
+    #devPanel {
+      border-radius: var(--radius);
+      border: 1.5px dashed #d4856a;
+      background: #fff8f6;
+      overflow: hidden;
+    }
+    #devHeader {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      cursor: pointer;
+      background: #fff3ef;
+      user-select: none;
+    }
+    .dev-badge {
+      background: #d4856a;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+    }
+    #devHeader span { font-size: 12px; font-weight: 600; color: #c06644; }
+    #devHeader .dev-note { margin-left: auto; font-size: 11px; color: #aaa; }
+    #devContent { display: none; padding: 14px 16px 16px; }
+    #devContent.open { display: block; }
+    .dev-section-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #aaa; margin-bottom: 8px; }
+    .demo-beats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .demo-beat-btn {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid #f0c4b4;
+      background: #fff;
+      color: #c06644;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .demo-beat-btn:hover { background: #fff3ef; }
+    #startTourBtn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #startTourBtn:hover { background: var(--surface); }
 
-        #brandName {
-          font-family: 'Pacifico', cursive;
-          font-size: 76px;
-          font-weight: 400;
-          line-height: 1;
-          color: var(--accent);
-          display: inline-block;
-          text-shadow: 0 0 40px rgba(196,154,60,0.5), 0 0 80px rgba(196,154,60,0.2);
-          margin-bottom: 28px;
-          letter-spacing: 0px;
-        }
+    /* ── CARDS ── */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .step-num {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .card-title { font-size: 15px; font-weight: 700; }
+    .card-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+    .card-body { padding: 18px; }
 
-        /* Transport group */
-        .transport-group {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          background: var(--surface);
-          border: 1px solid var(--border);
-          border-radius: 50px;
-          padding: 6px 12px;
-        }
+    /* ── STEP 1: RECORD / UPLOAD ── */
+    .rec-upload-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    @media (max-width: 480px) { .rec-upload-row { grid-template-columns: 1fr; } }
+    .rec-side { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    #recBtn {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      border: 3px solid #e8a0a0;
+      background: #fff;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      position: relative;
+    }
+    #recBtn::before {
+      content: '';
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: #e05050;
+      transition: border-radius 0.15s;
+    }
+    #recBtn.recording {
+      border-color: #e05050;
+      animation: pulseRed 0.8s ease-in-out infinite;
+    }
+    #recBtn.recording::before { border-radius: 4px; }
+    @keyframes pulseRed { 0%,100%{box-shadow:0 0 0 0 rgba(224,80,80,0.4)} 50%{box-shadow:0 0 0 12px rgba(224,80,80,0)} }
+    #recTimer { font-size: 20px; font-weight: 700; color: #e05050; letter-spacing: 0.05em; }
+    #recStatus { font-size: 11px; color: var(--text-muted); text-align: center; }
+    .upload-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 28px 16px;
+      border: 2px dashed var(--accent2);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--surface);
+      min-height: 130px;
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: var(--accent);
+      background: #eef4ee;
+    }
+    .upload-zone .uz-icon { font-size: 28px; }
+    .upload-zone .uz-label { font-size: 13px; font-weight: 600; color: var(--accent); }
+    .upload-zone .uz-hint { font-size: 11px; color: var(--text-muted); }
+    .rec-toggles {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .toggle-label { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); cursor: pointer; }
+    input[type=checkbox] { accent-color: var(--accent); width: 14px; height: 14px; }
 
-        #bpmDown, #bpmUp {
-          width: 28px;
-          height: 28px;
-          border-radius: 50%;
-          border: 1px solid var(--border);
-          background: var(--surface2);
-          color: var(--text);
-          cursor: pointer;
-          font-size: 15px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: background 0.15s;
-          font-family: inherit;
-        }
+    /* ── STEP 2: RECORDINGS LIST ── */
+    #takesList { display: flex; flex-direction: column; gap: 8px; min-height: 60px; }
+    .empty-state {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 28px 16px; color: var(--text-muted); gap: 6px; text-align: center;
+    }
+    .empty-icon { font-size: 32px; opacity: 0.4; }
+    .empty-title { font-weight: 600; font-size: 13px; }
+    .empty-msg { font-size: 12px; max-width: 240px; }
+    .take-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 14px; background: var(--surface);
+      border-radius: 10px; border: 1px solid var(--border);
+      animation: fadeUp 0.25s ease;
+    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+    .take-info { display: flex; align-items: center; gap: 10px; }
+    .take-icon { font-size: 20px; }
+    .take-details strong { display: block; font-size: 13px; }
+    .take-details small { font-size: 11px; color: var(--text-muted); }
+    .take-controls { display: flex; gap: 8px; }
+    .take-btn {
+      padding: 6px 12px; border-radius: 7px;
+      border: 1px solid var(--border);
+      background: var(--card); cursor: pointer;
+      font-size: 13px; transition: all 0.15s;
+    }
+    .take-btn:hover { background: var(--surface2); }
+    .take-btn.del-btn { color: #d05050; }
 
-        #bpmDown:hover, #bpmUp:hover { background: var(--accent); color: #000; }
+    /* ── AI CARD ── */
+    .ai-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .ai-header h3 { font-size: 14px; display: flex; align-items: center; gap: 6px; }
+    #analyzeBtn {
+      padding: 7px 16px; border-radius: 8px;
+      border: 1.5px solid var(--accent);
+      background: #fff; color: var(--accent);
+      font-size: 12px; font-weight: 700; cursor: pointer;
+      transition: all 0.15s;
+    }
+    #analyzeBtn:hover { background: var(--accent); color: #fff; }
+    #aiOutput { min-height: 60px; }
+    .ai-loading { display: flex; align-items: center; gap: 10px; color: var(--text-muted); padding: 12px 0; }
+    .spinner { width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+    .ai-tip { display: flex; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+    .ai-tip:last-child { border-bottom: none; padding-bottom: 0; }
+    .ai-tip-icon { font-size: 20px; flex-shrink: 0; }
+    .ai-tip-body strong { display: block; font-size: 13px; margin-bottom: 3px; }
+    .ai-tip-body p { margin: 0; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
 
-        #bpmVal {
-          font-size: 20px;
-          font-weight: 700;
-          color: var(--accent);
-          min-width: 40px;
-          text-align: center;
-        }
+    /* ── BEAT BUILDER ── */
+    .beat-controls-row { display: flex; gap: 8px; margin-bottom: 14px; }
+    .beat-action-btn {
+      padding: 7px 16px; border-radius: 8px; font-size: 13px;
+      font-weight: 600; cursor: pointer; border: 1px solid var(--border);
+      transition: all 0.15s;
+    }
+    #beatPlayBtn { background: var(--accent); color: #fff; border-color: var(--accent); }
+    #beatPlayBtn:hover { background: #698a6d; }
+    #beatClearBtn { background: var(--surface); color: var(--text-mid); }
+    #beatClearBtn:hover { background: var(--surface2); }
+    #beatGrid { display: flex; flex-direction: column; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+    .beat-row { display: flex; align-items: center; gap: 3px; }
+    .beat-row-label { width: 58px; font-size: 11px; color: var(--text-muted); text-align: right; padding-right: 8px; flex-shrink: 0; }
+    .beat-cell {
+      width: 30px; height: 30px; flex-shrink: 0;
+      border: 1px solid var(--border); border-radius: 5px;
+      background: var(--surface); cursor: pointer; padding: 0;
+      transition: background 0.1s;
+    }
+    .beat-cell.bar-start { border-left: 2px solid var(--accent2); }
+    .beat-cell.on { background: var(--accent); border-color: var(--accent); }
+    .beat-cell.current { outline: 2px solid var(--accent); outline-offset: 1px; }
 
-        #playBtn {
-          background: var(--accent);
-          color: #000;
-          border: none;
-          border-radius: 50px;
-          padding: 7px 22px;
-          font-weight: 700;
-          font-size: 13px;
-          cursor: pointer;
-          transition: all 0.15s;
-          font-family: inherit;
-        }
+    /* ── COMING SOON PLACEHOLDER ── */
+    .coming-soon {
+      text-align: center; padding: 28px; color: var(--text-muted);
+      background: var(--surface); border-radius: 10px; font-size: 13px;
+    }
+    .coming-soon .cs-emoji { font-size: 28px; margin-bottom: 8px; }
+    .coming-soon strong { display: block; margin-bottom: 4px; color: var(--text-mid); }
 
-        #playBtn:hover { background: #d4aa4c; transform: scale(1.03); }
+    /* ── TOAST ── */
+    #toastBox {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      z-index: 9999; display: flex; flex-direction: column; gap: 8px;
+      pointer-events: none; align-items: center;
+    }
+    .toast {
+      background: var(--text); color: #fff; padding: 10px 20px;
+      border-radius: 24px; font-size: 13px; font-weight: 500;
+      opacity: 0; transform: translateY(8px);
+      transition: all 0.25s ease; pointer-events: auto;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: var(--accent); }
+    .toast.error { background: #c05050; }
 
-        /* ===== MAIN CONTENT ===== */
-        #mainContent {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 20px;
-        }
-
-        /* ===== CARDS ===== */
-        .card {
-          background: var(--surface);
-          border: 1px solid var(--border);
-          border-radius: var(--radius);
-          padding: 20px;
-        }
-
-        .card-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 18px;
-        }
-
-        .card-title {
-          font-size: 15px;
-          font-weight: 700;
-          color: var(--text);
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .card-title-icon {
-          width: 28px;
-          height: 28px;
-          border-radius: 8px;
-          background: var(--surface2);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 14px;
-        }
-
-        .card-subtitle {
-          font-size: 12px;
-          color: var(--text-muted);
-          margin-top: 2px;
-        }
-
-        .step-num {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          background: var(--accent);
-          color: #000;
-          font-size: 9px;
-          font-weight: 800;
-          flex-shrink: 0;
-        }
-
-        /* ===== DEV PANEL ===== */
-        #devPanel {
-          background: rgba(255, 80, 80, 0.06);
-          border: 1px solid rgba(255, 80, 80, 0.25);
-          border-radius: var(--radius);
-          padding: 12px 16px;
-          margin-bottom: 20px;
-        }
-
-        .dev-panel-header {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          cursor: pointer;
-          user-select: none;
-        }
-
-        .dev-badge {
-          background: rgba(255, 80, 80, 0.3);
-          color: #ff8080;
-          font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 1.5px;
-          padding: 2px 8px;
-          border-radius: 4px;
-          text-transform: uppercase;
-        }
-
-        #devContent {
-          display: none;
-          margin-top: 14px;
-        }
-
-        #devContent.open { display: block; }
-
-        .dev-section-label {
-          font-size: 10px;
-          text-transform: uppercase;
-          letter-spacing: 1.5px;
-          color: rgba(255,128,128,0.5);
-          margin-bottom: 8px;
-          margin-top: 12px;
-        }
-
-        .dev-section-label:first-child { margin-top: 0; }
-
-        .dev-beats-row {
-          display: flex;
-          gap: 8px;
-          flex-wrap: wrap;
-        }
-
-        .pat-btn {
-          background: var(--surface2);
-          border: 1px solid rgba(255,80,80,0.2);
-          color: rgba(255,128,128,0.8);
-          border-radius: 6px;
-          padding: 5px 12px;
-          font-size: 12px;
-          cursor: pointer;
-          transition: all 0.15s;
-        }
-
-        .pat-btn:hover, .pat-btn.active {
-          background: rgba(255,80,80,0.15);
-          border-color: rgba(255,80,80,0.5);
-          color: #ff8080;
-        }
-
-        /* ===== VOICE RECORDER ===== */
-        .rec-controls {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 10px;
-          min-width: 100px;
-        }
-
-        #recBtn {
-          width: 72px;
-          height: 72px;
-          border-radius: 50%;
-          border: 3px solid var(--danger);
-          background: transparent;
-          color: var(--danger);
-          cursor: pointer;
-          transition: all 0.2s;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: relative;
-        }
-
-        #recBtn::before {
-          content: '';
-          width: 28px;
-          height: 28px;
-          border-radius: 50%;
-          background: var(--danger);
-          transition: all 0.2s;
-        }
-
-        #recBtn:hover { background: rgba(224, 92, 122, 0.1); transform: scale(1.05); }
-
-        #recTime {
-          font-size: 18px;
-          font-weight: 700;
-          font-variant-numeric: tabular-nums;
-          color: var(--accent);
-        }
-
-        .upload-zone {
-          border: 2px dashed rgba(196,154,60,0.3);
-          border-radius: var(--radius-sm);
-          padding: 24px 20px;
-          text-align: center;
-          cursor: pointer;
-          transition: all 0.2s;
-          margin-bottom: 14px;
-          background: rgba(196,154,60,0.03);
-          display: block;
-        }
-
-        .upload-zone:hover {
-          border-color: var(--accent);
-          background: rgba(196,154,60,0.05);
-        }
-
-        /* ===== AI CARD ===== */
-        #aiCard {
-          border-color: rgba(0, 200, 150, 0.2);
-        }
-
-        .ai-badge {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          background: rgba(0, 200, 150, 0.08);
-          border: 1px solid rgba(0, 200, 150, 0.2);
-          border-radius: 20px;
-          padding: 4px 12px;
-          font-size: 11px;
-          color: var(--green);
-          font-weight: 600;
-        }
-
-        .ai-pulse {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: var(--green);
-          animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.4; transform: scale(0.8); }
-        }
-
-        /* ===== SCROLLBAR ===== */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-    </style>
+    /* ── TOUR OVERLAY ── */
+    #tourOverlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5); z-index: 9998;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    #tourOverlay.open { display: flex; }
+    .tour-card {
+      background: var(--card); border-radius: 18px;
+      padding: 28px 24px; max-width: 380px; width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      position: relative;
+    }
+    .tour-card h3 { font-size: 17px; margin-bottom: 10px; color: var(--accent); }
+    .tour-card p { font-size: 14px; line-height: 1.65; color: var(--text-mid); margin-bottom: 20px; }
+    .tour-footer { display: flex; align-items: center; justify-content: space-between; }
+    .tour-counter { font-size: 12px; color: var(--text-muted); }
+    .tour-btns { display: flex; gap: 8px; }
+    .tour-btn {
+      padding: 8px 18px; border-radius: 8px; font-size: 13px;
+      font-weight: 600; cursor: pointer; border: none;
+    }
+    #tourPrev { background: var(--surface); color: var(--text-mid); }
+    #tourNext { background: var(--accent); color: #fff; }
+    #tourClose {
+      position: absolute; top: 14px; right: 16px;
+      background: none; border: none; cursor: pointer;
+      font-size: 18px; color: var(--text-muted);
+    }
+    #tourClose:hover { color: var(--text); }
+  </style>
 </head>
 <body>
-    <div id="topAccent"></div>
-    <div id="appShell">
-        <div class="topbar">
-            <div id="appTypeLabel">Music Production App</div>
-            <div id="brandName">alot</div>
-            <div class="transport-group">
-                <button id="tapBtn" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);border-radius:6px;padding:5px 12px;font-size:11px;letter-spacing:1px;cursor:pointer;font-family:inherit;text-transform:uppercase;">TAP</button>
-                <button id="bpmDown">−</button>
-                <span id="bpmVal">140</span>
-                <button id="bpmUp">+</button>
-                <span style="font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;">BPM</span>
-                <div style="width:1px;height:24px;background:var(--border);margin:0 4px;"></div>
-                <button id="playBtn">▶ PLAY</button>
-                <button id="stopBtn" style="background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:50px;padding:8px 18px;font-weight:600;font-size:13px;cursor:pointer;">■ STOP</button>
-                <span id="tTime" style="font-size:13px;color:var(--text-muted);font-variant-numeric:tabular-nums;min-width:48px;">00:00</span>
-                <span id="cSt" style="font-size:11px;color:var(--text-muted);padding:4px 12px;border-radius:20px;background:var(--surface2);border:1px solid var(--border);">Ready</span>
-            </div>
-        </div>
 
-        <!-- DEV PANEL -->
-        <div id="devPanel">
-            <div class="dev-panel-header" onclick="document.getElementById('devContent').classList.toggle('open')">
-                <span class="dev-badge">DEV ONLY</span>
-                <span style="color:#ff8080;font-size:12px;font-weight:600;">Test Files & Demo Beats — Remove Before Launch</span>
-                <span style="color:rgba(255,128,128,0.5);font-size:11px;margin-left:auto;">Not visible to users in v1</span>
-            </div>
-            <div id="devContent">
-                <div class="dev-section-label">Demo Beat Patterns</div>
-                <div class="dev-beats-row">
-                    <button class="pat-btn" onclick="alert('Demo: Trap 140')">Trap 140</button>
-                    <button class="pat-btn" onclick="alert('Demo: Boom Bap 90')">Boom Bap 90</button>
-                    <button class="pat-btn" onclick="alert('Demo: Lo-Fi 75')">Lo-Fi 75</button>
-                    <button class="pat-btn" onclick="alert('Demo: Latino 110')">Latino 110</button>
-                </div>
-            </div>
-        </div>
+<div id="topBar"></div>
 
-        <!-- MAIN CONTENT -->
-        <div id="mainContent">
-            <!-- Step 1: Voice Recorder -->
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                        <div class="card-title"><span class="step-num">1</span><span class="card-title-icon">🎙</span>Record or Upload Your Voice</div>
-                        <div class="card-subtitle">Tap the button to record from your mic, or upload an MP3 file</div>
-                    </div>
-                </div>
-                <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
-                    <div class="rec-controls">
-                        <button id="recBtn"></button>
-                        <span id="recTime">00:00</span>
-                        <span style="font-size:11px;color:var(--text-muted);text-align:center;">Click to record</span>
-                    </div>
-                    <div style="flex:1;min-width:180px;">
-                        <label class="upload-zone" for="uploadMp3">
-                            <div style="font-size:22px;margin-bottom:4px;">📂</div>
-                            <div style="font-size:12px;color:var(--text-muted);"><strong style="color:var(--accent);">Upload an MP3</strong><br>Drag & drop or click to browse</div>
-                            <input type="file" id="uploadMp3" accept=".mp3,audio/*" style="display:none">
-                        </label>
-                        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-                            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--text-muted);">
-                                <input type="checkbox" id="loopChk" style="width:32px;height:18px;-webkit-appearance:none;background:var(--off);border-radius:9px;cursor:pointer;">
-                                Loop recording
-                            </label>
-                            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--text-muted);">
-                                <input type="checkbox" id="autoCloud" style="width:32px;height:18px;-webkit-appearance:none;background:var(--off);border-radius:9px;cursor:pointer;">
-                                Auto-save to cloud
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- HEADER -->
+<div id="header">
+  <div class="app-label">Music Production App</div>
+  <div class="brand">alot</div>
+</div>
 
-            <!-- Step 2: My Recordings -->
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                        <div class="card-title"><span class="step-num">2</span><span class="card-title-icon">🎵</span>My Recordings</div>
-                        <div class="card-subtitle">Your recorded and uploaded voice clips</div>
-                    </div>
-                </div>
-                <div id="takesList" style="text-align:center;padding:28px 16px;color:var(--text-muted);font-size:13px;">
-                    <div style="font-size:36px;margin-bottom:10px;">🎙</div>
-                    <div style="font-weight:600;color:#a0a0b8;margin-bottom:4px;">No recordings yet</div>
-                    <div style="font-size:12px;">Record your voice above or upload an MP3 to get started</div>
-                </div>
-            </div>
+<!-- TRANSPORT -->
+<div id="transport">
+  <button class="t-btn" id="tapBtn">TAP</button>
+  <button class="t-btn" id="bpmDown">−</button>
+  <span id="bpmDisplay">140</span>
+  <button class="t-btn" id="bpmUp">+</button>
+  <span style="font-size:12px;color:var(--text-muted)">BPM</span>
+  <div style="width:1px;height:24px;background:var(--border);margin:0 4px"></div>
+  <button class="t-btn" id="playBtn">▶ PLAY</button>
+  <button class="t-btn" id="stopBtn">■ STOP</button>
+  <span id="transportTime">00:00</span>
+  <span id="transportStatus">Ready</span>
+</div>
 
-            <!-- Step AI: AI Assistant -->
-            <div class="card" id="aiCard">
-                <div class="card-header">
-                    <div>
-                        <div class="card-title"><span class="card-title-icon">🤖</span>AI Assistant</div>
-                        <div class="card-subtitle">Real-time suggestions to improve your sound</div>
-                    </div>
-                    <button onclick="alert('AI Analysis coming soon!')" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);border-radius:8px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:inherit;">✦ Analyze</button>
-                </div>
-                <div style="text-align:center;padding:24px;color:var(--text-muted);">
-                    <div style="font-size:32px;margin-bottom:8px;">🎵</div>
-                    <div style="font-weight:600;margin-bottom:6px;">No analysis yet</div>
-                    <div style="font-size:12px;">Click "Analyze" to get AI feedback on your project</div>
-                </div>
-            </div>
+<!-- MAIN -->
+<div id="main">
 
-            <!-- Step 3: Beat Builder -->
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                        <div class="card-title"><span class="step-num">3</span><span class="card-title-icon">🥁</span>Beat Builder</div>
-                        <div class="card-subtitle">Build your own drum pattern</div>
-                    </div>
-                </div>
-                <div style="padding:16px;background:var(--surface2);border-radius:10px;text-align:center;color:var(--text-muted);font-size:12px;">
-                    Beat sequencer interface — coming soon
-                </div>
-            </div>
-
-            <!-- Step 4: Voice Effects -->
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                        <div class="card-title"><span class="step-num">4</span><span class="card-title-icon">✨</span>Voice Effects</div>
-                        <div class="card-subtitle">Add effects to your voice</div>
-                    </div>
-                </div>
-                <div style="padding:16px;background:var(--surface2);border-radius:10px;text-align:center;color:var(--text-muted);font-size:12px;">
-                    Effects panel (Reverb, Delay, Pitch, EQ, Compressor) — coming soon
-                </div>
-            </div>
-
-            <!-- Step 5: Mix & Export -->
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                        <div class="card-title"><span class="step-num">5</span><span class="card-title-icon">🎚</span>Mix & Export</div>
-                        <div class="card-subtitle">Balance and download your track</div>
-                    </div>
-                </div>
-                <div style="padding:16px;background:var(--surface2);border-radius:10px;text-align:center;color:var(--text-muted);font-size:12px;">
-                    Mixer and export controls — coming soon
-                </div>
-            </div>
-        </div>
+  <!-- DEV PANEL -->
+  <div id="devPanel">
+    <div id="devHeader">
+      <span class="dev-badge">DEV ONLY</span>
+      <span>Test Files &amp; Demo Beats — Remove Before Launch</span>
+      <span class="dev-note">Not visible to users in v1</span>
     </div>
+    <div id="devContent">
+      <div class="dev-section-label">Demo Beat Patterns</div>
+      <div class="demo-beats">
+        <button class="demo-beat-btn" data-pattern="trap">Trap 140</button>
+        <button class="demo-beat-btn" data-pattern="boombap">Boom Bap 90</button>
+        <button class="demo-beat-btn" data-pattern="lofi">Lo-Fi 75</button>
+        <button class="demo-beat-btn" data-pattern="latino">Latino 110</button>
+      </div>
+      <button id="startTourBtn">🗺 App Tour</button>
+    </div>
+  </div>
 
-    <script>
-        // Initialize basic functionality
-        document.getElementById('recBtn').addEventListener('click', function() {
-            alert('Recording feature coming soon!');
-        });
+  <!-- STEP 1 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="step-num">1</div>
+      <div>
+        <div class="card-title">🎙 Record or Upload Your Voice</div>
+        <div class="card-sub">Tap the button to record from your mic, or upload an MP3 file</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="rec-upload-row">
+        <div class="rec-side">
+          <button id="recBtn"></button>
+          <div id="recTimer">00:00</div>
+          <div id="recStatus">Click to record</div>
+        </div>
+        <label class="upload-zone" id="uploadZone">
+          <input type="file" id="uploadMp3" accept=".mp3,.wav,.ogg,.flac,.aac,.m4a,audio/*" style="display:none">
+          <span class="uz-icon">📂</span>
+          <span class="uz-label">Upload an MP3</span>
+          <span class="uz-hint">Drag &amp; drop or click to browse</span>
+        </label>
+      </div>
+      <div class="rec-toggles">
+        <label class="toggle-label"><input type="checkbox" id="loopChk"> Loop recording</label>
+        <label class="toggle-label"><input type="checkbox" id="autoCloud"> Auto-save to cloud</label>
+      </div>
+    </div>
+  </div>
 
-        document.getElementById('playBtn').addEventListener('click', function() {
-            alert('Play feature coming soon!');
-        });
+  <!-- STEP 2 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="step-num">2</div>
+      <div>
+        <div class="card-title">🎵 My Recordings</div>
+        <div class="card-sub">Your recorded and uploaded voice clips</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div id="takesList">
+        <div class="empty-state">
+          <div class="empty-icon">🎤</div>
+          <div class="empty-title">No recordings yet</div>
+          <div class="empty-msg">Record your voice above or upload an MP3 to get started</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        document.getElementById('stopBtn').addEventListener('click', function() {
-            alert('Stop feature coming soon!');
-        });
+  <!-- AI ASSISTANT -->
+  <div class="card">
+    <div class="card-body">
+      <div class="ai-header">
+        <h3>🤖 AI Assistant <span style="font-size:11px;font-weight:400;color:var(--text-muted)">— Real-time suggestions to improve your sound</span></h3>
+        <button id="analyzeBtn">✦ Analyze</button>
+      </div>
+      <div id="aiOutput">
+        <div class="empty-state" style="padding:16px 0">
+          <div class="empty-icon">🎵</div>
+          <div class="empty-title">No analysis yet</div>
+          <div class="empty-msg">Click "Analyze" to get AI feedback on your project</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        // BPM controls
-        document.getElementById('bpmUp').addEventListener('click', function() {
-            let val = parseInt(document.getElementById('bpmVal').textContent);
-            document.getElementById('bpmVal').textContent = val + 5;
-        });
+  <!-- STEP 3: BEAT BUILDER -->
+  <div class="card">
+    <div class="card-header">
+      <div class="step-num">3</div>
+      <div>
+        <div class="card-title">🥁 Beat Builder</div>
+        <div class="card-sub">Build your own drum pattern — click boxes to turn beats on/off</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="beat-controls-row">
+        <button class="beat-action-btn" id="beatPlayBtn">▶ Play</button>
+        <button class="beat-action-btn" id="beatClearBtn">✕ Clear</button>
+      </div>
+      <div id="beatGrid"></div>
+    </div>
+  </div>
 
-        document.getElementById('bpmDown').addEventListener('click', function() {
-            let val = parseInt(document.getElementById('bpmVal').textContent);
-            if (val > 0) document.getElementById('bpmVal').textContent = val - 5;
-        });
+  <!-- STEP 4: VOICE EFFECTS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="step-num">4</div>
+      <div>
+        <div class="card-title">✨ Voice Effects</div>
+        <div class="card-sub">Add effects to your voice</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="coming-soon">
+        <div class="cs-emoji">🎛</div>
+        <strong>Coming in v1</strong>
+        Reverb, Delay, Pitch Shift, EQ, and Compressor controls
+      </div>
+    </div>
+  </div>
 
-        // Open dev panel by default
-        document.getElementById('devContent').classList.add('open');
-    </script>
-</body>
-</html>
+  <!-- STEP 5: MIX & EXPORT -->
+  <div class="card">
+    <div class="card-header">
+      <div class="step-num">5</div>
+      <div>
+        <div class="card-title">🎚 Mix &amp; Export</div>
+        <div class="card-sub">Balance everything and download your track</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="coming-soon">
+        <div class="cs-emoji">📤</div>
+        <strong>Coming in v1</strong>
+        Mixer, volume faders, and MP3/WAV export
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- TOAST BOX -->
+<div id="toastBox"></div>
+
+<!-- TOUR OVERLAY -->
+<div id="tourOverlay">
+  <div class="tour-card">
+    <button id="tourClose">✕</button>
+    <h3 id="tourTitle"></h3>
+    <p id="tourBody"></p>
+    <div class="tour-footer">
+      <span id="tourCounter"></span>
+      <div class="tour-btns">
+        <button class="tour-btn" id="tourPrev">← Back</button>
+        <button class="tour-btn" id="tourNext">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+'use strict';
+
+// ── STATE ──────────────────────────────────────────────
+var bpm = 140;
+var isRecording = false;
+var mediaRec = null;
+var recChunks = [];
+var recInterval = null;
+var recSec = 0;
+var recordings = [];
+var playingId = null;
+var playingAudio = null;
+var transportInterval = null;
+var transportSec = 0;
+var beatPlaying = false;
+var beatStep = 0;
+var beatInterval = null;
+var ROWS = ['Kick','Snare','Hi-Hat','Open HH'];
+var STEPS = 16;
+var grid = ROWS.map(function(){ return new Array(STEPS).fill(false); });
+
+// ── HELPERS ────────────────────────────────────────────
+function ft(s){ s=Math.round(s||0); return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+
+function toast(msg, type){
+  var box = document.getElementById('toastBox');
+  var el = document.createElement('div');
+  el.className = 'toast' + (type ? ' '+type : '');
+  el.textContent = msg;
+  box.appendChild(el);
+  setTimeout(function(){ el.classList.add('show'); }, 10);
+  setTimeout(function(){ el.classList.remove('show'); setTimeout(function(){ el.remove(); }, 300); }, 3500);
+}
+
+// ── BPM ────────────────────────────────────────────────
+var bpmEl = document.getElementById('bpmDisplay');
+document.getElementById('bpmUp').onclick = function(){ bpm = Math.min(bpm+1,220); bpmEl.textContent = bpm; };
+document.getElementById('bpmDown').onclick = function(){ bpm = Math.max(bpm-1,40); bpmEl.textContent = bpm; };
+
+var tapTimes = [];
+document.getElementById('tapBtn').onclick = function(){
+  var now = Date.now();
+  tapTimes.push(now);
+  if(tapTimes.length > 8) tapTimes.shift();
+  if(tapTimes.length >= 2){
+    var intervals = [];
+    for(var i=1;i<tapTimes.length;i++) intervals.push(tapTimes[i]-tapTimes[i-1]);
+    var avg = intervals.reduce(function(a,b){return a+b;},0)/intervals.length;
+    bpm = Math.max(40,Math.min(220,Math.round(60000/avg)));
+    bpmEl.textContent = bpm;
+    toast('BPM: '+bpm,'');
+  }
+};
+
+// ── TRANSPORT ──────────────────────────────────────────
+var tTimeEl = document.getElementById('transportTime');
+var tStatusEl = document.getElementById('transportStatus');
+document.getElementById('playBtn').onclick = function(){
+  clearInterval(transportInterval);
+  transportSec = 0;
+  tStatusEl.textContent = 'Playing';
+  transportInterval = setInterval(function(){ transportSec++; tTimeEl.textContent = ft(transportSec); }, 1000);
+  toast('\u25B6 Playback started','');
+};
+document.getElementById('stopBtn').onclick = function(){
+  if(playingAudio){ playingAudio.pause(); playingAudio.currentTime=0; document.querySelectorAll('.play-take').forEach(function(b){b.textContent='\u25B6';}); playingId=null; }
+  clearInterval(transportInterval); transportSec=0; tTimeEl.textContent='00:00'; tStatusEl.textContent='Ready';
+};
+
+// ── RECORDING ──────────────────────────────────────────
+var recBtn = document.getElementById('recBtn');
+var recTimerEl = document.getElementById('recTimer');
+var recStatusEl = document.getElementById('recStatus');
+
+recBtn.onclick = function(){
+  if(!isRecording){
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+      mediaRec = new MediaRecorder(stream);
+      recChunks = [];
+      mediaRec.ondataavailable = function(e){ if(e.data.size>0) recChunks.push(e.data); };
+      mediaRec.onstop = function(){
+        var blob = new Blob(recChunks,{type:'audio/webm'});
+        var url = URL.createObjectURL(blob);
+        var id = Date.now();
+        var rec = {id:id, name:'Voice Take '+(recordings.length+1), url:url, duration:recSec, type:'recorded'};
+        recordings.push(rec);
+        addToList(rec);
+        toast('\u2713 Voice Take '+(recordings.length)+' saved!','success');
+        stream.getTracks().forEach(function(t){t.stop();});
+      };
+      mediaRec.start(100);
+      isRecording = true; recSec = 0;
+      recBtn.classList.add('recording');
+      recStatusEl.textContent = 'Recording\u2026 tap to stop';
+      recInterval = setInterval(function(){ recSec++; recTimerEl.textContent=ft(recSec); }, 1000);
+    }).catch(function(){
+      toast('Mic access denied. Allow microphone in your browser settings.','error');
+    });
+  } else {
+    isRecording = false;
+    clearInterval(recInterval);
+    mediaRec.stop();
+    recBtn.classList.remove('recording');
+    recStatusEl.textContent = 'Click to record';
+    recTimerEl.textContent = '00:00';
+  }
+};
+
+// ── FILE UPLOAD ────────────────────────────────────────
+var uploadZone = document.getElementById('uploadZone');
+var uploadInput = document.getElementById('uploadMp3');
+
+uploadZone.addEventListener('dragover', function(e){ e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', function(){ uploadZone.classList.remove('drag-over'); });
+uploadZone.addEventListener('drop', function(e){
+  e.preventDefault(); uploadZone.classList.remove('drag-over');
+  if(e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
+});
+uploadInput.onchange = function(){
+  if(this.files && this.files[0]){ processFile(this.files[0]); this.value=''; }
+};
+
+function processFile(file){
+  var isAudio = file.type.startsWith('audio/') || /\.(mp3|wav|ogg|flac|aac|m4a|webm|opus)$/i.test(file.name);
+  if(!isAudio){ toast('Please upload an audio file (MP3, WAV, etc.)','error'); return; }
+  var url = URL.createObjectURL(file);
+  var id = Date.now();
+  var name = file.name.replace(/\.[^.]+$/,'');
+  var added = false;
+  function addIt(dur){
+    if(added) return; added=true;
+    var rec = {id:id, name:name, url:url, duration:Math.round(dur||0), type:'uploaded'};
+    recordings.push(rec);
+    addToList(rec);
+    toast('\u2713 '+name+' added to My Recordings!','success');
+  }
+  var audio = new Audio(url);
+  audio.preload = 'metadata';
+  audio.addEventListener('loadedmetadata', function(){ addIt(audio.duration); });
+  audio.addEventListener('durationchange', function(){ if(audio.duration && isFinite(audio.duration)) addIt(audio.duration); });
+  audio.addEventListener('error', function(){ addIt(0); });
+  audio.load();
+  setTimeout(function(){ addIt(0); }, 2500);
+}
+
+// ── RECORDINGS LIST ────────────────────────────────────
+function addToList(rec){
+  var list = document.getElementById('takesList');
+  var empty = list.querySelector('.empty-state');
+  if(empty) empty.remove();
+
+  var item = document.createElement('div');
+  item.className = 'take-item';
+  item.id = 'r'+rec.id;
+  item.innerHTML =
+    '<div class="take-info">'+
+      '<span class="take-icon">'+(rec.type==='uploaded'?'\uD83D\uDCC2':'\uD83C\uDFA4')+'</span>'+
+      '<div class="take-details">'+
+        '<strong>'+rec.name+'</strong>'+
+        '<small>'+(rec.type==='uploaded'?'Uploaded':'Recorded')+(rec.duration>0?' \u2022 '+ft(rec.duration):'')+' </small>'+
+      '</div>'+
+    '</div>'+
+    '<div class="take-controls">'+
+      '<button class="take-btn play-take" data-id="'+rec.id+'">\u25B6</button>'+
+      '<button class="take-btn del-btn" data-id="'+rec.id+'">\uD83D\uDDD1</button>'+
+    '</div>';
+  list.insertBefore(item, list.firstChild);
+
+  item.querySelector('.play-take
