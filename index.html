@@ -1150,13 +1150,28 @@
         var cross = crossfadeSeconds();
         var audio = player.audio;
         if (player !== trackCurrent || player.handedOver || !cross || !player.voice) return;
-        if (!isFinite(audio.duration) || audio.duration < cross * 2 + 1) return;
-        if (audio.duration - audio.currentTime > cross) return;
+        if (!isFinite(audio.duration) || audio.duration < 2) return;
+        // Short files get a shorter overlap, so they don't restart sharply either.
+        var overlap = Math.min(cross, (audio.duration - 0.5) / 2);
+        if (audio.duration - audio.currentTime > overlap) return;
         player.handedOver = true;
-        playNext(player.rec, false, cross);
+        playNext(player.rec, false, overlap);
       });
       player.audio.addEventListener('ended', function () {
         if (player === trackCurrent && player.rec) playNext(player.rec, false, 0.1);
+      });
+      // Waits until sound is really flowing, so a file can't begin at full level with a click.
+      player.audio.addEventListener('playing', function () {
+        if (!player.voice || !player.fadeIn || player !== trackCurrent) return;
+        var seconds = player.fadeIn;
+        player.fadeIn = 0;
+        var level = player.voice.gain.gain;
+        var now = mixGraph.ctx.currentTime;
+        // An equal-power curve keeps the level steady while two tracks overlap.
+        var curve = new Float32Array(32);
+        for (var i = 0; i < 32; i++) curve[i] = Math.sin((i / 31) * Math.PI / 2);
+        level.cancelScheduledValues(now);
+        level.setValueCurveAtTime(curve, now, Math.max(0.05, seconds));
       });
       return player;
     });
@@ -1218,11 +1233,9 @@
       mixGraph.ctx.resume();
       var level = player.voice.gain.gain;
       var now = mixGraph.ctx.currentTime;
-      // An equal-power curve keeps the level steady while two tracks overlap.
-      var curve = new Float32Array(32);
-      for (var i = 0; i < 32; i++) curve[i] = Math.sin((i / 31) * Math.PI / 2);
       level.cancelScheduledValues(now);
-      level.setValueCurveAtTime(curve, now, Math.max(0.05, fade));
+      level.setValueAtTime(0, now); // stays silent until the 'playing' event starts the fade
+      player.fadeIn = fade;
     } else {
       bnPrepareAudioSession();
       player.audio.volume = mixState.muted ? 0 : mixLevel(mixState.tracks);
