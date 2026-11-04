@@ -647,6 +647,8 @@
     .yt-link { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
     .yt-note { margin: 12px 0 0; }
 
+    .shower-input { display: block; width: 100%; min-height: 44px; margin-bottom: 12px; padding: 0 12px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: rgba(14,11,9,0.42); color: var(--text); font: inherit; font-size: max(16px, calc(16px * var(--text))); }
+    .shower-input:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; }
     .sound-check { margin: 0; padding: 10px 12px; border-radius: 12px; background: rgba(14,11,9,0.42); color: var(--text-mid); font-size: calc(13px * var(--text)); line-height: 1.6; font-variant-numeric: tabular-nums; }
 
     /* ── REVIEW FIXES ── */
@@ -912,6 +914,25 @@
     </div>
   </article>
 
+  <!-- SHOWER PLAYLIST -->
+  <article class="card" aria-labelledby="shower-title">
+    <div class="card-header">
+      <div class="card-titles">
+        <h2 class="card-title" id="shower-title" data-t="shower.title">Shower music</h2>
+        <div class="card-sub" data-t="shower.sub"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="yt-frame" id="showerFrame" hidden></div>
+      <input class="shower-input" id="showerLink" type="url" inputmode="url" autocomplete="off" enterkeyhint="done" data-t-aria="shower.link">
+      <div class="yt-actions">
+        <button class="bn-btn primary" id="showerPlay" data-t="shower.play">▶ Play</button>
+        <a class="bn-btn yt-link" id="showerFind" target="_blank" rel="noopener" data-t="shower.find">Find a playlist ↗</a>
+      </div>
+      <p class="sheet-note yt-note" data-t="shower.note"></p>
+    </div>
+  </article>
+
   <!-- TRACK LIBRARY -->
   <article class="card" aria-labelledby="library-title">
     <div class="card-header">
@@ -1007,7 +1028,7 @@
       'add.title': 'Add Your Tracks', 'add.sub': 'Choose audio files from your device', 'add.main': 'Choose tracks', 'add.hint': 'Tap to choose, or drag and drop', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.title': 'My Tracks', 'tracks.sub': 'Your list plays in order. Play or delete tracks here', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Choose an audio file above to get started', 'play': '▶ Play', 'stop': '■ Stop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
       'mix.title': 'Neural Beats Mixer', 'mix.sub': 'Binaural beats, mixed with your tracks and noise. Use headphones: each ear gets a slightly different tone.', 'mix.type': 'Beat type', 'mix.rate': 'Beat rate', 'mix.pitch': 'Pitch', 'mix.beats': 'Neural Beats', 'mix.tracks': 'My Tracks', 'mix.noise': 'Noise', 'mix.master': 'Master', 'mute': 'Mute', 'muted': 'Muted', 'aria.play.beats': 'Play neural beats', 'aria.stop.beats': 'Stop neural beats',
       'settings': 'Settings', 'close': 'Close', 'set.layout': 'Layout', 'layout.flow': 'Flow', 'layout.focus': 'Focus', 'layout.compact': 'Compact', 'layout.stage': 'Stage', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.ripples': 'Ripples', 'bg.fireflies': 'Fireflies', 'bg.constellation': 'Constellation', 'bg.aurora': 'Aurora', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'set.joy': 'Little joys', 'group.sound': 'Sound', 'set.crossfade': 'Transition between tracks', 'cross.0': 'Off', 'cross.2': 'Short', 'cross.4': 'Medium', 'cross.8': 'Long', 'check.title': 'Sound check', 'check.note': 'Press play and listen for a few minutes. If you hear a skip, tell Blossom these numbers.', 'check.dropouts': 'Dropouts', 'check.gaps': 'Audio clock gaps', 'check.state': 'Audio', 'check.na': 'not measured in this browser', 'check.none': 'not started yet', 'check.interrupted': 'Interruptions', 'group.look': 'Look', 'group.sizes': 'Sizes and spacing', 'group.joy': 'Messages and particles', 'group.phone': 'Phone and Sonos', 'meta': 'Shape your own noise, loop your tracks and mix them with binaural beats, right in your browser.', 'beat.Alpha': 'Alpha', 'set.messages': 'Positive messages', 'set.particles': 'Floating particles', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'cheer.from': '— Blossom',
-      'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'yt.title': 'Ian’s favorite', 'yt.play': '▶ Play', 'yt.close': '✕ Close player', 'yt.open': 'Open on YouTube ↗', 'yt.note': 'Plays and repeats in YouTube’s own player. It has its own volume, so it isn’t part of your list or the mixer, and it may stop when the screen locks.', 'library.title': 'Library', 'library.sub': 'Original downtempo and lo-fi tracks, made in your browser. Add them to your list to play, loop or mix.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Lo-fi bossa', 'library.waltz': 'Lo-fi waltz', 'library.triphop': 'Trip-hop', 'library.electronic': 'Electronic downtempo', 'library.ambient': 'Ambient downtempo', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', 'rate.rarely': 'Rarely', 'rate.sometimes': 'Sometimes', 'rate.often': 'Often'
+      'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'yt.title': 'Ian’s favorite', 'yt.play': '▶ Play', 'yt.close': '✕ Close player', 'yt.open': 'Open on YouTube ↗', 'yt.note': 'Plays and repeats in YouTube’s own player. It has its own volume, so it isn’t part of your list or the mixer, and it may stop when the screen locks.', 'shower.title': 'Shower music', 'shower.sub': 'Paste a YouTube playlist link. It’s remembered on this device.', 'shower.link': 'YouTube playlist link', 'shower.play': '▶ Play', 'shower.close': '✕ Close player', 'shower.find': 'Find a playlist ↗', 'shower.bad': 'That link has no playlist in it', 'shower.note': 'Plays in YouTube’s own player, with its own volume, so it isn’t part of your list or the mixer. The playlist must be public, and YouTube may show ads.', 'library.title': 'Library', 'library.sub': 'Original downtempo and lo-fi tracks, made in your browser. Add them to your list to play, loop or mix.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Lo-fi bossa', 'library.waltz': 'Lo-fi waltz', 'library.triphop': 'Trip-hop', 'library.electronic': 'Electronic downtempo', 'library.ambient': 'Ambient downtempo', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', 'rate.rarely': 'Rarely', 'rate.sometimes': 'Sometimes', 'rate.often': 'Often'
     },
     es: {
       'title': 'alot — App de producción musical', 'skip': 'Saltar al contenido principal', 'eyebrow': 'App de producción musical',
@@ -1021,7 +1042,7 @@
       'add.title': 'Añade tus pistas', 'add.sub': 'Elige archivos de audio de tu dispositivo', 'add.main': 'Elegir pistas', 'add.hint': 'Toca para elegir, o arrastra y suelta', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.title': 'Mis pistas', 'tracks.sub': 'Tu lista suena en orden. Reproduce o elimina pistas aquí', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Elige un archivo de audio arriba para empezar', 'play': '▶ Reproducir', 'stop': '■ Detener', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
       'mix.title': 'Mezclador de ritmos neuronales', 'mix.sub': 'Ritmos binaurales mezclados con tus pistas y el ruido. Usa audífonos: cada oído recibe un tono ligeramente distinto.', 'mix.type': 'Tipo de ritmo', 'mix.rate': 'Frecuencia del ritmo', 'mix.pitch': 'Altura', 'mix.beats': 'Ritmos neuronales', 'mix.tracks': 'Mis pistas', 'mix.noise': 'Ruido', 'mix.master': 'General', 'mute': 'Silenciar', 'muted': 'Silenciado', 'aria.play.beats': 'Reproducir ritmos neuronales', 'aria.stop.beats': 'Detener ritmos neuronales',
       'settings': 'Ajustes', 'close': 'Cerrar', 'set.layout': 'Diseño', 'layout.flow': 'Fluido', 'layout.focus': 'Enfoque', 'layout.compact': 'Compacto', 'layout.stage': 'Escenario', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.ripples': 'Ondas', 'bg.fireflies': 'Luciérnagas', 'bg.constellation': 'Constelación', 'bg.aurora': 'Aurora', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'set.joy': 'Pequeñas alegrías', 'group.sound': 'Sonido', 'set.crossfade': 'Transición entre pistas', 'cross.0': 'Sin transición', 'cross.2': 'Corta', 'cross.4': 'Media', 'cross.8': 'Larga', 'check.title': 'Prueba de sonido', 'check.note': 'Toca reproducir y escucha unos minutos. Si oyes un corte, dile estos números a Blossom.', 'check.dropouts': 'Cortes', 'check.gaps': 'Saltos del reloj de audio', 'check.state': 'Audio', 'check.na': 'no se mide en este navegador', 'check.none': 'aún no empieza', 'check.interrupted': 'Interrupciones', 'group.look': 'Apariencia', 'group.sizes': 'Tamaños y espacio', 'group.joy': 'Mensajes y partículas', 'group.phone': 'Teléfono y Sonos', 'meta': 'Crea tu propio ruido, repite tus pistas y mézclalas con ritmos binaurales, directamente en tu navegador.', 'beat.Alpha': 'Alfa', 'set.messages': 'Mensajes positivos', 'set.particles': 'Partículas flotantes', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'cheer.from': '— Blossom',
-      'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'yt.title': 'La favorita de Ian', 'yt.play': '▶ Reproducir', 'yt.close': '✕ Cerrar reproductor', 'yt.open': 'Abrir en YouTube ↗', 'yt.note': 'Suena y se repite en el reproductor de YouTube. Tiene su propio volumen, así que no forma parte de tu lista ni del mezclador, y puede detenerse al bloquear la pantalla.', 'library.title': 'Biblioteca', 'library.sub': 'Pistas originales de downtempo y lo-fi, creadas en tu navegador. Añádelas a tu lista para reproducirlas, repetirlas o mezclarlas.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Bossa lo-fi', 'library.waltz': 'Vals lo-fi', 'library.triphop': 'Trip-hop', 'library.electronic': 'Downtempo electrónico', 'library.ambient': 'Downtempo ambiental', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', 'rate.rarely': 'Rara vez', 'rate.sometimes': 'A veces', 'rate.often': 'Seguido'
+      'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'yt.title': 'La favorita de Ian', 'yt.play': '▶ Reproducir', 'yt.close': '✕ Cerrar reproductor', 'yt.open': 'Abrir en YouTube ↗', 'yt.note': 'Suena y se repite en el reproductor de YouTube. Tiene su propio volumen, así que no forma parte de tu lista ni del mezclador, y puede detenerse al bloquear la pantalla.', 'shower.title': 'Música para la ducha', 'shower.sub': 'Pega el enlace de una lista de YouTube. Se recuerda en este dispositivo.', 'shower.link': 'Enlace de la lista de YouTube', 'shower.play': '▶ Reproducir', 'shower.close': '✕ Cerrar reproductor', 'shower.find': 'Buscar una lista ↗', 'shower.bad': 'Ese enlace no contiene una lista', 'shower.note': 'Suena en el reproductor de YouTube, con su propio volumen, así que no forma parte de tu lista ni del mezclador. La lista debe ser pública y YouTube puede mostrar anuncios.', 'library.title': 'Biblioteca', 'library.sub': 'Pistas originales de downtempo y lo-fi, creadas en tu navegador. Añádelas a tu lista para reproducirlas, repetirlas o mezclarlas.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Bossa lo-fi', 'library.waltz': 'Vals lo-fi', 'library.triphop': 'Trip-hop', 'library.electronic': 'Downtempo electrónico', 'library.ambient': 'Downtempo ambiental', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', 'rate.rarely': 'Rara vez', 'rate.sometimes': 'A veces', 'rate.often': 'Seguido'
     }
   };
   var SETTINGS_STORE = 'alot.settings.v1';
@@ -1111,27 +1132,63 @@
   var playingNode = null;
   var mixGraph = null;
 
+  // Phones only let an audio element start by itself once a tap has started it, so two
+  // players are unlocked by the first tap and reused. That lets tracks hand over unattended.
+  var trackPools = {};
+  var trackCurrent = null;
+
+  function trackPlayers() {
+    var key = settings.background ? 'plain' : 'routed';
+    if (trackPools[key]) return trackPools[key];
+    var pool = [0, 1].map(function () {
+      var player = { audio: new Audio(), voice: null, rec: null, handedOver: false, timer: null };
+      if (key === 'routed') player.voice = routeTrack(player.audio);
+      player.audio.src = BG_SILENCE;
+      player.audio.play().catch(function () {});
+      // The next track, or the same one again, starts while this one fades out.
+      player.audio.addEventListener('timeupdate', function () {
+        var cross = crossfadeSeconds();
+        var audio = player.audio;
+        if (player !== trackCurrent || player.handedOver || !cross || !player.voice) return;
+        if (!isFinite(audio.duration) || audio.duration < cross * 2 + 1) return;
+        if (audio.duration - audio.currentTime > cross) return;
+        player.handedOver = true;
+        playNext(player.rec, false, cross);
+      });
+      player.audio.addEventListener('ended', function () {
+        if (player === trackCurrent && player.rec) playNext(player.rec, false, 0.1);
+      });
+      return player;
+    });
+    trackPools[key] = pool;
+    return pool;
+  }
+
   // Lets a track leave smoothly, however it was stopped.
-  function releaseVoice(audio, voice, seconds) {
-    if (!audio) return;
-    if (!voice) { // locked-screen mode: a phone can't fade an audio element
-      audio.pause();
+  function releasePlayer(player, seconds) {
+    if (!player) return;
+    clearTimeout(player.timer);
+    if (!player.voice) { // locked-screen mode: a phone can't fade an audio element
+      player.audio.pause();
       return;
     }
     var now = mixGraph.ctx.currentTime;
-    var level = voice.gain.gain;
+    var level = player.voice.gain.gain;
     level.cancelScheduledValues(now);
     level.setValueAtTime(level.value, now);
     level.linearRampToValueAtTime(0, now + seconds);
-    setTimeout(function () {
-      audio.pause();
-      voice.node.disconnect();
-      voice.gain.disconnect();
-    }, seconds * 1000 + 80);
+    player.timer = setTimeout(function () { player.audio.pause(); }, seconds * 1000 + 80);
   }
 
   function stopPlayback(fadeSeconds) {
-    releaseVoice(playingAudio, playingNode, fadeSeconds === undefined ? 0.4 : fadeSeconds);
+    var fade = fadeSeconds === undefined ? 0.4 : fadeSeconds;
+    releasePlayer(trackCurrent, fade);
+    if (fade < 1) { // a quick stop also ends any track that is still fading out
+      (trackPools.routed || []).concat(trackPools.plain || []).forEach(function (player) {
+        if (player !== trackCurrent && !player.audio.paused) releasePlayer(player, fade);
+      });
+    }
+    trackCurrent = null;
     playingNode = null;
     playingAudio = null;
     playingId = null;
@@ -1144,37 +1201,54 @@
 
   function play(rec, fadeSeconds) {
     var fade = fadeSeconds || 0.4;
+    var pool = trackPlayers();
+    var previous = trackCurrent;
+    var player = pool[0] === previous ? pool[1] : pool[0];
     stopPlayback(fade);
     lastSource = 'tracks';
-    var audio = new Audio(rec.url);
-    var handedOver = false;
-    playingAudio = audio;
+    clearTimeout(player.timer);
+    player.rec = rec;
+    player.handedOver = false;
+    trackCurrent = player;
+    playingAudio = player.audio;
+    playingNode = player.voice;
     playingId = rec.id;
-    if (settings.background) {
+    if (player.voice) {
       bnPrepareAudioSession();
-      audio.volume = mixState.muted ? 0 : mixLevel(mixState.tracks);
+      mixGraph.ctx.resume();
+      var level = player.voice.gain.gain;
+      var now = mixGraph.ctx.currentTime;
+      // An equal-power curve keeps the level steady while two tracks overlap.
+      var curve = new Float32Array(32);
+      for (var i = 0; i < 32; i++) curve[i] = Math.sin((i / 31) * Math.PI / 2);
+      level.cancelScheduledValues(now);
+      level.setValueCurveAtTime(curve, now, Math.max(0.05, fade));
     } else {
-      playingNode = routeTrack(audio, fade);
+      bnPrepareAudioSession();
+      player.audio.volume = mixState.muted ? 0 : mixLevel(mixState.tracks);
     }
+    player.audio.src = rec.url;
     syncWakeLock();
-    // The next track, or the same one again, starts while this one fades out.
-    audio.addEventListener('timeupdate', function () {
-      var cross = crossfadeSeconds();
-      if (handedOver || playingAudio !== audio || !cross || !playingNode) return;
-      if (!isFinite(audio.duration) || audio.duration < cross * 2 + 1) return;
-      if (audio.duration - audio.currentTime > cross) return;
-      handedOver = true;
-      playNext(rec, false, cross);
-    });
-    audio.addEventListener('ended', function () {
-      if (playingAudio !== audio) return;
-      playNext(rec, false, 0.1);
-    });
-    audio.play().catch(function () {
-      if (playingAudio !== audio) return;
-      stopPlayback(0);
+    player.audio.play().catch(function () {
+      if (trackCurrent !== player) return;
+      // A refused handover shouldn't leave silence: the old track carries on.
+      if (previous && previous.voice && !previous.audio.ended) {
+        clearTimeout(previous.timer);
+        var t0 = mixGraph.ctx.currentTime;
+        var back = previous.voice.gain.gain;
+        back.cancelScheduledValues(t0);
+        back.setValueAtTime(back.value, t0);
+        back.linearRampToValueAtTime(1, t0 + 0.2);
+        previous.handedOver = true;
+        trackCurrent = previous;
+        playingAudio = previous.audio;
+        playingNode = previous.voice;
+        playingId = previous.rec.id;
+      } else {
+        stopPlayback(0);
+        toast(t('err.play'), 'error');
+      }
       renderTakes();
-      toast(t('err.play'), 'error');
     });
     renderTakes();
   }
@@ -2708,16 +2782,13 @@
     mixRender();
   }
 
-  function routeTrack(audio, fadeSeconds) {
+  function routeTrack(audio) {
     bnPrepareAudioSession();
     var g = mixBus();
     g.ctx.resume();
     var node = g.ctx.createMediaElementSource(audio);
     var gain = g.ctx.createGain();
-    // An equal-power curve keeps the level steady while two tracks overlap.
-    var curve = new Float32Array(32);
-    for (var i = 0; i < 32; i++) curve[i] = Math.sin((i / 31) * Math.PI / 2);
-    gain.gain.setValueCurveAtTime(curve, g.ctx.currentTime, Math.max(0.05, fadeSeconds));
+    gain.gain.value = 0;
     node.connect(gain);
     gain.connect(g.tracks);
     return { node: node, gain: gain };
@@ -3353,6 +3424,48 @@
     this.textContent = t('yt.close');
   });
 
+  // Shower music: any public YouTube playlist, remembered on this device.
+  var SHOWER_STORE = 'alot.shower.v1';
+  var showerLink = document.getElementById('showerLink');
+  var showerFrame = document.getElementById('showerFrame');
+  var showerPlay = document.getElementById('showerPlay');
+  try { showerLink.value = localStorage.getItem(SHOWER_STORE) || ''; } catch (e) { /* starts empty */ }
+
+  function showerListId(text) {
+    var found = /[?&]list=([A-Za-z0-9_-]{10,})/.exec(text.trim());
+    return found ? found[1] : null;
+  }
+
+  function showerSetButton(key) {
+    showerPlay.setAttribute('data-t', key);
+    showerPlay.textContent = t(key);
+  }
+
+  showerPlay.addEventListener('click', function () {
+    if (!showerFrame.hidden) {
+      showerFrame.textContent = '';
+      showerFrame.hidden = true;
+      showerSetButton('shower.play');
+      return;
+    }
+    var list = showerListId(showerLink.value);
+    if (!list) {
+      toast(t('shower.bad'), 'error');
+      showerLink.focus();
+      return;
+    }
+    try { localStorage.setItem(SHOWER_STORE, showerLink.value.trim()); } catch (e) { /* lasts for this visit */ }
+    var player = document.createElement('iframe');
+    player.src = 'https://www.youtube-nocookie.com/embed/videoseries?list=' + list + '&autoplay=1&playsinline=1&loop=1&rel=0';
+    player.title = t('shower.title');
+    player.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    player.allowFullscreen = true;
+    player.referrerPolicy = 'strict-origin-when-cross-origin';
+    showerFrame.appendChild(player);
+    showerFrame.hidden = false;
+    showerSetButton('shower.close');
+  });
+
   document.getElementById('libraryAll').addEventListener('click', function () {
     LIBRARY.reduce(function (chain, def) {
       return chain.then(function () { return addLibraryTrack(def); });
@@ -3387,6 +3500,7 @@
     document.getElementById('setBgLevel').style.setProperty('--v', (settings.bgLevel - 15) / 85 * 100 + '%');
     document.title = t('title');
     document.getElementById('metaDescription').setAttribute('content', t('meta'));
+    document.getElementById('showerFind').href = 'https://www.youtube.com/results?sp=EgIQAw%253D%253D&search_query=' + encodeURIComponent(settings.lang === 'es' ? 'música para la ducha' : 'shower music');
     if (cheerLang !== settings.lang) { // a message shown in the old language shouldn't linger
       cheerEl.classList.remove('show');
       cheerEl.textContent = '';
