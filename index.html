@@ -361,9 +361,6 @@
       .bn-btn:hover:not(:disabled):not(.primary) { background: var(--card); }
       .bn-btn.primary:hover { background: var(--accent-btn); }
     }
-    .take-btn.loop[aria-pressed="true"], .take-btn.loop[aria-pressed="true"]:hover {
-      background: var(--accent-btn); border-color: var(--accent-btn); color: #fff;
-    }
     @media (max-width: 560px) {
       .take-item { flex-wrap: wrap; gap: 10px; }
       .take-info { width: 100%; }
@@ -452,7 +449,6 @@
     .bn-saved-item .bn-chip { border-right: none; }
     .take-btn { background: transparent; border-radius: 100px; transition: background 0.25s, transform 0.2s; }
     .take-item { background: rgba(14,11,9,0.42); border-radius: 16px; }
-    .take-btn.loop[aria-pressed="true"], .take-btn.loop[aria-pressed="true"]:hover,
     .take-btn.mix-toggle[aria-pressed="true"], .take-btn.mix-toggle[aria-pressed="true"]:hover {
       background: rgba(var(--glow),0.16); border-color: rgba(var(--glow),0.7); color: var(--accent);
     }
@@ -588,7 +584,6 @@
     #bnMiniName { overflow: hidden; color: var(--text); font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(16px * var(--text)); text-overflow: ellipsis; white-space: nowrap; }
     main { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
     .sheet-note { margin: 2px 0 10px; font-size: calc(13px * var(--text)); line-height: 1.5; color: var(--text-muted); }
-    .sheet-wide { width: 100%; margin-bottom: 10px; }
     .switch span { padding-right: 14px; }
     .bn-ends { font-size: calc(12px * var(--text)); }
     .bn-hint { font-size: calc(12px * var(--text)); }
@@ -631,6 +626,18 @@
     :root[data-panels="solid"] .card, :root[data-panels="solid"] .bn-panel { background: #221b15; -webkit-backdrop-filter: none; backdrop-filter: none; }
     :root[data-panels="clear"] .card, :root[data-panels="clear"] .bn-panel { background: rgba(34,27,21,0.28); }
     :root[data-calm="true"] *, :root[data-calm="true"] *::before, :root[data-calm="true"] *::after { animation: none !important; transition: none !important; }
+
+    /* ── PLAYLIST + LIBRARY ── */
+    .playlist-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .playlist-switch { flex: 1; }
+    .take-btn.play { flex-shrink: 0; }
+    .take-item.is-playing { border-color: rgba(var(--glow),0.65); box-shadow: 0 0 22px rgba(var(--glow),0.14); }
+    .library-list { display: flex; flex-direction: column; gap: 8px; }
+    .library-item { flex-wrap: nowrap !important; }
+    .library-item .take-info { width: auto; flex: 1; min-width: 0; }
+    .library-add { flex: 0 0 auto !important; padding: 0 14px !important; }
+    .take-btn:disabled { opacity: 0.6; cursor: default; }
+    .library-all { width: 100%; margin-top: 12px; }
 
   </style>
 </head>
@@ -709,7 +716,6 @@
     <label class="switch"><span data-t="set.keep">Keep screen on while playing</span><input type="checkbox" role="switch" id="setKeep"><i aria-hidden="true"></i></label>
     <label class="switch"><span data-t="set.bgplay">Keep playing when the screen locks</span><input type="checkbox" role="switch" id="setBackground"><i aria-hidden="true"></i></label>
     <p class="sheet-note" data-t="set.bgnote"></p>
-    <button class="bn-btn sheet-wide" id="setAirplay" data-t="set.airplay" hidden>Choose a speaker (AirPlay)</button>
     <p class="sheet-note" data-t="set.sonos"></p>
 
     <button class="bn-btn sheet-reset" id="settingsReset" data-t="set.reset">Reset settings</button>
@@ -806,12 +812,30 @@
       </div>
     </div>
     <div class="card-body">
+      <div class="playlist-bar">
+        <label class="switch playlist-switch"><span data-t="tracks.playlist">Loop playlist</span><input type="checkbox" role="switch" id="playlistLoop"><i aria-hidden="true"></i></label>
+        <button class="take-btn" id="playlistNext" data-t="tracks.next">⏭ Next</button>
+      </div>
       <div id="takesList" role="list" data-t-aria="tracks.list">
         <div class="empty-state" role="listitem">
           <div class="empty-title" data-t="tracks.empty">No tracks yet</div>
           <div class="empty-msg" data-t="tracks.emptymsg">Choose an audio file above to get started</div>
         </div>
       </div>
+    </div>
+  </article>
+
+  <!-- TRACK LIBRARY -->
+  <article class="card" aria-labelledby="library-title">
+    <div class="card-header">
+      <div class="card-titles">
+        <h2 class="card-title" id="library-title" data-t="library.title">Library</h2>
+        <div class="card-sub" data-t="library.sub"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div id="libraryList" class="library-list" role="list"></div>
+      <button class="bn-btn library-all" id="libraryAll" data-t="library.all">Add all</button>
     </div>
   </article>
 
@@ -893,10 +917,10 @@
       'slider.tone': 'Tone', 'low.tone': 'Deep', 'high.tone': 'Bright', 'slider.rumble': 'Rumble', 'low.rumble': 'Light', 'high.rumble': 'Heavy', 'slider.swell': 'Swell', 'low.swell': 'Steady', 'high.swell': 'Waves', 'slider.pace': 'Pace', 'low.pace': 'Slow', 'high.pace': 'Fast', 'slider.space': 'Space', 'low.space': 'Close', 'high.space': 'Wide', 'slider.drift': 'Drift', 'low.drift': 'Still', 'high.drift': 'Wandering', 'slider.grain': 'Grain', 'low.grain': 'Clean', 'high.grain': 'Crackling',
       'hint.pace': 'Turn up Swell to use Pace',
       'generate': '✦ Generate new version', 'surprise': '✧ Surprise me', 'prev': '↩ Previous', 'save': 'Save', 'save.version': 'Save version', 'cancel': 'Cancel', 'save.name': 'Name this version', 'saved': 'Saved versions', 'saved.empty': 'Versions you save will appear here.', 'toast.saved': 'Version saved', 'toast.deleted': 'Version deleted', 'undo': 'Undo', 'mix.your': 'Your mix', 'mix.n': 'Mix {n}', 'version.n': 'Version {n}', 'aria.play.noise': 'Play noise', 'aria.stop.noise': 'Stop noise', 'aria.delete': 'Delete {n}',
-      'add.title': 'Add Your Tracks', 'add.sub': 'Choose audio files from your device', 'add.main': 'Choose tracks', 'add.hint': 'Tap to choose, or drag and drop', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.title': 'My Tracks', 'tracks.sub': 'Play, loop or delete your tracks here', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Choose an audio file above to get started', 'play': '▶ Play', 'stop': '■ Stop', 'loop': '↻ Loop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'aria.loop': 'Loop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
+      'add.title': 'Add Your Tracks', 'add.sub': 'Choose audio files from your device', 'add.main': 'Choose tracks', 'add.hint': 'Tap to choose, or drag and drop', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.title': 'My Tracks', 'tracks.sub': 'Your list plays in order. Play or delete tracks here', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Choose an audio file above to get started', 'play': '▶ Play', 'stop': '■ Stop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
       'mix.title': 'Neural Beats Mixer', 'mix.sub': 'Binaural beats, mixed with your tracks and noise. Use headphones: each ear gets a slightly different tone.', 'mix.type': 'Beat type', 'mix.rate': 'Beat rate', 'mix.pitch': 'Pitch', 'mix.beats': 'Neural Beats', 'mix.tracks': 'My Tracks', 'mix.noise': 'Noise', 'mix.master': 'Master', 'mute': 'Mute', 'muted': 'Muted', 'aria.play.beats': 'Play neural beats', 'aria.stop.beats': 'Stop neural beats',
       'settings': 'Settings', 'close': 'Close', 'set.layout': 'Layout', 'layout.flow': 'Flow', 'layout.focus': 'Focus', 'layout.compact': 'Compact', 'layout.stage': 'Stage', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'set.joy': 'Little joys', 'set.messages': 'Positive messages', 'set.particles': 'Floating particles', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'cheer.from': '— Blossom',
-      'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.airplay': 'Choose a speaker (AirPlay)', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', 'rate.rarely': 'Rarely', 'rate.sometimes': 'Sometimes', 'rate.often': 'Often'
+      'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'library.title': 'Library', 'library.sub': 'Original downtempo and lo-fi tracks, made in your browser. Add them to your list to play, loop or mix.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'library.lofi': 'Lo-fi', 'library.downtempo': 'Downtempo', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', 'rate.rarely': 'Rarely', 'rate.sometimes': 'Sometimes', 'rate.often': 'Often'
     },
     es: {
       'title': 'alot — App de producción musical', 'skip': 'Saltar al contenido principal', 'eyebrow': 'App de producción musical',
@@ -907,14 +931,14 @@
       'slider.tone': 'Tono', 'low.tone': 'Profundo', 'high.tone': 'Brillante', 'slider.rumble': 'Retumbo', 'low.rumble': 'Suave', 'high.rumble': 'Intenso', 'slider.swell': 'Oleaje', 'low.swell': 'Constante', 'high.swell': 'Olas', 'slider.pace': 'Ritmo', 'low.pace': 'Lento', 'high.pace': 'Rápido', 'slider.space': 'Espacio', 'low.space': 'Cerca', 'high.space': 'Amplio', 'slider.drift': 'Deriva', 'low.drift': 'Quieta', 'high.drift': 'Errante', 'slider.grain': 'Grano', 'low.grain': 'Limpio', 'high.grain': 'Crepitante',
       'hint.pace': 'Sube el Oleaje para usar el Ritmo',
       'generate': '✦ Generar nueva versión', 'surprise': '✧ Sorpréndeme', 'prev': '↩ Anterior', 'save': 'Guardar', 'save.version': 'Guardar versión', 'cancel': 'Cancelar', 'save.name': 'Ponle nombre a esta versión', 'saved': 'Versiones guardadas', 'saved.empty': 'Las versiones que guardes aparecerán aquí.', 'toast.saved': 'Versión guardada', 'toast.deleted': 'Versión eliminada', 'undo': 'Deshacer', 'mix.your': 'Tu mezcla', 'mix.n': 'Mezcla {n}', 'version.n': 'Versión {n}', 'aria.play.noise': 'Reproducir ruido', 'aria.stop.noise': 'Detener ruido', 'aria.delete': 'Eliminar {n}',
-      'add.title': 'Añade tus pistas', 'add.sub': 'Elige archivos de audio de tu dispositivo', 'add.main': 'Elegir pistas', 'add.hint': 'Toca para elegir, o arrastra y suelta', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.title': 'Mis pistas', 'tracks.sub': 'Reproduce, repite o elimina tus pistas aquí', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Elige un archivo de audio arriba para empezar', 'play': '▶ Reproducir', 'stop': '■ Detener', 'loop': '↻ Repetir', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'aria.loop': 'Repetir {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
+      'add.title': 'Añade tus pistas', 'add.sub': 'Elige archivos de audio de tu dispositivo', 'add.main': 'Elegir pistas', 'add.hint': 'Toca para elegir, o arrastra y suelta', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.title': 'Mis pistas', 'tracks.sub': 'Tu lista suena en orden. Reproduce o elimina pistas aquí', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Elige un archivo de audio arriba para empezar', 'play': '▶ Reproducir', 'stop': '■ Detener', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
       'mix.title': 'Mezclador de ritmos neuronales', 'mix.sub': 'Ritmos binaurales mezclados con tus pistas y el ruido. Usa audífonos: cada oído recibe un tono ligeramente distinto.', 'mix.type': 'Tipo de ritmo', 'mix.rate': 'Frecuencia del ritmo', 'mix.pitch': 'Altura', 'mix.beats': 'Ritmos neuronales', 'mix.tracks': 'Mis pistas', 'mix.noise': 'Ruido', 'mix.master': 'General', 'mute': 'Silenciar', 'muted': 'Silenciado', 'aria.play.beats': 'Reproducir ritmos neuronales', 'aria.stop.beats': 'Detener ritmos neuronales',
       'settings': 'Ajustes', 'close': 'Cerrar', 'set.layout': 'Diseño', 'layout.flow': 'Fluido', 'layout.focus': 'Enfoque', 'layout.compact': 'Compacto', 'layout.stage': 'Escenario', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'set.joy': 'Pequeñas alegrías', 'set.messages': 'Mensajes positivos', 'set.particles': 'Partículas flotantes', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'cheer.from': '— Blossom',
-      'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.airplay': 'Elegir una bocina (AirPlay)', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', 'rate.rarely': 'Rara vez', 'rate.sometimes': 'A veces', 'rate.often': 'Seguido'
+      'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'library.title': 'Biblioteca', 'library.sub': 'Pistas originales de downtempo y lo-fi, creadas en tu navegador. Añádelas a tu lista para reproducirlas, repetirlas o mezclarlas.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'library.lofi': 'Lo-fi', 'library.downtempo': 'Downtempo', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', 'rate.rarely': 'Rara vez', 'rate.sometimes': 'A veces', 'rate.often': 'Seguido'
     }
   };
   var SETTINGS_STORE = 'alot.settings.v1';
-  var SETTINGS_DEFAULT = { lang: 'es', layout: 'flow', bg: 'threads', accent: 'amber', messages: true, particles: true, keepAwake: true, background: false, textSize: 'm', sliderSize: 'm', controlSize: 'm', spacing: 'normal', panels: 'glass', messageRate: 'sometimes', bgLevel: 100, calm: false };
+  var SETTINGS_DEFAULT = { lang: 'es', layout: 'flow', bg: 'threads', accent: 'amber', messages: true, particles: true, keepAwake: true, background: false, playlistLoop: true, textSize: 'm', sliderSize: 'm', controlSize: 'm', spacing: 'normal', panels: 'glass', messageRate: 'sometimes', bgLevel: 100, calm: false };
   var settings = Object.assign({}, SETTINGS_DEFAULT);
   try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_STORE)) || {}); } catch (e) { /* defaults */ }
   (function () {
@@ -940,6 +964,7 @@
   var recordings = [];
   var playingId = null;
   var playingAudio = null;
+  var lastSource = 'noise'; // which sound the phone's play and pause controls act on
 
   /* ═══════════════════════════════════════════
      HELPERS
@@ -1014,8 +1039,8 @@
 
   function play(rec) {
     stopPlayback();
+    lastSource = 'tracks';
     var audio = new Audio(rec.url);
-    audio.loop = rec.loop;
     playingAudio = audio;
     playingId = rec.id;
     if (settings.background) {
@@ -1027,8 +1052,7 @@
     syncWakeLock();
     audio.addEventListener('ended', function () {
       if (playingAudio !== audio) return;
-      stopPlayback();
-      renderTakes();
+      playNext(rec, false);
     });
     audio.play().catch(function () {
       if (playingAudio !== audio) return;
@@ -1037,6 +1061,20 @@
       toast(t('err.play'), 'error');
     });
     renderTakes();
+  }
+
+  // Plays the next track. At the end of the list, it starts over if the playlist
+  // loops; pressing Next always wraps round.
+  function playNext(rec, pressed) {
+    var at = recordings.indexOf(rec);
+    var next = recordings[at + 1];
+    if (!next && (pressed || settings.playlistLoop)) next = recordings[0];
+    if (next) {
+      play(next);
+    } else {
+      stopPlayback();
+      renderTakes();
+    }
   }
 
   function removeRecording(rec) {
@@ -1048,13 +1086,15 @@
 
   function renderTakes() {
     takesList.textContent = '';
+    renderLibrary();
+    bnUpdateMediaSession();
     if (!recordings.length) {
       takesList.appendChild(emptyState);
       return;
     }
     recordings.forEach(function (rec) {
       var item = document.createElement('div');
-      item.className = 'take-item';
+      item.className = 'take-item' + (playingId === rec.id ? ' is-playing' : '');
       item.setAttribute('role', 'listitem');
 
       var info = document.createElement('div');
@@ -1091,23 +1131,12 @@
           play(rec);
         }
       });
-      var loopBtn = document.createElement('button');
-      loopBtn.className = 'take-btn loop';
-      loopBtn.textContent = t('loop');
-      loopBtn.setAttribute('aria-pressed', String(rec.loop));
-      loopBtn.setAttribute('aria-label', t('aria.loop', { n: rec.name }));
-      loopBtn.addEventListener('click', function () {
-        rec.loop = !rec.loop;
-        if (playingId === rec.id) playingAudio.loop = rec.loop;
-        renderTakes();
-      });
       var delBtn = document.createElement('button');
       delBtn.className = 'take-btn del';
       delBtn.textContent = t('delete');
       delBtn.setAttribute('aria-label', t('aria.delete', { n: rec.name }));
       delBtn.addEventListener('click', function () { removeRecording(rec); });
       btns.appendChild(playBtn);
-      btns.appendChild(loopBtn);
       btns.appendChild(delBtn);
 
       item.appendChild(info);
@@ -1127,8 +1156,7 @@
         name: file.name,
         size: file.size,
         url: URL.createObjectURL(file),
-        duration: NaN,
-        loop: false
+        duration: NaN
       };
       recordings.push(rec);
       var probe = new Audio();
@@ -1264,6 +1292,8 @@
   }
 
   /* ── Sound ── */
+  var NOISE_LOOP_SECONDS = 30; // long enough that the repeat can't be picked out
+
   // Audio filter (standard biquad formulas), used to shape noise while it is generated.
   function makeFilter(type, freq, rate, q, gainDb) {
     var A = Math.pow(10, (gainDb || 0) / 40);
@@ -1338,7 +1368,7 @@
 
   function makeNoiseBuffer(ctx, seed, colorId) {
     var rate = ctx.sampleRate;
-    var loopLength = rate * 12;
+    var loopLength = rate * NOISE_LOOP_SECONDS;
     var overlap = rate; // 1 second, blended so the loop point can't be heard
     var random = makeRandom(seed);
     var buffer = ctx.createBuffer(2, loopLength, rate);
@@ -1448,12 +1478,12 @@
   // Grain: soft, scattered ticks, like rain or a distant fire.
   function makeGrainBuffer(ctx, seed) {
     var rate = ctx.sampleRate;
-    var length = rate * 12;
+    var length = rate * NOISE_LOOP_SECONDS;
     var random = makeRandom(seed ^ 0x5bd1e995);
     var buffer = ctx.createBuffer(2, length, rate);
     for (var c = 0; c < 2; c++) {
       var out = buffer.getChannelData(c);
-      for (var n = 0; n < 12 * 45; n++) {
+      for (var n = 0; n < NOISE_LOOP_SECONDS * 45; n++) {
         var at = Math.floor(random() * length);
         var size = Math.pow(random(), 3) * 0.8 + 0.03;
         var ring = Math.floor(rate * (0.001 + random() * 0.007));
@@ -1463,6 +1493,8 @@
       }
       var body = makeFilter('bandpass', 2400, rate, 0.5);
       var peak = 0;
+      // The first pass only settles the filter, so the end of the loop meets its start cleanly.
+      for (var settle = 0; settle < length; settle++) body(out[settle]);
       for (var k = 0; k < length; k++) {
         out[k] = body(out[k]);
         peak = Math.max(peak, Math.abs(out[k]));
@@ -1571,6 +1603,7 @@
       bnStopSource(BN_FADE);
     }
     bnPlaying = on;
+    if (on) lastSource = 'noise';
     bnPulse = 1;
     bnEl.play.setAttribute('aria-pressed', String(on));
     bnEl.play.setAttribute('aria-label', t(on ? 'aria.stop.noise' : 'aria.play.noise'));
@@ -1591,8 +1624,11 @@
   function bnUpdateMediaSession() {
     if (!('mediaSession' in navigator) || !window.MediaMetadata) return;
     try {
-      navigator.mediaSession.metadata = new MediaMetadata({ title: bnDisplayName(), artist: 'alot' });
-      navigator.mediaSession.playbackState = bnPlaying ? 'playing' : 'paused';
+      var track = recordings.filter(function (r) { return r.id === playingId; })[0];
+      var showTrack = lastSource === 'tracks' && track;
+      navigator.mediaSession.metadata = new MediaMetadata({ title: showTrack ? track.name : bnDisplayName(), artist: 'alot' });
+      var active = lastSource === 'tracks' ? (playingAudio && !playingAudio.paused) : bnPlaying;
+      navigator.mediaSession.playbackState = active ? 'playing' : 'paused';
     } catch (e) { /* lock-screen details are optional */ }
   }
 
@@ -1610,6 +1646,9 @@
   /* ── Living background: threads of light shaped by the settings and the sound ── */
   var bnPulse = 0;
   var bnLastFrame = 0;
+  var bnFrameSeen = 0;
+  var bnSlowFrames = 0;
+  var bnLowPower = false; // simpler drawing on a struggling phone, so sound keeps priority
 
   function bnCalm() {
     return bnReducedMotion || settings.calm;
@@ -1635,7 +1674,7 @@
     var h = canvas.clientHeight;
     if (!w || !h) return;
     var small = w < 600;
-    var dpr = Math.min(window.devicePixelRatio || 1, small ? 1.5 : 2);
+    var dpr = bnLowPower ? 1 : Math.min(window.devicePixelRatio || 1, small ? 1.5 : 2);
     if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
@@ -1690,8 +1729,8 @@
       return;
     }
     g.lineWidth = 0.6 + rumble * 1.1;
-    var threads = small ? 10 : 16;
-    var step = small ? 12 : 8;
+    var threads = bnLowPower ? 6 : (small ? 10 : 16);
+    var step = bnLowPower ? 18 : (small ? 12 : 8);
     for (var r = 0; r < 5; r++) {
       var baseY = h * (0.18 + r * 0.16);
       var amp = h * (0.05 + 0.1 * swell + 0.05 * rumble + 0.1 * life);
@@ -1718,8 +1757,12 @@
   function bnVisualLoop(now) {
     bnRaf = null;
     if (document.hidden || settings.bg === 'still' || bnCalm()) return;
+    if (bnFrameSeen && now - bnFrameSeen > 45 && now - bnFrameSeen < 500) bnSlowFrames++;
+    bnFrameSeen = now;
+    if (bnSlowFrames > 20) bnLowPower = true;
     var sounding = bnAnySound();
-    if (sounding || bgActive || bnPulse > 0.01 || now - bnLastFrame > 33) { // quieter frame rate while silent
+    // Capped, so drawing never competes with the sound: 30 a second playing, 20 silent.
+    if (now - bnLastFrame >= (sounding || bgActive ? 33 : 50)) {
       bnLastFrame = now;
       var target = bgActive ? 0.35 : 0;
       if (sounding) {
@@ -1730,8 +1773,10 @@
         target = Math.min(1, Math.sqrt(Math.sqrt(sum / data.length)) * 1.6);
       }
       bnLevel += (target - bnLevel) * 0.05;
-      bnPulse *= 0.965;
+      bnPulse *= 0.93;
+      var drawStart = performance.now();
       bnDraw(now);
+      if (performance.now() - drawStart > 10) bnSlowFrames++;
     }
     bnRaf = requestAnimationFrame(bnVisualLoop);
   }
@@ -1752,10 +1797,11 @@
      audio element playing. This mode records the current noise into a looping
      file for that element, which also gives AirPlay a real file to play.
   ═══════════════════════════════════════════ */
-  var BG_SECONDS = 45;
-  var BG_OVERLAP = 2;
+  var BG_SECONDS = 60;
+  var BG_OVERLAP = 4;
   var BG_SILENCE = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
-  var bgEl = null;
+  var bgPair = [];
+  var bgFront = null;
   var bgUrl = null;
   var bgKey = null;
   var bgJob = 0;
@@ -1778,14 +1824,49 @@
   }
   document.addEventListener('visibilitychange', syncWakeLock);
 
-  function bgElement() {
-    if (!bgEl) {
-      bgEl = new Audio();
-      bgEl.loop = true;
-      bgEl.preload = 'auto';
-      bgEl.setAttribute('x-webkit-airplay', 'allow');
+  // Looping one audio element leaves a tiny gap. Two elements overlap instead: each
+  // recording fades in and out, and the next one starts as the current one fades.
+  function bgElements() {
+    if (!bgPair.length) {
+      bgPair = [new Audio(), new Audio()];
+      bgPair.forEach(function (el) {
+        el.preload = 'auto';
+        el.setAttribute('x-webkit-airplay', 'allow');
+        el.addEventListener('timeupdate', function () {
+          if (!bgActive || el !== bgFront || !bgUrl) return;
+          if (bgInTail(el)) bgHandOver(bgUrl);
+        });
+        // A late timeupdate should never leave silence behind.
+        el.addEventListener('ended', function () {
+          if (bgActive && el === bgFront && bgUrl) bgHandOver(bgUrl);
+        });
+      });
+      bgFront = bgPair[0];
     }
-    return bgEl;
+    return bgPair;
+  }
+
+  function bgIsRecording(el) {
+    return isFinite(el.duration) && el.duration > BG_OVERLAP * 2;
+  }
+
+  function bgInTail(el) {
+    return bgIsRecording(el) && el.currentTime >= el.duration - BG_OVERLAP;
+  }
+
+  function bgHandOver(url) {
+    var next = bgPair[0] === bgFront ? bgPair[1] : bgPair[0];
+    if (next.src !== url) next.src = url;
+    else next.currentTime = 0;
+    bgFront = next;
+    next.play().catch(function () {});
+  }
+
+  function bgSwitchTo(url) {
+    // Jumping to the fade-out lets the old recording leave smoothly, even on
+    // iPhones, where a page can't change an audio element's volume.
+    if (bgIsRecording(bgFront) && !bgInTail(bgFront)) bgFront.currentTime = bgFront.duration - BG_OVERLAP;
+    bgHandOver(url);
   }
 
   function encodeWav(left, right, rate) {
@@ -1816,10 +1897,10 @@
 
   function bgRender() {
     var rate = 44100;
-    var length = BG_SECONDS * rate;
+    var length = (BG_SECONDS + BG_OVERLAP) * rate;
     var overlap = BG_OVERLAP * rate;
     var Offline = window.OfflineAudioContext || window.webkitOfflineAudioContext;
-    var off = new Offline(2, length + overlap, rate);
+    var off = new Offline(2, length, rate);
     var a = bnWire(off, off.destination);
     a.master.gain.value = 1;
     bnApplySound(a);
@@ -1840,15 +1921,11 @@
     }
     return off.startRendering().then(function (result) {
       var sides = [0, 1].map(function (c) {
-        var raw = result.getChannelData(c);
-        var out = new Float32Array(length);
-        for (var i = 0; i < length; i++) {
-          if (i < overlap) { // blends the end into the start so the loop point can't be heard
-            var mix = i / overlap;
-            out[i] = raw[i] * Math.sqrt(mix) + raw[length + i] * Math.sqrt(1 - mix);
-          } else {
-            out[i] = raw[i];
-          }
+        var out = result.getChannelData(c);
+        for (var n = 0; n < overlap; n++) {
+          var rise = Math.sqrt(n / overlap);
+          out[n] *= rise;
+          out[out.length - 1 - n] *= rise;
         }
         return out;
       });
@@ -1859,10 +1936,7 @@
   function bgRefresh() {
     var key = JSON.stringify([bn.seed, bn.color, BN_KEYS.map(function (k) { return bn[k]; })]);
     if (key === bgKey && bgUrl) {
-      if (bgEl.src !== bgUrl) {
-        bgEl.src = bgUrl;
-        bgEl.play().catch(function () {});
-      }
+      if (bgFront.src !== bgUrl || bgFront.paused) bgSwitchTo(bgUrl);
       return;
     }
     var job = ++bgJob;
@@ -1874,19 +1948,20 @@
       var old = bgUrl;
       bgUrl = url;
       bgKey = key;
-      bgEl.src = url;
-      bgEl.play().catch(function () {});
-      if (old) URL.revokeObjectURL(old);
+      bgSwitchTo(url);
+      if (old) setTimeout(function () { URL.revokeObjectURL(old); }, (BG_OVERLAP + 2) * 1000);
     }).catch(function () {
       toast(t('err.play'), 'error');
     });
   }
 
   function bgStart() {
-    var el = bgElement();
-    el.volume = bnVolumeLevel();
-    el.src = BG_SILENCE; // starts inside the tap, which permits playback once the recording is ready
-    el.play().catch(function () {});
+    // Both start inside the tap, which permits them to play later without one.
+    bgElements().forEach(function (el) {
+      el.volume = bnVolumeLevel();
+      el.src = BG_SILENCE;
+      el.play().catch(function () {});
+    });
     bgActive = true;
     bgRefresh();
   }
@@ -1895,7 +1970,7 @@
     bgActive = false;
     bgJob++;
     clearTimeout(bgTimer);
-    if (bgEl) bgEl.pause();
+    bgPair.forEach(function (el) { el.pause(); });
   }
 
   function bgQueue() {
@@ -2157,7 +2232,7 @@
   bnEl.volume.addEventListener('input', function () {
     bnEl.volume.style.setProperty('--v', bnEl.volume.value + '%');
     mixSyncBrown();
-    if (bgEl) bgEl.volume = bnVolumeLevel();
+    bgPair.forEach(function (el) { el.volume = bnVolumeLevel(); });
     if (bnAudio) bnAudio.master.gain.setTargetAtTime(bnVolumeLevel(), bnAudio.ctx.currentTime, 0.02);
     bnPersist();
   });
@@ -2264,7 +2339,10 @@
 
   function mixBus() {
     if (mixGraph) return mixGraph;
-    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    var Context = window.AudioContext || window.webkitAudioContext;
+    var ctx;
+    // Asks for a larger audio buffer: a little slower to respond, far less prone to dropouts.
+    try { ctx = new Context({ latencyHint: 'playback' }); } catch (e) { ctx = new Context(); }
     var g = { ctx: ctx };
     g.master = ctx.createGain();
     g.master.gain.value = mixLevel(mixState.master);
@@ -2460,6 +2538,20 @@
     g.setTransform(dpr, 0, 0, dpr, 0, 0);
     var glow = getComputedStyle(document.documentElement).getPropertyValue('--glow').trim();
     var LIFE = 4800;
+    function makeSprite(color) { // drawn once: far cheaper than a new gradient per particle per frame
+      var sprite = document.createElement('canvas');
+      sprite.width = sprite.height = 64;
+      var c = sprite.getContext('2d');
+      var light = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+      light.addColorStop(0, 'rgba(' + color + ',1)');
+      light.addColorStop(0.25, 'rgba(' + color + ',0.45)');
+      light.addColorStop(1, 'rgba(' + color + ',0)');
+      c.fillStyle = light;
+      c.fillRect(0, 0, 64, 64);
+      return sprite;
+    }
+    var warm = makeSprite(glow);
+    var pale = makeSprite('255,246,232');
     var motes = [];
     for (var i = 0; i < (w < 600 ? 30 : 56); i++) {
       motes.push({
@@ -2493,14 +2585,10 @@
         var x = m.x + Math.sin(seconds * 0.7 + m.phase) * m.sway;
         var y = m.y - m.rise * seconds;
         var radius = m.size * 3.5;
-        var color = m.white ? '255,246,232' : glow;
-        var light = g.createRadialGradient(x, y, 0, x, y, radius);
-        light.addColorStop(0, 'rgba(' + color + ',' + alpha + ')');
-        light.addColorStop(0.25, 'rgba(' + color + ',' + alpha * 0.45 + ')');
-        light.addColorStop(1, 'rgba(' + color + ',0)');
-        g.fillStyle = light;
-        g.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+        g.globalAlpha = alpha;
+        g.drawImage(m.white ? pale : warm, x - radius, y - radius, radius * 2, radius * 2);
       });
+      g.globalAlpha = 1;
       g.globalCompositeOperation = 'source-over';
       particlesRaf = requestAnimationFrame(frame);
     }
@@ -2544,6 +2632,255 @@
   });
 
   /* ═══════════════════════════════════════════
+     TRACK LIBRARY
+     Original tracks composed by this code, so there is nothing to license.
+     Each is rendered on request, and its tail wraps onto its start so it loops evenly.
+  ═══════════════════════════════════════════ */
+  var LIBRARY = [
+    { id: 'cafe', name: 'Café de lluvia', genre: 'lofi', bpm: 72, key: 57, seed: 11, chords: [[0, 3, 7, 10], [5, 8, 12, 15], [-2, 2, 5, 9], [-4, 0, 3, 7]], cutoff: 2600 },
+    { id: 'cocina', name: 'Luz de cocina', genre: 'lofi', bpm: 78, key: 60, seed: 23, chords: [[0, 4, 7, 11], [-3, 0, 4, 7], [2, 5, 9, 12], [-5, -1, 2, 5]], cutoff: 3000 },
+    { id: 'domingo', name: 'Domingo lento', genre: 'lofi', bpm: 66, key: 55, seed: 37, chords: [[0, 4, 7, 9], [5, 9, 12, 16], [-3, 0, 4, 7], [2, 5, 9, 12]], cutoff: 2300 },
+    { id: 'marea', name: 'Marea baja', genre: 'downtempo', bpm: 84, key: 52, seed: 41, chords: [[0, 3, 7, 12], [-4, 0, 3, 7], [3, 7, 10, 14], [-2, 2, 5, 10]], cutoff: 3600 },
+    { id: 'ruta', name: 'Ruta nocturna', genre: 'downtempo', bpm: 92, key: 50, seed: 53, chords: [[0, 3, 7, 10], [0, 3, 7, 10], [-4, 0, 3, 7], [-2, 2, 5, 9]], cutoff: 4200 },
+    { id: 'agua', name: 'Bajo el agua', genre: 'downtempo', bpm: 76, key: 53, seed: 67, chords: [[0, 4, 7, 14], [5, 9, 12, 19], [-3, 0, 4, 11], [2, 5, 9, 16]], cutoff: 2800 }
+  ];
+  var libraryBusy = {};
+
+  function renderLibraryTrack(def) {
+    var rate = 44100;
+    var beat = 60 / def.bpm;
+    var step = beat / 4;
+    var BARS = 16;
+    var loopLength = Math.round(BARS * 4 * beat * rate);
+    var tail = 3 * rate;
+    var Offline = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    var off = new Offline(2, loopLength + tail, rate);
+    var random = makeRandom(def.seed);
+    var lofi = def.genre === 'lofi';
+
+    var warmth = off.createWaveShaper();
+    var curve = new Float32Array(1024);
+    for (var c = 0; c < 1024; c++) curve[c] = Math.tanh((c / 511.5 - 1) * 1.6);
+    warmth.curve = curve;
+    var tone = off.createBiquadFilter();
+    tone.type = 'lowpass';
+    tone.frequency.value = def.cutoff;
+    tone.connect(warmth);
+    warmth.connect(off.destination);
+    var music = off.createGain();
+    music.gain.value = 0.7;
+    music.connect(tone);
+    var drums = off.createGain();
+    drums.gain.value = 0.8;
+    drums.connect(warmth);
+
+    var echo = off.createDelay(2);
+    echo.delayTime.value = beat * 0.75;
+    var echoBack = off.createGain();
+    echoBack.gain.value = lofi ? 0.22 : 0.38;
+    var echoSend = off.createGain();
+    echoSend.gain.value = lofi ? 0.16 : 0.3;
+    echoSend.connect(echo);
+    echo.connect(echoBack);
+    echoBack.connect(echo);
+    echo.connect(music);
+
+    function freq(midi) { return 440 * Math.pow(2, (midi - 69) / 12); }
+
+    function pan(node, position) {
+      if (!off.createStereoPanner) return node;
+      var panner = off.createStereoPanner();
+      panner.pan.value = position;
+      node.connect(panner);
+      return panner;
+    }
+
+    function keyNote(time, midi, length, level, position) {
+      var env = off.createGain();
+      env.gain.setValueAtTime(0, time);
+      env.gain.linearRampToValueAtTime(level, time + (lofi ? 0.012 : 0.09));
+      env.gain.exponentialRampToValueAtTime(level * 0.45, time + 0.35);
+      env.gain.exponentialRampToValueAtTime(0.0008, time + length);
+      [[lofi ? 'triangle' : 'sawtooth', -4, 1], ['sine', 5, 0.8], ['sine', 0, 0.16]].forEach(function (voice, n) {
+        var osc = off.createOscillator();
+        osc.type = voice[0];
+        osc.frequency.value = freq(midi) * (n === 2 ? 3 : 1);
+        osc.detune.value = voice[1];
+        var part = off.createGain();
+        part.gain.value = voice[2] * (voice[0] === 'sawtooth' ? 0.28 : 1);
+        osc.connect(part);
+        part.connect(env);
+        osc.start(time);
+        osc.stop(time + length + 0.05);
+      });
+      var out = pan(env, position);
+      out.connect(music);
+      out.connect(echoSend);
+    }
+
+    function bassNote(time, midi, length) {
+      var osc = off.createOscillator();
+      osc.frequency.value = freq(midi);
+      var env = off.createGain();
+      env.gain.setValueAtTime(0, time);
+      env.gain.linearRampToValueAtTime(0.55, time + 0.015);
+      env.gain.exponentialRampToValueAtTime(0.001, time + length);
+      osc.connect(env);
+      env.connect(music);
+      osc.start(time);
+      osc.stop(time + length + 0.05);
+    }
+
+    function kick(time, level) {
+      var osc = off.createOscillator();
+      osc.frequency.setValueAtTime(120, time);
+      osc.frequency.exponentialRampToValueAtTime(44, time + 0.11);
+      var env = off.createGain();
+      env.gain.setValueAtTime(level, time);
+      env.gain.exponentialRampToValueAtTime(0.001, time + 0.3);
+      osc.connect(env);
+      env.connect(drums);
+      osc.start(time);
+      osc.stop(time + 0.32);
+    }
+
+    var noise = off.createBuffer(1, rate, rate);
+    var noiseData = noise.getChannelData(0);
+    for (var w = 0; w < rate; w++) noiseData[w] = random() * 2 - 1;
+
+    function burst(time, type, frequency, q, level, length, position) {
+      var source = off.createBufferSource();
+      source.buffer = noise;
+      var filter = off.createBiquadFilter();
+      filter.type = type;
+      filter.frequency.value = frequency;
+      filter.Q.value = q;
+      var env = off.createGain();
+      env.gain.setValueAtTime(level, time);
+      env.gain.exponentialRampToValueAtTime(0.001, time + length);
+      source.connect(filter);
+      filter.connect(env);
+      pan(env, position).connect(drums);
+      source.start(time, random() * 0.7, length + 0.02);
+    }
+
+    var swing = lofi ? step * 0.3 : step * 0.14;
+    var scale = [0, 3, 5, 7, 10, 12, 15, 17];
+    for (var bar = 0; bar < BARS; bar++) {
+      var start = bar * 4 * beat;
+      var chord = def.chords[bar % def.chords.length];
+      var root = def.key + chord[0];
+      chord.forEach(function (offset, n) {
+        var strum = n * (lofi ? 0.016 : 0.03);
+        keyNote(start + strum, def.key + offset, 4 * beat * (lofi ? 0.8 : 1), lofi ? 0.13 : 0.1, n % 2 ? 0.3 : -0.3);
+        if (lofi && bar % 2 === 1) keyNote(start + 2.5 * beat + swing + strum, def.key + offset, 1.4 * beat, 0.08, n % 2 ? -0.2 : 0.2);
+      });
+      bassNote(start, root - 24, beat * 1.7);
+      bassNote(start + 2.5 * beat + swing, root - 24 + (bar % 4 === 3 ? 7 : 0), beat * 1.1);
+
+      for (var s = 0; s < 16; s++) {
+        var time = start + s * step + (s % 2 ? swing : 0);
+        if (s === 0 || s === 10 || (s === 7 && bar % 4 === 2)) kick(time, 0.8);
+        if (s === 4 || s === 12) burst(time, 'bandpass', lofi ? 1700 : 2100, 0.8, 0.42, 0.16, 0);
+        if (s % 2 === 0) burst(time, 'highpass', 7500, 0.5, 0.06 + random() * 0.06, 0.05, 0.15);
+        else if (!lofi && random() < 0.45) burst(time, 'highpass', 8500, 0.5, 0.05, 0.035, -0.2);
+      }
+
+      if (bar >= 4 && (bar % 8 < 6)) { // the tune leaves room to breathe
+        for (var m = 0; m < 4; m++) {
+          if (random() < 0.42) {
+            var note = def.key + 12 + scale[Math.floor(random() * scale.length)];
+            keyNote(start + m * beat + (random() < 0.5 ? beat / 2 + swing : 0), note, beat * 1.6, lofi ? 0.09 : 0.075, random() - 0.5);
+          }
+        }
+      }
+    }
+
+    if (lofi) { // record crackle
+      var crackles = Math.round((loopLength / rate) * 9);
+      for (var k = 0; k < crackles; k++) {
+        burst(random() * (loopLength / rate), 'highpass', 2500 + random() * 3000, 1, 0.03 + Math.pow(random(), 4) * 0.2, 0.006, random() - 0.5);
+      }
+    }
+
+    return off.startRendering().then(function (result) {
+      var peak = 0;
+      var sides = [0, 1].map(function (side) {
+        var raw = result.getChannelData(side);
+        var out = raw.slice(0, loopLength);
+        for (var i = 0; i < tail; i++) out[i] += raw[loopLength + i]; // the tail wraps round
+        for (var j = 0; j < loopLength; j++) peak = Math.max(peak, Math.abs(out[j]));
+        return out;
+      });
+      sides.forEach(function (out) {
+        for (var j = 0; j < loopLength; j++) out[j] = out[j] / peak * 0.85;
+      });
+      return { blob: encodeWav(sides[0], sides[1], rate), duration: loopLength / rate };
+    });
+  }
+
+  function renderLibrary() {
+    var list = document.getElementById('libraryList');
+    list.textContent = '';
+    LIBRARY.forEach(function (def) {
+      var added = recordings.some(function (r) { return r.libraryId === def.id; });
+      var item = document.createElement('div');
+      item.className = 'take-item library-item';
+      item.setAttribute('role', 'listitem');
+      var info = document.createElement('div');
+      info.className = 'take-info';
+      var text = document.createElement('div');
+      text.style.minWidth = '0';
+      var name = document.createElement('div');
+      name.className = 'take-name';
+      name.textContent = def.name;
+      var meta = document.createElement('div');
+      meta.className = 'take-meta';
+      meta.textContent = t('library.' + def.genre) + ' · ' + def.bpm + ' BPM';
+      text.appendChild(name);
+      text.appendChild(meta);
+      info.appendChild(text);
+      var button = document.createElement('button');
+      button.className = 'take-btn library-add';
+      button.disabled = added || !!libraryBusy[def.id];
+      button.textContent = t(libraryBusy[def.id] ? 'library.making' : (added ? 'library.added' : 'library.add'));
+      button.setAttribute('aria-label', button.textContent + ': ' + def.name);
+      button.addEventListener('click', function () { addLibraryTrack(def); });
+      item.appendChild(info);
+      item.appendChild(button);
+      list.appendChild(item);
+    });
+  }
+
+  function addLibraryTrack(def) {
+    if (libraryBusy[def.id] || recordings.some(function (r) { return r.libraryId === def.id; })) return Promise.resolve();
+    libraryBusy[def.id] = true;
+    renderLibrary();
+    return renderLibraryTrack(def).then(function (made) {
+      recordings.push({
+        id: nextId++,
+        libraryId: def.id,
+        name: def.name,
+        size: made.blob.size,
+        url: URL.createObjectURL(made.blob),
+        duration: made.duration
+      });
+      libraryBusy[def.id] = false;
+      renderTakes();
+    }).catch(function () {
+      libraryBusy[def.id] = false;
+      renderLibrary();
+      toast(t('err.play'), 'error');
+    });
+  }
+
+  document.getElementById('libraryAll').addEventListener('click', function () {
+    LIBRARY.reduce(function (chain, def) {
+      return chain.then(function () { return addLibraryTrack(def); });
+    }, Promise.resolve());
+  });
+
+  /* ═══════════════════════════════════════════
      SETTINGS PANEL + LANGUAGE TOGGLE
   ═══════════════════════════════════════════ */
   var settingsEl = document.getElementById('settings');
@@ -2582,6 +2919,7 @@
     document.getElementById('setMessages').checked = settings.messages;
     document.getElementById('setParticles').checked = settings.particles;
     document.getElementById('setKeep').checked = settings.keepAwake;
+    document.getElementById('playlistLoop').checked = settings.playlistLoop;
     document.getElementById('setBackground').checked = settings.background;
     if (settings.bg === 'still') bnDraw(0);
     bnStartVisual();
@@ -2644,22 +2982,20 @@
     document.documentElement.style.setProperty('--bg-level', settings.bgLevel / 100);
     e.target.style.setProperty('--v', (settings.bgLevel - 15) / 85 * 100 + '%');
   });
+  document.getElementById('playlistLoop').addEventListener('change', function (e) {
+    settings.playlistLoop = e.target.checked;
+    saveSettings();
+  });
+  document.getElementById('playlistNext').addEventListener('click', function () {
+    var current = recordings.filter(function (r) { return r.id === playingId; })[0];
+    if (current) playNext(current, true);
+    else if (recordings.length) play(recordings[0]);
+  });
   document.getElementById('setKeep').addEventListener('change', function (e) {
     settings.keepAwake = e.target.checked;
     saveSettings();
     syncWakeLock();
   });
-  if (window.WebKitPlaybackTargetAvailabilityEvent) {
-    var airplayBtn = document.getElementById('setAirplay');
-    airplayBtn.hidden = false;
-    airplayBtn.addEventListener('click', function () {
-      if (!bgActive) {
-        setBackgroundMode(true);
-        if (!bnPlaying) bnSetPlaying(true);
-      }
-      if (bgEl.webkitShowPlaybackTargetPicker) bgEl.webkitShowPlaybackTargetPicker();
-    });
-  }
   document.getElementById('settingsReset').addEventListener('click', function () {
     if (bgActive) setBackgroundMode(false);
     var lang = settings.lang;
@@ -2670,11 +3006,40 @@
 
   // Lock-screen and headphone controls
   if ('mediaSession' in navigator) {
-    [['play', true], ['pause', false], ['stop', false]].forEach(function (action) {
+    var controls = {
+      play: function () {
+        if (lastSource === 'tracks') {
+          if (playingAudio) playingAudio.play().catch(function () {});
+          else if (recordings.length) play(recordings[0]);
+        } else if (!bnPlaying) {
+          bnSetPlaying(true);
+        }
+        bnUpdateMediaSession();
+      },
+      pause: function () {
+        if (lastSource === 'tracks') {
+          if (playingAudio) playingAudio.pause();
+        } else if (bnPlaying) {
+          bnSetPlaying(false);
+        }
+        bnUpdateMediaSession();
+      },
+      stop: function () {
+        if (lastSource === 'tracks') {
+          stopPlayback();
+          renderTakes();
+        } else if (bnPlaying) {
+          bnSetPlaying(false);
+        }
+      },
+      nexttrack: function () {
+        var current = recordings.filter(function (r) { return r.id === playingId; })[0];
+        if (lastSource === 'tracks' && current) playNext(current, true);
+      }
+    };
+    Object.keys(controls).forEach(function (action) {
       try {
-        navigator.mediaSession.setActionHandler(action[0], function () {
-          if (bnPlaying !== action[1]) bnSetPlaying(action[1]);
-        });
+        navigator.mediaSession.setActionHandler(action, controls[action]);
       } catch (e) { /* this browser doesn't offer it */ }
     });
   }
