@@ -639,6 +639,13 @@
     .take-btn:disabled { opacity: 0.6; cursor: default; }
     .library-all { width: 100%; margin-top: 12px; }
 
+    /* ── FAVORITE ON YOUTUBE ── */
+    .yt-frame { overflow: hidden; margin-bottom: 14px; border-radius: 14px; aspect-ratio: 16 / 9; background: #000; }
+    .yt-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
+    .yt-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .yt-link { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+    .yt-note { margin: 12px 0 0; }
+
   </style>
 </head>
 <body>
@@ -825,6 +832,24 @@
     </div>
   </article>
 
+  <!-- FAVORITE ON YOUTUBE -->
+  <article class="card" aria-labelledby="yt-title">
+    <div class="card-header">
+      <div class="card-titles">
+        <h2 class="card-title" id="yt-title" data-t="yt.title">Ian's favorite</h2>
+        <div class="card-sub">21 savage - a lot - Soulful Version</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="yt-frame" id="ytFrame" hidden></div>
+      <div class="yt-actions">
+        <button class="bn-btn primary" id="ytPlay" data-t="yt.play">▶ Play</button>
+        <a class="bn-btn yt-link" href="https://www.youtube.com/watch?v=Vy8FvmZRhXw" target="_blank" rel="noopener" data-t="yt.open">Open on YouTube</a>
+      </div>
+      <p class="sheet-note yt-note" data-t="yt.note"></p>
+    </div>
+  </article>
+
   <!-- TRACK LIBRARY -->
   <article class="card" aria-labelledby="library-title">
     <div class="card-header">
@@ -920,7 +945,7 @@
       'add.title': 'Add Your Tracks', 'add.sub': 'Choose audio files from your device', 'add.main': 'Choose tracks', 'add.hint': 'Tap to choose, or drag and drop', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.title': 'My Tracks', 'tracks.sub': 'Your list plays in order. Play or delete tracks here', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Choose an audio file above to get started', 'play': '▶ Play', 'stop': '■ Stop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
       'mix.title': 'Neural Beats Mixer', 'mix.sub': 'Binaural beats, mixed with your tracks and noise. Use headphones: each ear gets a slightly different tone.', 'mix.type': 'Beat type', 'mix.rate': 'Beat rate', 'mix.pitch': 'Pitch', 'mix.beats': 'Neural Beats', 'mix.tracks': 'My Tracks', 'mix.noise': 'Noise', 'mix.master': 'Master', 'mute': 'Mute', 'muted': 'Muted', 'aria.play.beats': 'Play neural beats', 'aria.stop.beats': 'Stop neural beats',
       'settings': 'Settings', 'close': 'Close', 'set.layout': 'Layout', 'layout.flow': 'Flow', 'layout.focus': 'Focus', 'layout.compact': 'Compact', 'layout.stage': 'Stage', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'set.joy': 'Little joys', 'set.messages': 'Positive messages', 'set.particles': 'Floating particles', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'cheer.from': '— Blossom',
-      'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'library.title': 'Library', 'library.sub': 'Original downtempo and lo-fi tracks, made in your browser. Add them to your list to play, loop or mix.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Lo-fi bossa', 'library.waltz': 'Lo-fi waltz', 'library.triphop': 'Trip-hop', 'library.electronic': 'Electronic downtempo', 'library.ambient': 'Ambient downtempo', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', 'rate.rarely': 'Rarely', 'rate.sometimes': 'Sometimes', 'rate.often': 'Often'
+      'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'yt.title': 'Ian’s favorite', 'yt.play': '▶ Play', 'yt.close': '✕ Close player', 'yt.open': 'Open on YouTube', 'yt.note': 'Plays and repeats in YouTube’s own player. It has its own volume, so it isn’t part of your list or the mixer, and it may stop when the screen locks.', 'library.title': 'Library', 'library.sub': 'Original downtempo and lo-fi tracks, made in your browser. Add them to your list to play, loop or mix.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Lo-fi bossa', 'library.waltz': 'Lo-fi waltz', 'library.triphop': 'Trip-hop', 'library.electronic': 'Electronic downtempo', 'library.ambient': 'Ambient downtempo', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', 'rate.rarely': 'Rarely', 'rate.sometimes': 'Sometimes', 'rate.often': 'Often'
     },
     es: {
       'title': 'alot — App de producción musical', 'skip': 'Saltar al contenido principal', 'eyebrow': 'App de producción musical',
@@ -934,7 +959,7 @@
       'add.title': 'Añade tus pistas', 'add.sub': 'Elige archivos de audio de tu dispositivo', 'add.main': 'Elegir pistas', 'add.hint': 'Toca para elegir, o arrastra y suelta', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.title': 'Mis pistas', 'tracks.sub': 'Tu lista suena en orden. Reproduce o elimina pistas aquí', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Elige un archivo de audio arriba para empezar', 'play': '▶ Reproducir', 'stop': '■ Detener', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
       'mix.title': 'Mezclador de ritmos neuronales', 'mix.sub': 'Ritmos binaurales mezclados con tus pistas y el ruido. Usa audífonos: cada oído recibe un tono ligeramente distinto.', 'mix.type': 'Tipo de ritmo', 'mix.rate': 'Frecuencia del ritmo', 'mix.pitch': 'Altura', 'mix.beats': 'Ritmos neuronales', 'mix.tracks': 'Mis pistas', 'mix.noise': 'Ruido', 'mix.master': 'General', 'mute': 'Silenciar', 'muted': 'Silenciado', 'aria.play.beats': 'Reproducir ritmos neuronales', 'aria.stop.beats': 'Detener ritmos neuronales',
       'settings': 'Ajustes', 'close': 'Cerrar', 'set.layout': 'Diseño', 'layout.flow': 'Fluido', 'layout.focus': 'Enfoque', 'layout.compact': 'Compacto', 'layout.stage': 'Escenario', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'set.joy': 'Pequeñas alegrías', 'set.messages': 'Mensajes positivos', 'set.particles': 'Partículas flotantes', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'cheer.from': '— Blossom',
-      'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'library.title': 'Biblioteca', 'library.sub': 'Pistas originales de downtempo y lo-fi, creadas en tu navegador. Añádelas a tu lista para reproducirlas, repetirlas o mezclarlas.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Bossa lo-fi', 'library.waltz': 'Vals lo-fi', 'library.triphop': 'Trip-hop', 'library.electronic': 'Downtempo electrónico', 'library.ambient': 'Downtempo ambiental', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', 'rate.rarely': 'Rara vez', 'rate.sometimes': 'A veces', 'rate.often': 'Seguido'
+      'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'yt.title': 'La favorita de Ian', 'yt.play': '▶ Reproducir', 'yt.close': '✕ Cerrar reproductor', 'yt.open': 'Abrir en YouTube', 'yt.note': 'Suena y se repite en el reproductor de YouTube. Tiene su propio volumen, así que no forma parte de tu lista ni del mezclador, y puede detenerse al bloquear la pantalla.', 'library.title': 'Biblioteca', 'library.sub': 'Pistas originales de downtempo y lo-fi, creadas en tu navegador. Añádelas a tu lista para reproducirlas, repetirlas o mezclarlas.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Bossa lo-fi', 'library.waltz': 'Vals lo-fi', 'library.triphop': 'Trip-hop', 'library.electronic': 'Downtempo electrónico', 'library.ambient': 'Downtempo ambiental', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', 'rate.rarely': 'Rara vez', 'rate.sometimes': 'A veces', 'rate.often': 'Seguido'
     }
   };
   var SETTINGS_STORE = 'alot.settings.v1';
@@ -3012,6 +3037,29 @@
       toast(t('err.play'), 'error');
     });
   }
+
+  // Loads nothing from YouTube until it is tapped. The official player has to stay
+  // visible, and it repeats by being told to loop its own one-video playlist.
+  document.getElementById('ytPlay').addEventListener('click', function () {
+    var frame = document.getElementById('ytFrame');
+    if (!frame.hidden) {
+      frame.textContent = '';
+      frame.hidden = true;
+      this.setAttribute('data-t', 'yt.play');
+      this.textContent = t('yt.play');
+      return;
+    }
+    var player = document.createElement('iframe');
+    player.src = 'https://www.youtube-nocookie.com/embed/Vy8FvmZRhXw?autoplay=1&playsinline=1&loop=1&playlist=Vy8FvmZRhXw&rel=0';
+    player.title = '21 savage - a lot - Soulful Version';
+    player.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    player.allowFullscreen = true;
+    player.referrerPolicy = 'strict-origin-when-cross-origin';
+    frame.appendChild(player);
+    frame.hidden = false;
+    this.setAttribute('data-t', 'yt.close');
+    this.textContent = t('yt.close');
+  });
 
   document.getElementById('libraryAll').addEventListener('click', function () {
     LIBRARY.reduce(function (chain, def) {
