@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" id="metaDescription" content="">
   <meta name="theme-color" content="#0e0b09">
   <link rel="apple-touch-icon" href="icon.png">
   <title>alot — Music Production App</title>
@@ -646,6 +647,40 @@
     .yt-link { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
     .yt-note { margin: 12px 0 0; }
 
+    /* ── REVIEW FIXES ── */
+    .sheet-group { border-top: 1px solid var(--border); padding: 14px 0; }
+    .sheet-group summary { display: flex; align-items: center; justify-content: space-between; min-height: 40px; font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(19px * var(--text)); color: var(--text); cursor: pointer; list-style: none; }
+    .sheet-group summary::-webkit-details-marker { display: none; }
+    .sheet-group summary::after { content: '+'; color: var(--accent); font-size: calc(22px * var(--text)); }
+    .sheet-group[open] summary::after { content: '–'; }
+    .sheet-group summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+    .sheet-group .sheet-label { margin: 16px 0 10px; font-size: calc(15px * var(--text)); color: var(--text-mid); }
+    .sheet-group .sheet-label:first-of-type { margin-top: 8px; }
+    .bn-btn { font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(15px * var(--text)); font-weight: 400; }
+    .bn-hint { display: block; margin: 0; }
+    #cheer {
+      top: auto; bottom: calc(84px + env(safe-area-inset-bottom)); padding: 10px 40px 10px 16px;
+      font-size: calc(16px * var(--text)); transform: translate(-50%, 12px);
+    }
+    #cheer.show { transform: translate(-50%, 0); }
+    .cheer-from { font-size: calc(12px * var(--text)); margin-top: 2px; }
+    .cheer-close { position: absolute; top: 2px; right: 2px; width: 36px; height: 36px; border: none; border-radius: 50%; background: transparent; color: var(--text-mid); font-size: 13px; cursor: pointer; pointer-events: auto; }
+    .cheer-close:focus-visible { outline: 3px solid var(--accent); }
+    #toastBox { bottom: calc(160px + env(safe-area-inset-bottom)); }
+    #bnMini { left: auto; right: calc(16px + env(safe-area-inset-right)); transform: none; }
+    .mix-strip { grid-template-columns: 124px 96px 1fr 30px; }
+    .mix-val { text-align: right; font-size: calc(12px * var(--text)); font-weight: 500; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .playlist-switch span { white-space: nowrap; }
+    [data-layout="focus"] article[aria-labelledby="library-title"], [data-layout="focus"] .mix-controls { display: none; }
+    @media (max-width: 700px) {
+      .top-tools { position: absolute; }
+      #bnMini { padding: 6px; }
+      #bnMiniName { display: none; }
+    }
+    @media (max-width: 560px) {
+      .mix-strip { grid-template-columns: 76px 72px 1fr 26px; gap: 6px; }
+    }
+
   </style>
 </head>
 <body>
@@ -674,6 +709,8 @@
       <button id="settingsClose" data-t-aria="close">✕</button>
     </div>
 
+    <details class="sheet-group" open>
+      <summary data-t="group.look"></summary>
     <div class="sheet-label" data-t="set.layout">Layout</div>
     <div class="layout-grid">
       <button class="layout-card" data-set="layout:flow"><span class="wire wire-flow" aria-hidden="true"><i></i><i></i><i></i></span><span data-t="layout.flow">Flow</span></button>
@@ -681,17 +718,6 @@
       <button class="layout-card" data-set="layout:compact"><span class="wire wire-compact" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span data-t="layout.compact">Compact</span></button>
       <button class="layout-card" data-set="layout:stage"><span class="wire wire-stage" aria-hidden="true"><i></i><i></i><i></i></span><span data-t="layout.stage">Stage</span></button>
     </div>
-
-    <div class="sheet-label" data-t="set.text"></div>
-    <div class="bn-chips"><button class="bn-chip" data-set="textSize:s" data-t="size.s"></button><button class="bn-chip" data-set="textSize:m" data-t="size.m"></button><button class="bn-chip" data-set="textSize:l" data-t="size.l"></button><button class="bn-chip" data-set="textSize:xl" data-t="size.xl"></button></div>
-    <div class="sheet-label" data-t="set.sliders"></div>
-    <div class="bn-chips"><button class="bn-chip" data-set="sliderSize:s" data-t="size.s"></button><button class="bn-chip" data-set="sliderSize:m" data-t="size.m"></button><button class="bn-chip" data-set="sliderSize:l" data-t="size.l"></button><button class="bn-chip" data-set="sliderSize:xl" data-t="size.xl"></button></div>
-    <div class="sheet-label" data-t="set.controls"></div>
-    <div class="bn-chips"><button class="bn-chip" data-set="controlSize:s" data-t="size.s"></button><button class="bn-chip" data-set="controlSize:m" data-t="size.m"></button><button class="bn-chip" data-set="controlSize:l" data-t="size.l"></button></div>
-    <div class="sheet-label" data-t="set.spacing"></div>
-    <div class="bn-chips"><button class="bn-chip" data-set="spacing:tight" data-t="spacing.tight"></button><button class="bn-chip" data-set="spacing:normal" data-t="spacing.normal"></button><button class="bn-chip" data-set="spacing:airy" data-t="spacing.airy"></button></div>
-    <div class="sheet-label" data-t="set.panels"></div>
-    <div class="bn-chips"><button class="bn-chip" data-set="panels:clear" data-t="panels.clear"></button><button class="bn-chip" data-set="panels:glass" data-t="panels.glass"></button><button class="bn-chip" data-set="panels:solid" data-t="panels.solid"></button></div>
 
     <div class="sheet-label" data-t="set.bg">Background</div>
     <div class="bn-chips">
@@ -718,16 +744,38 @@
       <button class="bn-chip bn-color" data-set="accent:lilac"><span class="bn-dot" style="background:#cdb8f2" aria-hidden="true"></span><span data-t="accent.lilac">Lilac</span></button>
     </div>
 
+    </details>
+    <details class="sheet-group">
+      <summary data-t="group.sizes"></summary>
+    <div class="sheet-label" data-t="set.text"></div>
+    <div class="bn-chips"><button class="bn-chip" data-set="textSize:s" data-t="size.s"></button><button class="bn-chip" data-set="textSize:m" data-t="size.m"></button><button class="bn-chip" data-set="textSize:l" data-t="size.l"></button><button class="bn-chip" data-set="textSize:xl" data-t="size.xl"></button></div>
+    <div class="sheet-label" data-t="set.sliders"></div>
+    <div class="bn-chips"><button class="bn-chip" data-set="sliderSize:s" data-t="size.s"></button><button class="bn-chip" data-set="sliderSize:m" data-t="size.m"></button><button class="bn-chip" data-set="sliderSize:l" data-t="size.l"></button><button class="bn-chip" data-set="sliderSize:xl" data-t="size.xl"></button></div>
+    <div class="sheet-label" data-t="set.controls"></div>
+    <div class="bn-chips"><button class="bn-chip" data-set="controlSize:s" data-t="size.s"></button><button class="bn-chip" data-set="controlSize:m" data-t="size.m"></button><button class="bn-chip" data-set="controlSize:l" data-t="size.l"></button></div>
+    <div class="sheet-label" data-t="set.spacing"></div>
+    <div class="bn-chips"><button class="bn-chip" data-set="spacing:tight" data-t="spacing.tight"></button><button class="bn-chip" data-set="spacing:normal" data-t="spacing.normal"></button><button class="bn-chip" data-set="spacing:airy" data-t="spacing.airy"></button></div>
+    <div class="sheet-label" data-t="set.panels"></div>
+    <div class="bn-chips"><button class="bn-chip" data-set="panels:clear" data-t="panels.clear"></button><button class="bn-chip" data-set="panels:glass" data-t="panels.glass"></button><button class="bn-chip" data-set="panels:solid" data-t="panels.solid"></button></div>
+
+    </details>
+    <details class="sheet-group">
+      <summary data-t="group.joy"></summary>
     <div class="sheet-label" data-t="set.joy">Little joys</div>
     <div class="bn-chips"><button class="bn-chip" data-set="messageRate:rarely" data-t="rate.rarely"></button><button class="bn-chip" data-set="messageRate:sometimes" data-t="rate.sometimes"></button><button class="bn-chip" data-set="messageRate:often" data-t="rate.often"></button></div>
     <label class="switch"><span data-t="set.messages">Positive messages</span><input type="checkbox" role="switch" id="setMessages"><i aria-hidden="true"></i></label>
     <label class="switch"><span data-t="set.particles">Floating particles</span><input type="checkbox" role="switch" id="setParticles"><i aria-hidden="true"></i></label>
 
+    </details>
+    <details class="sheet-group">
+      <summary data-t="group.phone"></summary>
     <div class="sheet-label" data-t="set.phone">Phone and Sonos</div>
     <label class="switch"><span data-t="set.keep">Keep screen on while playing</span><input type="checkbox" role="switch" id="setKeep"><i aria-hidden="true"></i></label>
     <label class="switch"><span data-t="set.bgplay">Keep playing when the screen locks</span><input type="checkbox" role="switch" id="setBackground"><i aria-hidden="true"></i></label>
     <p class="sheet-note" data-t="set.bgnote"></p>
     <p class="sheet-note" data-t="set.sonos"></p>
+
+    </details>
 
     <button class="bn-btn sheet-reset" id="settingsReset" data-t="set.reset">Reset settings</button>
   </aside>
@@ -893,22 +941,22 @@
         <div class="mix-strip">
           <label for="mixBeats" data-t="mix.beats">Neural Beats</label>
           <button class="take-btn mix-toggle" id="mixBeatsBtn" aria-pressed="false">▶</button>
-          <input class="bn-range" type="range" id="mixBeats" min="0" max="100">
+          <input class="bn-range" type="range" id="mixBeats" min="0" max="100"><span class="mix-val" id="mixBeatsVal"></span>
         </div>
         <div class="mix-strip">
           <label for="mixTracks" data-t="mix.tracks">My Tracks</label>
           <button class="take-btn mix-toggle" id="mixTracksBtn" aria-pressed="false">Mute</button>
-          <input class="bn-range" type="range" id="mixTracks" min="0" max="100">
+          <input class="bn-range" type="range" id="mixTracks" min="0" max="100"><span class="mix-val" id="mixTracksVal"></span>
         </div>
         <div class="mix-strip">
           <label for="mixBrown" data-t="mix.noise">Noise</label>
           <button class="take-btn mix-toggle" id="mixBrownBtn" aria-pressed="false">▶</button>
-          <input class="bn-range" type="range" id="mixBrown" min="0" max="100">
+          <input class="bn-range" type="range" id="mixBrown" min="0" max="100"><span class="mix-val" id="mixBrownVal"></span>
         </div>
         <div class="mix-strip">
           <label for="mixMaster" data-t="mix.master">Master</label>
           <span></span>
-          <input class="bn-range" type="range" id="mixMaster" min="0" max="100">
+          <input class="bn-range" type="range" id="mixMaster" min="0" max="100"><span class="mix-val" id="mixMasterVal"></span>
         </div>
       </div>
     </div>
@@ -945,11 +993,11 @@
       'preset.Deep': 'Deep', 'preset.Warm': 'Warm', 'preset.Ocean': 'Ocean', 'preset.Bright': 'Bright', 'preset.Rain': 'Rain', 'preset.Waterfall': 'Waterfall', 'preset.Wind': 'Wind', 'preset.Campfire': 'Campfire', 'preset.Night train': 'Night train', 'preset.Cave': 'Cave', 'preset.Breeze': 'Breeze', 'preset.Storm': 'Storm',
       'slider.tone': 'Tone', 'low.tone': 'Deep', 'high.tone': 'Bright', 'slider.rumble': 'Rumble', 'low.rumble': 'Light', 'high.rumble': 'Heavy', 'slider.swell': 'Swell', 'low.swell': 'Steady', 'high.swell': 'Waves', 'slider.pace': 'Pace', 'low.pace': 'Slow', 'high.pace': 'Fast', 'slider.space': 'Space', 'low.space': 'Close', 'high.space': 'Wide', 'slider.drift': 'Drift', 'low.drift': 'Still', 'high.drift': 'Wandering', 'slider.grain': 'Grain', 'low.grain': 'Clean', 'high.grain': 'Crackling',
       'hint.pace': 'Turn up Swell to use Pace',
-      'generate': '✦ Generate new version', 'surprise': '✧ Surprise me', 'prev': '↩ Previous', 'save': 'Save', 'save.version': 'Save version', 'cancel': 'Cancel', 'save.name': 'Name this version', 'saved': 'Saved versions', 'saved.empty': 'Versions you save will appear here.', 'toast.saved': 'Version saved', 'toast.deleted': 'Version deleted', 'undo': 'Undo', 'mix.your': 'Your mix', 'mix.n': 'Mix {n}', 'version.n': 'Version {n}', 'aria.play.noise': 'Play noise', 'aria.stop.noise': 'Stop noise', 'aria.delete': 'Delete {n}',
+      'generate': '✦ Generate new version', 'surprise': '✧ Surprise me', 'prev': '↩ Previous', 'save': 'Save', 'save.version': 'Save version', 'cancel': 'Cancel', 'save.name': 'Name this version', 'saved': 'Saved versions', 'saved.empty': 'Versions you save will appear here.', 'toast.saved': 'Version saved', 'toast.deleted': 'Version deleted', 'undo': 'Undo', 'mix.your': 'Your mix', 'mix.n': 'Mix {n}', 'version.n': 'New version {n}', 'aria.play.noise': 'Play noise', 'aria.stop.noise': 'Stop noise', 'aria.delete': 'Delete {n}',
       'add.title': 'Add Your Tracks', 'add.sub': 'Choose audio files from your device', 'add.main': 'Choose tracks', 'add.hint': 'Tap to choose, or drag and drop', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.title': 'My Tracks', 'tracks.sub': 'Your list plays in order. Play or delete tracks here', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Choose an audio file above to get started', 'play': '▶ Play', 'stop': '■ Stop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
       'mix.title': 'Neural Beats Mixer', 'mix.sub': 'Binaural beats, mixed with your tracks and noise. Use headphones: each ear gets a slightly different tone.', 'mix.type': 'Beat type', 'mix.rate': 'Beat rate', 'mix.pitch': 'Pitch', 'mix.beats': 'Neural Beats', 'mix.tracks': 'My Tracks', 'mix.noise': 'Noise', 'mix.master': 'Master', 'mute': 'Mute', 'muted': 'Muted', 'aria.play.beats': 'Play neural beats', 'aria.stop.beats': 'Stop neural beats',
-      'settings': 'Settings', 'close': 'Close', 'set.layout': 'Layout', 'layout.flow': 'Flow', 'layout.focus': 'Focus', 'layout.compact': 'Compact', 'layout.stage': 'Stage', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.ripples': 'Ripples', 'bg.fireflies': 'Fireflies', 'bg.constellation': 'Constellation', 'bg.aurora': 'Aurora', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'set.joy': 'Little joys', 'set.messages': 'Positive messages', 'set.particles': 'Floating particles', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'cheer.from': '— Blossom',
-      'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'yt.title': 'Ian’s favorite', 'yt.play': '▶ Play', 'yt.close': '✕ Close player', 'yt.open': 'Open on YouTube', 'yt.note': 'Plays and repeats in YouTube’s own player. It has its own volume, so it isn’t part of your list or the mixer, and it may stop when the screen locks.', 'library.title': 'Library', 'library.sub': 'Original downtempo and lo-fi tracks, made in your browser. Add them to your list to play, loop or mix.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Lo-fi bossa', 'library.waltz': 'Lo-fi waltz', 'library.triphop': 'Trip-hop', 'library.electronic': 'Electronic downtempo', 'library.ambient': 'Ambient downtempo', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', 'rate.rarely': 'Rarely', 'rate.sometimes': 'Sometimes', 'rate.often': 'Often'
+      'settings': 'Settings', 'close': 'Close', 'set.layout': 'Layout', 'layout.flow': 'Flow', 'layout.focus': 'Focus', 'layout.compact': 'Compact', 'layout.stage': 'Stage', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.ripples': 'Ripples', 'bg.fireflies': 'Fireflies', 'bg.constellation': 'Constellation', 'bg.aurora': 'Aurora', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'set.joy': 'Little joys', 'group.look': 'Look', 'group.sizes': 'Sizes and spacing', 'group.joy': 'Messages and particles', 'group.phone': 'Phone and Sonos', 'meta': 'Shape your own noise, loop your tracks and mix them with binaural beats, right in your browser.', 'beat.Alpha': 'Alpha', 'set.messages': 'Positive messages', 'set.particles': 'Floating particles', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'cheer.from': '— Blossom',
+      'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'yt.title': 'Ian’s favorite', 'yt.play': '▶ Play', 'yt.close': '✕ Close player', 'yt.open': 'Open on YouTube ↗', 'yt.note': 'Plays and repeats in YouTube’s own player. It has its own volume, so it isn’t part of your list or the mixer, and it may stop when the screen locks.', 'library.title': 'Library', 'library.sub': 'Original downtempo and lo-fi tracks, made in your browser. Add them to your list to play, loop or mix.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Lo-fi bossa', 'library.waltz': 'Lo-fi waltz', 'library.triphop': 'Trip-hop', 'library.electronic': 'Electronic downtempo', 'library.ambient': 'Ambient downtempo', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', 'rate.rarely': 'Rarely', 'rate.sometimes': 'Sometimes', 'rate.often': 'Often'
     },
     es: {
       'title': 'alot — App de producción musical', 'skip': 'Saltar al contenido principal', 'eyebrow': 'App de producción musical',
@@ -957,13 +1005,13 @@
       'noise': 'Ruido {c}', 'volume': 'Volumen', 'color.label': 'Color del ruido', 'preset.label': 'Empieza con', 'shape': 'Da forma a tu sonido',
       'color.brown': 'Marrón', 'color.pink': 'Rosa', 'color.white': 'Blanco', 'color.gray': 'Gris', 'color.green': 'Verde', 'color.blue': 'Azul', 'color.violet': 'Violeta',
       'preset.Deep': 'Profundo', 'preset.Warm': 'Cálido', 'preset.Ocean': 'Océano', 'preset.Bright': 'Brillante', 'preset.Rain': 'Lluvia', 'preset.Waterfall': 'Cascada', 'preset.Wind': 'Viento', 'preset.Campfire': 'Fogata', 'preset.Night train': 'Tren nocturno', 'preset.Cave': 'Cueva', 'preset.Breeze': 'Brisa', 'preset.Storm': 'Tormenta',
-      'slider.tone': 'Tono', 'low.tone': 'Profundo', 'high.tone': 'Brillante', 'slider.rumble': 'Retumbo', 'low.rumble': 'Suave', 'high.rumble': 'Intenso', 'slider.swell': 'Oleaje', 'low.swell': 'Constante', 'high.swell': 'Olas', 'slider.pace': 'Ritmo', 'low.pace': 'Lento', 'high.pace': 'Rápido', 'slider.space': 'Espacio', 'low.space': 'Cerca', 'high.space': 'Amplio', 'slider.drift': 'Deriva', 'low.drift': 'Quieta', 'high.drift': 'Errante', 'slider.grain': 'Grano', 'low.grain': 'Limpio', 'high.grain': 'Crepitante',
+      'slider.tone': 'Tono', 'low.tone': 'Profundo', 'high.tone': 'Brillante', 'slider.rumble': 'Graves', 'low.rumble': 'Suave', 'high.rumble': 'Intenso', 'slider.swell': 'Oleaje', 'low.swell': 'Constante', 'high.swell': 'Olas', 'slider.pace': 'Ritmo', 'low.pace': 'Lento', 'high.pace': 'Rápido', 'slider.space': 'Espacio', 'low.space': 'Cerca', 'high.space': 'Amplio', 'slider.drift': 'Deriva', 'low.drift': 'Quieta', 'high.drift': 'Errante', 'slider.grain': 'Grano', 'low.grain': 'Limpio', 'high.grain': 'Crepitante',
       'hint.pace': 'Sube el Oleaje para usar el Ritmo',
-      'generate': '✦ Generar nueva versión', 'surprise': '✧ Sorpréndeme', 'prev': '↩ Anterior', 'save': 'Guardar', 'save.version': 'Guardar versión', 'cancel': 'Cancelar', 'save.name': 'Ponle nombre a esta versión', 'saved': 'Versiones guardadas', 'saved.empty': 'Las versiones que guardes aparecerán aquí.', 'toast.saved': 'Versión guardada', 'toast.deleted': 'Versión eliminada', 'undo': 'Deshacer', 'mix.your': 'Tu mezcla', 'mix.n': 'Mezcla {n}', 'version.n': 'Versión {n}', 'aria.play.noise': 'Reproducir ruido', 'aria.stop.noise': 'Detener ruido', 'aria.delete': 'Eliminar {n}',
+      'generate': '✦ Generar nueva versión', 'surprise': '✧ Sorpréndeme', 'prev': '↩ Anterior', 'save': 'Guardar', 'save.version': 'Guardar versión', 'cancel': 'Cancelar', 'save.name': 'Ponle nombre a esta versión', 'saved': 'Versiones guardadas', 'saved.empty': 'Las versiones que guardes aparecerán aquí.', 'toast.saved': 'Versión guardada', 'toast.deleted': 'Versión eliminada', 'undo': 'Deshacer', 'mix.your': 'Tu mezcla', 'mix.n': 'Mezcla {n}', 'version.n': 'Nueva versión {n}', 'aria.play.noise': 'Reproducir ruido', 'aria.stop.noise': 'Detener ruido', 'aria.delete': 'Eliminar {n}',
       'add.title': 'Añade tus pistas', 'add.sub': 'Elige archivos de audio de tu dispositivo', 'add.main': 'Elegir pistas', 'add.hint': 'Toca para elegir, o arrastra y suelta', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.title': 'Mis pistas', 'tracks.sub': 'Tu lista suena en orden. Reproduce o elimina pistas aquí', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Elige un archivo de audio arriba para empezar', 'play': '▶ Reproducir', 'stop': '■ Detener', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
       'mix.title': 'Mezclador de ritmos neuronales', 'mix.sub': 'Ritmos binaurales mezclados con tus pistas y el ruido. Usa audífonos: cada oído recibe un tono ligeramente distinto.', 'mix.type': 'Tipo de ritmo', 'mix.rate': 'Frecuencia del ritmo', 'mix.pitch': 'Altura', 'mix.beats': 'Ritmos neuronales', 'mix.tracks': 'Mis pistas', 'mix.noise': 'Ruido', 'mix.master': 'General', 'mute': 'Silenciar', 'muted': 'Silenciado', 'aria.play.beats': 'Reproducir ritmos neuronales', 'aria.stop.beats': 'Detener ritmos neuronales',
-      'settings': 'Ajustes', 'close': 'Cerrar', 'set.layout': 'Diseño', 'layout.flow': 'Fluido', 'layout.focus': 'Enfoque', 'layout.compact': 'Compacto', 'layout.stage': 'Escenario', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.ripples': 'Ondas', 'bg.fireflies': 'Luciérnagas', 'bg.constellation': 'Constelación', 'bg.aurora': 'Aurora', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'set.joy': 'Pequeñas alegrías', 'set.messages': 'Mensajes positivos', 'set.particles': 'Partículas flotantes', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'cheer.from': '— Blossom',
-      'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'yt.title': 'La favorita de Ian', 'yt.play': '▶ Reproducir', 'yt.close': '✕ Cerrar reproductor', 'yt.open': 'Abrir en YouTube', 'yt.note': 'Suena y se repite en el reproductor de YouTube. Tiene su propio volumen, así que no forma parte de tu lista ni del mezclador, y puede detenerse al bloquear la pantalla.', 'library.title': 'Biblioteca', 'library.sub': 'Pistas originales de downtempo y lo-fi, creadas en tu navegador. Añádelas a tu lista para reproducirlas, repetirlas o mezclarlas.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Bossa lo-fi', 'library.waltz': 'Vals lo-fi', 'library.triphop': 'Trip-hop', 'library.electronic': 'Downtempo electrónico', 'library.ambient': 'Downtempo ambiental', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', 'rate.rarely': 'Rara vez', 'rate.sometimes': 'A veces', 'rate.often': 'Seguido'
+      'settings': 'Ajustes', 'close': 'Cerrar', 'set.layout': 'Diseño', 'layout.flow': 'Fluido', 'layout.focus': 'Enfoque', 'layout.compact': 'Compacto', 'layout.stage': 'Escenario', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.ripples': 'Ondas', 'bg.fireflies': 'Luciérnagas', 'bg.constellation': 'Constelación', 'bg.aurora': 'Aurora', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'set.joy': 'Pequeñas alegrías', 'group.look': 'Apariencia', 'group.sizes': 'Tamaños y espacio', 'group.joy': 'Mensajes y partículas', 'group.phone': 'Teléfono y Sonos', 'meta': 'Crea tu propio ruido, repite tus pistas y mézclalas con ritmos binaurales, directamente en tu navegador.', 'beat.Alpha': 'Alfa', 'set.messages': 'Mensajes positivos', 'set.particles': 'Partículas flotantes', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'cheer.from': '— Blossom',
+      'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'yt.title': 'La favorita de Ian', 'yt.play': '▶ Reproducir', 'yt.close': '✕ Cerrar reproductor', 'yt.open': 'Abrir en YouTube ↗', 'yt.note': 'Suena y se repite en el reproductor de YouTube. Tiene su propio volumen, así que no forma parte de tu lista ni del mezclador, y puede detenerse al bloquear la pantalla.', 'library.title': 'Biblioteca', 'library.sub': 'Pistas originales de downtempo y lo-fi, creadas en tu navegador. Añádelas a tu lista para reproducirlas, repetirlas o mezclarlas.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Bossa lo-fi', 'library.waltz': 'Vals lo-fi', 'library.triphop': 'Trip-hop', 'library.electronic': 'Downtempo electrónico', 'library.ambient': 'Downtempo ambiental', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', 'rate.rarely': 'Rara vez', 'rate.sometimes': 'A veces', 'rate.often': 'Seguido'
     }
   };
   var SETTINGS_STORE = 'alot.settings.v1';
@@ -1116,6 +1164,7 @@
   function renderTakes() {
     takesList.textContent = '';
     renderLibrary();
+    mixRender();
     bnUpdateMediaSession();
     if (!recordings.length) {
       takesList.appendChild(emptyState);
@@ -2378,14 +2427,14 @@
     high.setAttribute('data-t', 'high.' + s.key);
     ends.appendChild(low);
     ends.appendChild(high);
+    wrap.appendChild(label);
     if (s.key === 'pace') {
       var hint = document.createElement('span');
       hint.className = 'bn-hint';
       hint.id = 'bnPaceHint';
       hint.setAttribute('data-t', 'hint.pace');
-      label.appendChild(hint);
+      wrap.appendChild(hint);
     }
-    wrap.appendChild(label);
     wrap.appendChild(input);
     wrap.appendChild(ends);
     bnEl.sliders.appendChild(wrap);
@@ -2514,6 +2563,9 @@
   bnLoadStored();
   bnRenderControls();
   showView(location.hash === '#studio' ? 'studio' : 'brown');
+  window.addEventListener('hashchange', function () {
+    showView(location.hash === '#studio' ? 'studio' : 'brown');
+  });
 
   /* ═══════════════════════════════════════════
      NEURAL BEATS MIXER
@@ -2626,6 +2678,7 @@
   function mixSyncBrown() {
     mixEl.mixBrown.value = bnEl.volume.value;
     mixEl.mixBrown.style.setProperty('--v', bnEl.volume.value + '%');
+    document.getElementById('mixBrownVal').textContent = bnEl.volume.value;
     mixEl.mixBrownBtn.textContent = bnPlaying ? '■' : '▶';
     mixEl.mixBrownBtn.setAttribute('aria-label', t(bnPlaying ? 'aria.stop.noise' : 'aria.play.noise'));
     mixEl.mixBrownBtn.setAttribute('aria-pressed', String(bnPlaying));
@@ -2641,6 +2694,10 @@
     show(mixEl.mixBeats, mixState.beats, 0, 100);
     show(mixEl.mixTracks, mixState.tracks, 0, 100);
     show(mixEl.mixMaster, mixState.master, 0, 100);
+    document.getElementById('mixBeatsVal').textContent = mixState.beats;
+    document.getElementById('mixTracksVal').textContent = mixState.tracks;
+    document.getElementById('mixMasterVal').textContent = mixState.master;
+    mixEl.mixTracksBtn.disabled = !recordings.length;
     mixEl.mixRateValue.textContent = mixState.rate + ' Hz';
     mixEl.mixPitchValue.textContent = mixState.pitch + ' Hz';
     mixEl.mixBeatsBtn.textContent = mixOscillators ? '■' : '▶';
@@ -2675,7 +2732,11 @@
   MIX_TYPES.forEach(function (type) {
     var chip = document.createElement('button');
     chip.className = 'bn-chip';
-    chip.textContent = type.name + ' · ' + type.rate + ' Hz';
+    var typeName = document.createElement('span');
+    if (type.name === 'Alpha') typeName.setAttribute('data-t', 'beat.Alpha');
+    else typeName.textContent = type.name;
+    chip.appendChild(typeName);
+    chip.appendChild(document.createTextNode(' · ' + type.rate + ' Hz'));
     chip.addEventListener('click', function () {
       mixState.rate = type.rate;
       mixChanged();
@@ -2809,9 +2870,15 @@
     from.className = 'cheer-from';
     from.textContent = t('cheer.from');
     cheerEl.appendChild(from);
+    var close = document.createElement('button');
+    close.className = 'cheer-close';
+    close.textContent = '✕';
+    close.setAttribute('aria-label', t('close'));
+    close.addEventListener('click', function () { cheerEl.classList.remove('show'); });
+    cheerEl.appendChild(close);
     cheerEl.classList.add('show');
     clearTimeout(cheerTimer);
-    cheerTimer = setTimeout(function () { cheerEl.classList.remove('show'); }, 4000);
+    cheerTimer = setTimeout(function () { cheerEl.classList.remove('show'); }, 3500);
   }
 
   var cheerLastShown = -Infinity;
@@ -2825,7 +2892,7 @@
   }
   document.addEventListener('click', function (e) {
     var el = e.target.closest ? e.target.closest('button, label, a, input') : null;
-    if (!el || el.matches('input[type="text"], input[type="range"]')) return;
+    if (!el || el.matches('input[type="text"], input[type="range"], .cheer-close')) return;
     if (el.matches('label') && el.control && (el.control.type === 'range' || el.control.type === 'text')) return;
     cheerOnInteraction();
   });
@@ -3247,6 +3314,7 @@
   /* ═══════════════════════════════════════════
      SETTINGS PANEL + LANGUAGE TOGGLE
   ═══════════════════════════════════════════ */
+  var cheerLang = settings.lang;
   var settingsEl = document.getElementById('settings');
   var gearEl = document.getElementById('gear');
 
@@ -3270,11 +3338,23 @@
     document.getElementById('setBgLevel').value = settings.bgLevel;
     document.getElementById('setBgLevel').style.setProperty('--v', (settings.bgLevel - 15) / 85 * 100 + '%');
     document.title = t('title');
+    document.getElementById('metaDescription').setAttribute('content', t('meta'));
+    if (cheerLang !== settings.lang) { // a message shown in the old language shouldn't linger
+      cheerEl.classList.remove('show');
+      cheerEl.textContent = '';
+      cheerLang = settings.lang;
+    }
+    if (bnCalm() && particlesRaf) {
+      cancelAnimationFrame(particlesRaf);
+      particlesRaf = null;
+      particlesEl.hidden = true;
+    }
     translateIn(document);
     translateIn(emptyState);
     bnRenderControls();
     renderTakes();
     mixRender();
+    bnMiniSync();
     bnUpdateMediaSession();
     Array.prototype.forEach.call(document.querySelectorAll('[data-set]'), function (el) {
       var parts = el.getAttribute('data-set').split(':');
