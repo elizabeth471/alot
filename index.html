@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" id="metaDescription" content="">
   <meta name="theme-color" content="#0e0b09">
+  <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
   <title>alot — Music Production App</title>
   <style>
@@ -2398,6 +2399,7 @@
       input.value = bn[k];
       input.style.setProperty('--v', bn[k] + '%');
     });
+    rangeText();
     var paceOff = bn.swell === 0;
     var pace = document.getElementById('bn-pace');
     pace.disabled = paceOff;
@@ -2816,6 +2818,16 @@
     mixEl.mixBrownBtn.setAttribute('aria-pressed', String(bnPlaying));
   }
 
+  // Screen readers announce sliders with their unit, not a bare number.
+  function rangeText() {
+    Array.prototype.forEach.call(document.querySelectorAll('input[type="range"]'), function (r) {
+      r.setAttribute('aria-valuetext', r.value + (r.id === 'mixRate' || r.id === 'mixPitch' ? ' Hz' : '%'));
+    });
+  }
+  document.addEventListener('input', function (e) {
+    if (e.target.matches && e.target.matches('input[type="range"]')) rangeText();
+  });
+
   function mixRender() {
     function show(input, value, min, max) {
       input.value = value;
@@ -2826,6 +2838,7 @@
     show(mixEl.mixBeats, mixState.beats, 0, 100);
     show(mixEl.mixTracks, mixState.tracks, 0, 100);
     show(mixEl.mixMaster, mixState.master, 0, 100);
+    rangeText();
     document.getElementById('mixBeatsVal').textContent = mixState.beats;
     document.getElementById('mixTracksVal').textContent = mixState.tracks;
     document.getElementById('mixMasterVal').textContent = mixState.master;
@@ -3374,6 +3387,7 @@
       var name = document.createElement('div');
       name.className = 'take-name';
       name.textContent = def.name;
+      name.lang = 'es';
       var meta = document.createElement('div');
       meta.className = 'take-meta';
       meta.textContent = t('library.' + def.style) + ' · ' + def.bpm + ' BPM';
@@ -3511,6 +3525,7 @@
     document.getElementById('setCalm').checked = settings.calm;
     document.getElementById('setBgLevel').value = settings.bgLevel;
     document.getElementById('setBgLevel').style.setProperty('--v', (settings.bgLevel - 15) / 85 * 100 + '%');
+    rangeText();
     document.title = t('title');
     document.getElementById('metaDescription').setAttribute('content', t('meta'));
     document.getElementById('showerFind').href = 'https://www.youtube.com/results?sp=EgIQAw%253D%253D&search_query=' + encodeURIComponent(settings.lang === 'es' ? 'música para la ducha' : 'shower music');
