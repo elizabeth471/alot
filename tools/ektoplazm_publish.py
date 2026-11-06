@@ -17,6 +17,8 @@ live_path = os.path.join(ALOT, 'tracks/manifest.json')
 live = {}
 ratings_path = os.path.join(ROOT, 'ratings-applied.json')
 applied = json.load(open(ratings_path, encoding='utf-8')) if os.path.exists(ratings_path) else {'removed': [], 'weights': {}}
+intros_path = os.path.join(ROOT, 'intros.json')
+intros = json.load(open(intros_path, encoding='utf-8')) if os.path.exists(intros_path) else {}
 out, by_release = [], {}
 for t in source:
     if t['id'] in applied['removed']:
@@ -24,6 +26,7 @@ for t in source:
     row = {k: t[k] for k in ['id', 'name', 'style', 'bpm', 'duration', 'size']}
     row['file'] = f"{PUBLIC}/{t['file']}"
     row['weight'] = applied['weights'].get(t['id'], 1)
+    row['intro'] = intros.get(t['name'], 0)
     row['album'] = f"{releases[t['release']]['artist']}: {releases[t['release']]['album']}"
     out.append(row)
     by_release.setdefault(t['release'], []).append(t['name'])
