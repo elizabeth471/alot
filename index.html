@@ -629,6 +629,31 @@
     .beats-note { margin: 0 0 16px; }
     .beats-switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; color: var(--text); }
     .beats-switch .mix-toggle { flex: 0 0 auto; width: 64px; }
+    .drawer-tabs { margin-bottom: 12px; }
+    .drawer-tabs .bn-chip { flex: 1 1 0; justify-content: center; }
+    .drawer-scroll { max-height: min(46vh, 420px); overflow-y: auto; overscroll-behavior: contain; }
+    #panePlaylist[hidden], #paneLibrary[hidden] { display: none; }
+    .library-note { margin: 0 0 8px; }
+    #drawerMusic .library-list { gap: 0; }
+    .album { border-bottom: 1px solid var(--border); }
+    .album:last-child { border-bottom: 0; }
+    .album-row { display: flex; align-items: center; gap: 8px; }
+    .album-open { flex: 1 1 auto; min-width: 0; min-height: 52px; padding: 6px 0; border: 0; background: transparent; color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+    .album-open:focus-visible { outline: 3px solid var(--accent); outline-offset: -2px; border-radius: 6px; }
+    .album-name { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: calc(15px * var(--text)); }
+    .album-meta { display: block; font-size: calc(12px * var(--text)); color: var(--text-muted); }
+    .album-open[aria-expanded="true"] .album-name { color: var(--accent); }
+    #drawerMusic .take-item { display: flex; flex-wrap: nowrap !important; align-items: center; gap: 8px; min-height: 44px; margin: 0; padding: 2px 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+    #drawerMusic .take-item + .take-item { border-top: 1px solid var(--border); }
+    #drawerMusic .take-item.is-playing .take-name { color: var(--accent); }
+    #drawerMusic .take-info { flex: 1 1 auto; width: auto; min-width: 0; }
+    #drawerMusic .take-name { flex: 1 1 auto; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: 400; font-size: calc(14px * var(--text)); }
+    #drawerMusic .take-meta { display: none; }
+    #drawerMusic .take-btns { flex: 0 0 auto; display: flex; gap: 4px; width: auto; }
+    #drawerMusic .take-btns .take-btn { flex: 0 0 auto; width: 40px; min-width: 40px; min-height: 40px; padding: 0; }
+    #drawerMusic .library-add { flex: 0 0 auto; min-height: 36px; padding: 0 12px !important; }
+    #drawerMusic .upload-zone { min-height: 0; margin-top: 12px; padding: 12px; }
+    #drawerMusic .playlist-bar { margin-bottom: 8px; }
     .library-credits { display: block; margin: 14px 0 2px; text-align: center; color: var(--accent); font-size: calc(14px * var(--text)); }
     .bn-chip:disabled { opacity: 0.45; cursor: default; }
     .bn-chip#musicLike[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
@@ -820,53 +845,34 @@
         <button class="bn-chip" id="musicDislike" data-t="layer.dislike">Dislike</button>
       </div>
       <div class="layer-drawer" id="drawerMusic" hidden>
-      <div class="layer-list" id="layerList">
-      <div class="playlist-bar">
+        <div class="bn-chips drawer-tabs" role="group" aria-labelledby="layerMusicName">
+          <button class="bn-chip" id="tabPlaylist" aria-pressed="true" data-t="layer.playlist">Playlist</button>
+          <button class="bn-chip" id="tabLibrary" aria-pressed="false" data-t="library.title">Library</button>
+        </div>
+        <div id="panePlaylist">
+          <div class="playlist-bar">
         <label class="switch playlist-switch"><span data-t="tracks.playlist">Loop playlist</span><input type="checkbox" role="switch" id="playlistLoop"><i aria-hidden="true"></i></label>
         <button class="take-btn" id="playlistNext" data-t="tracks.next">⏭ Next</button>
       </div>
-      <div id="takesList" role="list" data-t-aria="tracks.list">
-        <div class="empty-state" role="listitem">
-          <div class="empty-title" data-t="tracks.empty">No tracks yet</div>
-          <div class="empty-msg" data-t="tracks.emptymsg">Tap Shuffle, or choose tracks below</div>
+          <div class="drawer-scroll">
+          <div id="takesList" role="list" data-t-aria="tracks.list">
+            <div class="empty-state" role="listitem">
+              <div class="empty-title" data-t="tracks.empty">No tracks yet</div>
+              <div class="empty-msg" data-t="tracks.emptymsg">Tap Shuffle, or choose from the Library</div>
+            </div>
+          </div>
+          </div>
+          <button class="bn-btn library-all" id="ratingsCopy" data-t="ratings.copy">Copy my ratings</button>
         </div>
-      </div>
-      </div>
-  <!-- TRACK LIBRARY -->
-  <article class="card" aria-labelledby="library-title">
-    <div class="card-header">
-      <div class="card-titles">
-        <h2 class="card-title" id="library-title" data-t="library.title">Library</h2>
-        <div class="card-sub" data-t="library.sub"></div>
-      </div>
-    </div>
-    <div class="card-body">
-      <div id="libraryList" class="library-list" role="list"></div>
-      <button class="bn-btn library-all" id="libraryAll" data-t="library.all">Add all</button>
-      <a class="library-credits" href="credits.html" data-t="library.credits">Music credits</a>
-      <button class="bn-btn library-all" id="ratingsCopy" data-t="ratings.copy">Copy my ratings</button>
-    </div>
-  </article>
-
-  <!-- STEP 1 -->
-  <article class="card" aria-labelledby="step1-title">
-    <div class="card-header">
-      <div class="card-titles">
-        <h2 class="card-title" id="step1-title" data-t="add.title">Add Your Tracks</h2>
-        <div class="card-sub" data-t="add.sub">Choose audio files from your device</div>
-      </div>
-    </div>
-    <div class="card-body">
-      <div class="rec-layout">
-        <label class="upload-zone" id="uploadZone" data-t-aria="add.aria">
-          <input type="file" id="uploadMp3" multiple accept=".mp3,.wav,.ogg,.flac,.aac,.m4a,audio/*" data-t-aria="add.main">
-          <span class="uz-main" data-t="add.main">Choose tracks</span>
-          <span class="uz-hint" data-t="add.hint">Drag &amp; drop or click to browse</span>
-        </label>
-      </div>
-    </div>
-  </article>
-
+        <div id="paneLibrary" hidden>
+          <p class="sheet-note library-note" data-t="library.sub"></p>
+          <div id="libraryList" class="library-list drawer-scroll" role="list"></div>
+          <label class="upload-zone" id="uploadZone" data-t-aria="add.aria">
+            <input type="file" id="uploadMp3" multiple accept=".mp3,.wav,.ogg,.flac,.aac,.m4a,audio/*" data-t-aria="add.main">
+            <span class="uz-main" data-t="add.main">Choose tracks</span>
+          </label>
+          <a class="library-credits" href="credits.html" data-t="library.credits">Music credits</a>
+        </div>
       </div>
     </div>
 
@@ -909,7 +915,7 @@
       'slider.tone': 'Tone', 'low.tone': 'Deep', 'high.tone': 'Bright', 'slider.rumble': 'Rumble', 'low.rumble': 'Light', 'high.rumble': 'Heavy', 'slider.swell': 'Swell', 'low.swell': 'Steady', 'high.swell': 'Waves', 'slider.pace': 'Pace', 'low.pace': 'Slow', 'high.pace': 'Fast', 'slider.space': 'Space', 'low.space': 'Close', 'high.space': 'Wide', 'slider.drift': 'Drift', 'low.drift': 'Still', 'high.drift': 'Wandering', 'slider.grain': 'Grain', 'low.grain': 'Clean', 'high.grain': 'Crackling',
       'hint.pace': 'Turn up Swell to use Pace',
       'generate': '✦ Generate new version', 'surprise': '✧ Surprise me', 'prev': '↩ Previous', 'save': 'Save', 'save.version': 'Save version', 'cancel': 'Cancel', 'save.name': 'Name this version', 'saved': 'Saved versions', 'saved.empty': 'Versions you save will appear here.', 'toast.saved': 'Version saved', 'toast.deleted': 'Version deleted', 'undo': 'Undo', 'mix.your': 'Your mix', 'mix.n': 'Mix {n}', 'version.n': 'New version {n}', 'aria.play.noise': 'Play noise', 'aria.stop.noise': 'Stop noise', 'aria.delete': 'Delete {n}',
-      'add.title': 'Add Your Tracks', 'add.sub': 'Choose audio files from your device', 'add.main': 'Choose tracks', 'add.hint': 'Tap to choose, or drag and drop', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.title': 'My Tracks', 'tracks.sub': 'Your list plays in order. Play or delete tracks here', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Tap Shuffle, or choose tracks below', 'play': '▶ Play', 'stop': '■ Stop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
+      'add.title': 'Add Your Tracks', 'add.sub': 'Choose audio files from your device', 'add.main': 'Choose tracks', 'add.hint': 'Tap to choose, or drag and drop', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.title': 'My Tracks', 'tracks.sub': 'Your list plays in order. Play or delete tracks here', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Tap Shuffle, or choose from the Library', 'play': '▶ Play', 'stop': '■ Stop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
       'mix.sub': 'Binaural beats, mixed with your tracks and noise. Use headphones: each ear gets a slightly different tone.', 'mix.type': 'Beat type', 'mix.rate': 'Beat rate', 'mix.pitch': 'Pitch', 'mix.beats': 'Neural Beats', 'mute': 'Mute', 'muted': 'Muted', 'aria.play.beats': 'Play neural beats', 'aria.stop.beats': 'Stop neural beats',
       'tagline': 'Layer sounds. Make your own mix.', 'layer.noise': 'Noise', 'layer.playlist': 'Playlist', 'layer.beats': 'Beats', 'layer.configure': 'Configure', 'layer.shuffle': 'Shuffle', 'layer.like': 'Like', 'layer.dislike': 'Dislike', 'ratings.copy': 'Copy my ratings', 'ratings.copied': 'Ratings copied', 'library.credits': 'Music credits', 'aria.play.music': 'Play playlist', 'aria.stop.music': 'Stop playlist', 'layer.master': 'Master volume', 'aria.play.mix': 'Play mix', 'aria.stop.mix': 'Stop mix',
       'settings': 'Settings', 'close': 'Close', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.ripples': 'Ripples', 'bg.fireflies': 'Fireflies', 'bg.constellation': 'Constellation', 'bg.aurora': 'Aurora', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'group.sound': 'Sound', 'set.crossfade': 'Transition between tracks', 'cross.0': 'Off', 'cross.2': 'Short', 'cross.4': 'Medium', 'cross.8': 'Long', 'check.title': 'Sound check', 'check.note': 'Press play and listen for a few minutes. If you hear a skip, tell Blossom these numbers.', 'check.dropouts': 'Dropouts', 'check.gaps': 'Audio clock gaps', 'check.state': 'Audio', 'check.na': 'not measured in this browser', 'check.none': 'not started yet', 'check.interrupted': 'Interruptions', 'group.look': 'Look', 'group.sizes': 'Sizes and spacing', 'group.phone': 'Phone and Sonos', 'meta': 'Shape your own noise, loop your tracks and mix them with binaural beats, right in your browser.', 'beat.Alpha': 'Alpha', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'library.title': 'Library', 'library.sub': 'Music from Ektoplazm under Creative Commons licenses.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Lo-fi bossa', 'library.waltz': 'Lo-fi waltz', 'library.triphop': 'Trip-hop', 'library.electronic': 'Electronic downtempo', 'library.ambient': 'Ambient downtempo', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', },
@@ -921,7 +927,7 @@
       'slider.tone': 'Tono', 'low.tone': 'Profundo', 'high.tone': 'Brillante', 'slider.rumble': 'Graves', 'low.rumble': 'Suave', 'high.rumble': 'Intenso', 'slider.swell': 'Oleaje', 'low.swell': 'Constante', 'high.swell': 'Olas', 'slider.pace': 'Ritmo', 'low.pace': 'Lento', 'high.pace': 'Rápido', 'slider.space': 'Espacio', 'low.space': 'Cerca', 'high.space': 'Amplio', 'slider.drift': 'Deriva', 'low.drift': 'Quieta', 'high.drift': 'Errante', 'slider.grain': 'Grano', 'low.grain': 'Limpio', 'high.grain': 'Crepitante',
       'hint.pace': 'Sube el Oleaje para usar el Ritmo',
       'generate': '✦ Generar nueva versión', 'surprise': '✧ Sorpréndeme', 'prev': '↩ Anterior', 'save': 'Guardar', 'save.version': 'Guardar versión', 'cancel': 'Cancelar', 'save.name': 'Ponle nombre a esta versión', 'saved': 'Versiones guardadas', 'saved.empty': 'Las versiones que guardes aparecerán aquí.', 'toast.saved': 'Versión guardada', 'toast.deleted': 'Versión eliminada', 'undo': 'Deshacer', 'mix.your': 'Tu mezcla', 'mix.n': 'Mezcla {n}', 'version.n': 'Nueva versión {n}', 'aria.play.noise': 'Reproducir ruido', 'aria.stop.noise': 'Detener ruido', 'aria.delete': 'Eliminar {n}',
-      'add.title': 'Añade tus pistas', 'add.sub': 'Elige archivos de audio de tu dispositivo', 'add.main': 'Elegir pistas', 'add.hint': 'Toca para elegir, o arrastra y suelta', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.title': 'Mis pistas', 'tracks.sub': 'Tu lista suena en orden. Reproduce o elimina pistas aquí', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Toca Aleatorio o elige pistas abajo', 'play': '▶ Reproducir', 'stop': '■ Detener', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
+      'add.title': 'Añade tus pistas', 'add.sub': 'Elige archivos de audio de tu dispositivo', 'add.main': 'Elegir pistas', 'add.hint': 'Toca para elegir, o arrastra y suelta', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.title': 'Mis pistas', 'tracks.sub': 'Tu lista suena en orden. Reproduce o elimina pistas aquí', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Toca Aleatorio o elige en la Biblioteca', 'play': '▶ Reproducir', 'stop': '■ Detener', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
       'mix.sub': 'Ritmos binaurales mezclados con tus pistas y el ruido. Usa audífonos: cada oído recibe un tono ligeramente distinto.', 'mix.type': 'Tipo de ritmo', 'mix.rate': 'Frecuencia del ritmo', 'mix.pitch': 'Altura', 'mix.beats': 'Ritmos neuronales', 'mute': 'Silenciar', 'muted': 'Silenciado', 'aria.play.beats': 'Reproducir ritmos neuronales', 'aria.stop.beats': 'Detener ritmos neuronales',
       'tagline': 'Combina sonidos. Crea tu propia mezcla.', 'layer.noise': 'Ruido', 'layer.playlist': 'Lista', 'layer.beats': 'Ritmos', 'layer.configure': 'Configurar', 'layer.shuffle': 'Aleatorio', 'layer.like': 'Me gusta', 'layer.dislike': 'No me gusta', 'ratings.copy': 'Copiar mis valoraciones', 'ratings.copied': 'Valoraciones copiadas', 'library.credits': 'Créditos musicales', 'aria.play.music': 'Reproducir lista', 'aria.stop.music': 'Detener lista', 'layer.master': 'Volumen general', 'aria.play.mix': 'Reproducir mezcla', 'aria.stop.mix': 'Detener mezcla',
       'settings': 'Ajustes', 'close': 'Cerrar', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.ripples': 'Ondas', 'bg.fireflies': 'Luciérnagas', 'bg.constellation': 'Constelación', 'bg.aurora': 'Aurora', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'group.sound': 'Sonido', 'set.crossfade': 'Transición entre pistas', 'cross.0': 'Sin transición', 'cross.2': 'Corta', 'cross.4': 'Media', 'cross.8': 'Larga', 'check.title': 'Prueba de sonido', 'check.note': 'Toca reproducir y escucha unos minutos. Si oyes un corte, dile estos números a Blossom.', 'check.dropouts': 'Cortes', 'check.gaps': 'Saltos del reloj de audio', 'check.state': 'Audio', 'check.na': 'no se mide en este navegador', 'check.none': 'aún no empieza', 'check.interrupted': 'Interrupciones', 'group.look': 'Apariencia', 'group.sizes': 'Tamaños y espacio', 'group.phone': 'Teléfono y Sonos', 'meta': 'Crea tu propio ruido, repite tus pistas y mézclalas con ritmos binaurales, directamente en tu navegador.', 'beat.Alpha': 'Alfa', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'library.title': 'Biblioteca', 'library.sub': 'Música de Ektoplazm con licencias Creative Commons.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Bossa lo-fi', 'library.waltz': 'Vals lo-fi', 'library.triphop': 'Trip-hop', 'library.electronic': 'Downtempo electrónico', 'library.ambient': 'Downtempo ambiental', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', }
@@ -1192,10 +1198,6 @@
 
       var info = document.createElement('div');
       info.className = 'take-info';
-      var icon = document.createElement('span');
-      icon.className = 'take-icon note-emoji';
-      icon.setAttribute('aria-hidden', 'true');
-      icon.textContent = '🎵';
       var text = document.createElement('div');
       text.style.minWidth = '0';
       var name = document.createElement('div');
@@ -1206,7 +1208,6 @@
       meta.textContent = formatTime(rec.duration) + ' · ' + formatSize(rec.size);
       text.appendChild(name);
       text.appendChild(meta);
-      info.appendChild(icon);
       info.appendChild(text);
 
       var isPlaying = playingId === rec.id;
@@ -1214,7 +1215,7 @@
       btns.className = 'take-btns';
       var playBtn = document.createElement('button');
       playBtn.className = 'take-btn play';
-      playBtn.textContent = t(isPlaying ? 'stop' : 'play');
+      playBtn.textContent = isPlaying ? '■' : '▶';
       playBtn.setAttribute('aria-label', t(isPlaying ? 'aria.stop' : 'aria.play', { n: rec.name }));
       playBtn.addEventListener('click', function () {
         if (playingId === rec.id) {
@@ -1226,7 +1227,7 @@
       });
       var delBtn = document.createElement('button');
       delBtn.className = 'take-btn del';
-      delBtn.textContent = t('delete');
+      delBtn.textContent = '✕';
       delBtn.setAttribute('aria-label', t('aria.delete', { n: rec.name }));
       delBtn.addEventListener('click', function () { removeRecording(rec); });
       btns.appendChild(playBtn);
@@ -2801,38 +2802,75 @@
   var LIBRARY = [];
   var libraryBusy = {};
 
+  var libraryOpen = {};
+  function isAdded(def) {
+    return recordings.some(function (r) { return r.libraryId === def.id; });
+  }
+  function addAlbum(defs) {
+    return defs.reduce(function (chain, def) {
+      return chain.then(function () { return addLibraryTrack(def); });
+    }, Promise.resolve());
+  }
+  function libraryAddButton(label, disabled, click) {
+    var button = document.createElement('button');
+    button.className = 'take-btn library-add';
+    button.disabled = disabled;
+    button.textContent = t(disabled ? 'library.added' : 'library.add');
+    button.setAttribute('aria-label', button.textContent + ': ' + label);
+    button.addEventListener('click', click);
+    return button;
+  }
   function renderLibrary() {
     var list = document.getElementById('libraryList');
-    list.textContent = '';
+    var top = list.scrollTop;
+    var albums = [];
+    var byAlbum = {};
     LIBRARY.forEach(function (def) {
-      var added = recordings.some(function (r) { return r.libraryId === def.id; });
-      var item = document.createElement('div');
-      item.className = 'take-item library-item';
-      item.setAttribute('role', 'listitem');
-      var info = document.createElement('div');
-      info.className = 'take-info';
-      var text = document.createElement('div');
-      text.style.minWidth = '0';
-      var name = document.createElement('div');
-      name.className = 'take-name';
-      name.textContent = def.name;
-      name.lang = 'es';
-      var meta = document.createElement('div');
-      meta.className = 'take-meta';
-      meta.textContent = t('library.' + def.style) + ' · ' + def.bpm + ' BPM';
-      text.appendChild(name);
-      text.appendChild(meta);
-      info.appendChild(text);
-      var button = document.createElement('button');
-      button.className = 'take-btn library-add';
-      button.disabled = added || !!libraryBusy[def.id];
-      button.textContent = t(libraryBusy[def.id] ? 'library.making' : (added ? 'library.added' : 'library.add'));
-      button.setAttribute('aria-label', button.textContent + ': ' + def.name);
-      button.addEventListener('click', function () { addLibraryTrack(def); });
-      item.appendChild(info);
-      item.appendChild(button);
-      list.appendChild(item);
+      var key = def.album || def.name;
+      if (!byAlbum[key]) { byAlbum[key] = []; albums.push(key); }
+      byAlbum[key].push(def);
     });
+    list.textContent = '';
+    albums.forEach(function (key) {
+      var defs = byAlbum[key];
+      var album = document.createElement('div');
+      album.className = 'album';
+      album.setAttribute('role', 'listitem');
+      var row = document.createElement('div');
+      row.className = 'album-row';
+      var open = document.createElement('button');
+      open.className = 'album-open';
+      open.setAttribute('aria-expanded', String(!!libraryOpen[key]));
+      var name = document.createElement('span');
+      name.className = 'album-name';
+      name.textContent = key;
+      var meta = document.createElement('span');
+      meta.className = 'album-meta';
+      meta.textContent = t('library.' + defs[0].style) + ' · ' + defs.length;
+      open.appendChild(name);
+      open.appendChild(meta);
+      open.addEventListener('click', function () {
+        libraryOpen[key] = !libraryOpen[key];
+        renderLibrary();
+      });
+      row.appendChild(open);
+      row.appendChild(libraryAddButton(key, defs.every(isAdded), function () { addAlbum(defs); }));
+      album.appendChild(row);
+      if (libraryOpen[key]) {
+        defs.forEach(function (def) {
+          var item = document.createElement('div');
+          item.className = 'take-item library-item';
+          var title = document.createElement('div');
+          title.className = 'take-name';
+          title.textContent = def.name.split(' – ').pop();
+          item.appendChild(title);
+          item.appendChild(libraryAddButton(def.name, isAdded(def) || !!libraryBusy[def.id], function () { addLibraryTrack(def); }));
+          album.appendChild(item);
+        });
+      }
+      list.appendChild(album);
+    });
+    list.scrollTop = top;
   }
 
   function addLibraryTrack(def) {
@@ -2878,7 +2916,8 @@
           file: track.file,
           size: Number(track.size) || 0,
           duration: Number(track.duration),
-          weight: Number(track.weight) > 0 ? Number(track.weight) : 1
+          weight: Number(track.weight) > 0 ? Number(track.weight) : 1,
+          album: track.album ? String(track.album) : ''
         });
       });
       renderLibrary();
@@ -2886,11 +2925,6 @@
   }
   loadPublishedTracks();
 
-  document.getElementById('libraryAll').addEventListener('click', function () {
-    LIBRARY.reduce(function (chain, def) {
-      return chain.then(function () { return addLibraryTrack(def); });
-    }, Promise.resolve());
-  });
 
   /* ═══════════════════════════════════════════
      SETTINGS PANEL + LANGUAGE TOGGLE
@@ -3243,6 +3277,15 @@
       toast(t('ratings.copied'), 'success');
     }).catch(function () { toast(t('err.play'), 'error'); });
   });
+
+  function musicTab(library) {
+    document.getElementById('paneLibrary').hidden = !library;
+    document.getElementById('panePlaylist').hidden = library;
+    document.getElementById('tabLibrary').setAttribute('aria-pressed', String(library));
+    document.getElementById('tabPlaylist').setAttribute('aria-pressed', String(!library));
+  }
+  document.getElementById('tabPlaylist').addEventListener('click', function () { musicTab(false); });
+  document.getElementById('tabLibrary').addEventListener('click', function () { musicTab(true); });
 
   var LAYER_DRAWERS = { Noise: 'drawerNoise', Music: 'drawerMusic' };
   function layerToggle(name, open) {

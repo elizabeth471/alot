@@ -8,7 +8,8 @@
    "duration": 72.48,
    "size": 1784550,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-entangled-everything-popping-out.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Entangled Everything"
   },
   {
    "id": "globular-entangled-everything-for-the-time-being",
@@ -18,7 +19,8 @@
    "duration": 560.53,
    "size": 13927486,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-entangled-everything-for-the-time-being.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Entangled Everything"
   },
   {
    "id": "globular-entangled-everything-the-chalice",
@@ -28,7 +30,8 @@
    "duration": 497.05,
    "size": 12407041,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-entangled-everything-the-chalice.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Entangled Everything"
   },
   {
    "id": "globular-entangled-everything-total-perspective-vortex",
@@ -38,7 +41,8 @@
    "duration": 655.73,
    "size": 16252484,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-entangled-everything-total-perspective-vortex.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Entangled Everything"
   },
   {
    "id": "globular-entangled-everything-one-step-beyond",
@@ -48,7 +52,8 @@
    "duration": 467.45,
    "size": 11590961,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-entangled-everything-one-step-beyond.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Entangled Everything"
   },
   {
    "id": "globular-entangled-everything-dasein",
@@ -58,7 +63,8 @@
    "duration": 556.35,
    "size": 13779303,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-entangled-everything-dasein.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Entangled Everything"
   },
   {
    "id": "globular-entangled-everything-be-patient-towards-what-is-unsolved-in-your-heart",
@@ -68,7 +74,8 @@
    "duration": 203.43,
    "size": 4967136,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-entangled-everything-be-patient-towards-what-is-unsolved-in-your-heart.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Entangled Everything"
   },
   {
    "id": "globular-entangled-everything-dreamland-overflow",
@@ -78,7 +85,8 @@
    "duration": 514.2,
    "size": 12954363,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-entangled-everything-dreamland-overflow.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Entangled Everything"
   },
   {
    "id": "globular-entangled-everything-kaleidoscope-tribe",
@@ -88,7 +96,8 @@
    "duration": 415.54,
    "size": 10406901,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-entangled-everything-kaleidoscope-tribe.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Entangled Everything"
   },
   {
    "id": "globular-entangled-everything-this-strange-attractor",
@@ -98,7 +107,8 @@
    "duration": 595.36,
    "size": 14649918,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-entangled-everything-this-strange-attractor.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Entangled Everything"
   },
   {
    "id": "zoungla-there-will-be-dub-goodmorning-ozora",
@@ -108,7 +118,8 @@
    "duration": 570.93,
    "size": 13964418,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/zoungla-there-will-be-dub-goodmorning-ozora.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Zoungla: There Will Be Dub"
   },
   {
    "id": "zoungla-there-will-be-dub-day-moon",
@@ -118,7 +129,8 @@
    "duration": 446.44,
    "size": 11189273,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/zoungla-there-will-be-dub-day-moon.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Zoungla: There Will Be Dub"
   },
   {
    "id": "zoungla-there-will-be-dub-homage-to-the-dub-masters",
@@ -128,7 +140,8 @@
    "duration": 215.27,
    "size": 5321392,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/zoungla-there-will-be-dub-homage-to-the-dub-masters.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Zoungla: There Will Be Dub"
   },
   {
    "id": "zoungla-there-will-be-dub-deep-sea-dubbin",
@@ -138,7 +151,8 @@
    "duration": 553.24,
    "size": 13739349,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/zoungla-there-will-be-dub-deep-sea-dubbin.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Zoungla: There Will Be Dub"
   },
   {
    "id": "zoungla-there-will-be-dub-flower-sun",
@@ -148,7 +162,8 @@
    "duration": 636.71,
    "size": 15836025,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/zoungla-there-will-be-dub-flower-sun.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Zoungla: There Will Be Dub"
   },
   {
    "id": "zoungla-there-will-be-dub-sunday",
@@ -158,7 +173,8 @@
    "duration": 648.58,
    "size": 16053806,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/zoungla-there-will-be-dub-sunday.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Zoungla: There Will Be Dub"
   },
   {
    "id": "zoungla-there-will-be-dub-young-man-2",
@@ -168,7 +184,8 @@
    "duration": 394.58,
    "size": 9759142,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/zoungla-there-will-be-dub-young-man-2.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Zoungla: There Will Be Dub"
   },
   {
    "id": "zoungla-there-will-be-dub-tune-out-the-world",
@@ -178,7 +195,8 @@
    "duration": 377.55,
    "size": 9360774,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/zoungla-there-will-be-dub-tune-out-the-world.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Zoungla: There Will Be Dub"
   },
   {
    "id": "sephira-the-master-work-stranger-at-the-oasis",
@@ -188,7 +206,8 @@
    "duration": 434.26,
    "size": 10941576,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/sephira-the-master-work-stranger-at-the-oasis.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Sephira: The Master Work"
   },
   {
    "id": "sephira-the-master-work-cave-of-calcination",
@@ -198,7 +217,8 @@
    "duration": 327.12,
    "size": 8234898,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/sephira-the-master-work-cave-of-calcination.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Sephira: The Master Work"
   },
   {
    "id": "sephira-the-master-work-the-dissolution-dichotomy",
@@ -208,7 +228,8 @@
    "duration": 558.18,
    "size": 13897464,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/sephira-the-master-work-the-dissolution-dichotomy.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Sephira: The Master Work"
   },
   {
    "id": "sephira-the-master-work-self-separation",
@@ -218,7 +239,8 @@
    "duration": 374.73,
    "size": 9398810,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/sephira-the-master-work-self-separation.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Sephira: The Master Work"
   },
   {
    "id": "sephira-the-master-work-conjunction-event",
@@ -228,7 +250,8 @@
    "duration": 438.81,
    "size": 10982413,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/sephira-the-master-work-conjunction-event.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Sephira: The Master Work"
   },
   {
    "id": "sephira-the-master-work-dormant-fermentation",
@@ -238,7 +261,8 @@
    "duration": 419.54,
    "size": 10342393,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/sephira-the-master-work-dormant-fermentation.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Sephira: The Master Work"
   },
   {
    "id": "sephira-the-master-work-double-distillation",
@@ -248,7 +272,8 @@
    "duration": 462.05,
    "size": 11632830,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/sephira-the-master-work-double-distillation.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Sephira: The Master Work"
   },
   {
    "id": "sephira-the-master-work-coagulation-feat-josh-lambert-price",
@@ -258,7 +283,8 @@
    "duration": 403.54,
    "size": 10116587,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/sephira-the-master-work-coagulation-feat-josh-lambert-price.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Sephira: The Master Work"
   },
   {
    "id": "sephira-the-master-work-a-fitting-end",
@@ -268,7 +294,8 @@
    "duration": 470.51,
    "size": 11635377,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/sephira-the-master-work-a-fitting-end.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Sephira: The Master Work"
   },
   {
    "id": "globular-holobiont-tabula-rasa",
@@ -278,7 +305,8 @@
    "duration": 730.66,
    "size": 18001956,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-holobiont-tabula-rasa.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Holobiont"
   },
   {
    "id": "globular-holobiont-emergent-resurgence",
@@ -288,7 +316,8 @@
    "duration": 461.84,
    "size": 11400243,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-holobiont-emergent-resurgence.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Holobiont"
   },
   {
    "id": "globular-holobiont-42",
@@ -298,7 +327,8 @@
    "duration": 645.41,
    "size": 16015603,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-holobiont-42.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Holobiont"
   },
   {
    "id": "globular-holobiont-an-upwards-curve-in-the-horizon",
@@ -308,7 +338,8 @@
    "duration": 697.81,
    "size": 17455737,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-holobiont-an-upwards-curve-in-the-horizon.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Holobiont"
   },
   {
    "id": "globular-holobiont-and-it-speaks-of-everything",
@@ -318,7 +349,8 @@
    "duration": 433.28,
    "size": 10550414,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-holobiont-and-it-speaks-of-everything.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Holobiont"
   },
   {
    "id": "globular-holobiont-the-might-of-chondria",
@@ -328,7 +360,8 @@
    "duration": 470.97,
    "size": 11715211,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-holobiont-the-might-of-chondria.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Holobiont"
   },
   {
    "id": "globular-holobiont-overcoming-occhiolism",
@@ -338,7 +371,8 @@
    "duration": 557.52,
    "size": 13885587,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-holobiont-overcoming-occhiolism.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Holobiont"
   },
   {
    "id": "globular-holobiont-temple-of-the-pollinator",
@@ -348,7 +382,8 @@
    "duration": 782.27,
    "size": 19241256,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/globular-holobiont-temple-of-the-pollinator.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Globular: Holobiont"
   },
   {
    "id": "greatowl-lilia-sin-mi-einimali",
@@ -358,7 +393,8 @@
    "duration": 637.17,
    "size": 15848194,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/greatowl-lilia-sin-mi-einimali.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "GreatOwl: Lilia Sin Mi"
   },
   {
    "id": "greatowl-lilia-sin-mi-strijistela",
@@ -368,7 +404,8 @@
    "duration": 453.38,
    "size": 11547974,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/greatowl-lilia-sin-mi-strijistela.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "GreatOwl: Lilia Sin Mi"
   },
   {
    "id": "greatowl-lilia-sin-mi-hiu-si",
@@ -378,7 +415,8 @@
    "duration": 283.78,
    "size": 7253247,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/greatowl-lilia-sin-mi-hiu-si.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "GreatOwl: Lilia Sin Mi"
   },
   {
    "id": "greatowl-lilia-sin-mi-kiu-sei-kai",
@@ -388,7 +426,8 @@
    "duration": 567.36,
    "size": 13909034,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/greatowl-lilia-sin-mi-kiu-sei-kai.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "GreatOwl: Lilia Sin Mi"
   },
   {
    "id": "greatowl-lilia-sin-mi-xinopua",
@@ -398,7 +437,8 @@
    "duration": 477.63,
    "size": 11780242,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/greatowl-lilia-sin-mi-xinopua.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "GreatOwl: Lilia Sin Mi"
   },
   {
    "id": "greatowl-lilia-sin-mi-rakate",
@@ -408,7 +448,8 @@
    "duration": 545.23,
    "size": 13339164,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/greatowl-lilia-sin-mi-rakate.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "GreatOwl: Lilia Sin Mi"
   },
   {
    "id": "huuhaa-frostient-freezings-from-the-fractarctica",
@@ -418,7 +459,8 @@
    "duration": 512.0,
    "size": 12418019,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/huuhaa-frostient-freezings-from-the-fractarctica.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "HuuHaa: Frostient"
   },
   {
    "id": "huuhaa-frostient-flake-genesis",
@@ -428,7 +470,8 @@
    "duration": 260.0,
    "size": 6338935,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/huuhaa-frostient-flake-genesis.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "HuuHaa: Frostient"
   },
   {
    "id": "huuhaa-frostient-kryos-zero",
@@ -438,7 +481,8 @@
    "duration": 341.0,
    "size": 8308232,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/huuhaa-frostient-kryos-zero.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "HuuHaa: Frostient"
   },
   {
    "id": "saluberrimae-time-is-a-flat-circle-trapped-inside",
@@ -448,7 +492,8 @@
    "duration": 328.0,
    "size": 8250732,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/saluberrimae-time-is-a-flat-circle-trapped-inside.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Saluberrimae: Time Is A Flat Circle"
   },
   {
    "id": "saluberrimae-time-is-a-flat-circle-jesenne-prebudzanie-do-letneho-rana",
@@ -458,7 +503,8 @@
    "duration": 400.0,
    "size": 9862877,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/saluberrimae-time-is-a-flat-circle-jesenne-prebudzanie-do-letneho-rana.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Saluberrimae: Time Is A Flat Circle"
   },
   {
    "id": "saluberrimae-time-is-a-flat-circle-jennifer-connelly",
@@ -468,7 +514,8 @@
    "duration": 529.6,
    "size": 13267473,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/saluberrimae-time-is-a-flat-circle-jennifer-connelly.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Saluberrimae: Time Is A Flat Circle"
   },
   {
    "id": "saluberrimae-time-is-a-flat-circle-time-is-a-flat-circle",
@@ -478,7 +525,8 @@
    "duration": 438.4,
    "size": 10728156,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/saluberrimae-time-is-a-flat-circle-time-is-a-flat-circle.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Saluberrimae: Time Is A Flat Circle"
   },
   {
    "id": "saluberrimae-time-is-a-flat-circle-loophole",
@@ -488,7 +536,8 @@
    "duration": 419.2,
    "size": 10280041,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/saluberrimae-time-is-a-flat-circle-loophole.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Saluberrimae: Time Is A Flat Circle"
   },
   {
    "id": "saluberrimae-time-is-a-flat-circle-the-abyss",
@@ -498,7 +547,8 @@
    "duration": 366.4,
    "size": 9088115,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/saluberrimae-time-is-a-flat-circle-the-abyss.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Saluberrimae: Time Is A Flat Circle"
   },
   {
    "id": "saluberrimae-time-is-a-flat-circle-ciernobiela",
@@ -508,7 +558,8 @@
    "duration": 345.6,
    "size": 8477729,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/saluberrimae-time-is-a-flat-circle-ciernobiela.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Saluberrimae: Time Is A Flat Circle"
   },
   {
    "id": "saluberrimae-time-is-a-flat-circle-frozen",
@@ -518,7 +569,8 @@
    "duration": 319.2,
    "size": 7891876,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/saluberrimae-time-is-a-flat-circle-frozen.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Saluberrimae: Time Is A Flat Circle"
   },
   {
    "id": "saluberrimae-time-is-a-flat-circle-vecerna-ciga-na-balkone",
@@ -528,7 +580,8 @@
    "duration": 166.51,
    "size": 4089731,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/saluberrimae-time-is-a-flat-circle-vecerna-ciga-na-balkone.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Saluberrimae: Time Is A Flat Circle"
   },
   {
    "id": "saluberrimae-time-is-a-flat-circle-gestonkenflapped",
@@ -538,7 +591,8 @@
    "duration": 368.0,
    "size": 9337974,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/saluberrimae-time-is-a-flat-circle-gestonkenflapped.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Saluberrimae: Time Is A Flat Circle"
   },
   {
    "id": "ajnia-oasis-simoon",
@@ -548,7 +602,8 @@
    "duration": 548.77,
    "size": 13435515,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/ajnia-oasis-simoon.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Ajnia: Oasis"
   },
   {
    "id": "ajnia-oasis-entre-las-dunas",
@@ -558,7 +613,8 @@
    "duration": 703.52,
    "size": 17383278,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/ajnia-oasis-entre-las-dunas.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Ajnia: Oasis"
   },
   {
    "id": "ajnia-oasis-oasis",
@@ -568,7 +624,8 @@
    "duration": 435.43,
    "size": 10706565,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/ajnia-oasis-oasis.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Ajnia: Oasis"
   },
   {
    "id": "ajnia-oasis-la-gran-ruta-del-sur",
@@ -578,7 +635,8 @@
    "duration": 643.56,
    "size": 15957315,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/ajnia-oasis-la-gran-ruta-del-sur.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Ajnia: Oasis"
   },
   {
    "id": "ajnia-elements-earth",
@@ -588,7 +646,8 @@
    "duration": 517.72,
    "size": 12658667,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/ajnia-elements-earth.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Ajnia: Elements"
   },
   {
    "id": "ajnia-elements-fire",
@@ -598,7 +657,8 @@
    "duration": 501.59,
    "size": 12459499,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/ajnia-elements-fire.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Ajnia: Elements"
   },
   {
    "id": "ajnia-elements-air",
@@ -608,7 +668,8 @@
    "duration": 552.77,
    "size": 13507726,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/ajnia-elements-air.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Ajnia: Elements"
   },
   {
    "id": "ajnia-elements-water",
@@ -618,7 +679,8 @@
    "duration": 529.64,
    "size": 13051032,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/ajnia-elements-water.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Ajnia: Elements"
   },
   {
    "id": "ajnia-elements-ether",
@@ -628,7 +690,8 @@
    "duration": 425.06,
    "size": 10466379,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/ajnia-elements-ether.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Ajnia: Elements"
   },
   {
    "id": "shinjibomb-shinjibomb-firefly-shinjibomb-s-serene-rework",
@@ -638,7 +701,8 @@
    "duration": 862.22,
    "size": 21113319,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/shinjibomb-shinjibomb-firefly-shinjibomb-s-serene-rework.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Shinjibomb: Shinjibomb"
   },
   {
    "id": "shinjibomb-shinjibomb-philae",
@@ -648,7 +712,8 @@
    "duration": 720.0,
    "size": 17630448,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/shinjibomb-shinjibomb-philae.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Shinjibomb: Shinjibomb"
   },
   {
    "id": "shinjibomb-shinjibomb-2019-neo-tokyo-x-los-angeles",
@@ -658,7 +723,8 @@
    "duration": 736.19,
    "size": 18076454,
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/tracks/shinjibomb-shinjibomb-2019-neo-tokyo-x-los-angeles.m4a",
-   "weight": 1
+   "weight": 1,
+   "album": "Shinjibomb: Shinjibomb"
   }
  ]
 }
