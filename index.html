@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#0e0b09">
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
-  <title>alot — Music Production App</title>
+  <title>alot</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -67,13 +67,8 @@
       text-align: center;
       padding: 36px 20px 20px;
     }
-    .app-eyebrow {
-      font-size: calc(10px * var(--text)); letter-spacing: 0.3em;
-      text-transform: uppercase; color: var(--text-muted);
-      margin-bottom: 8px;
-    }
     .brand-name {
-      font-family: 'Pacifico', cursive;
+      font-family: ui-serif, Georgia, 'Iowan Old Style', serif;
       font-size: calc(clamp(52px, 12vw, 80px) * var(--text));
       color: var(--accent);
       line-height: 1;
@@ -180,17 +175,6 @@
       .mix-strip { grid-template-columns: 86px 84px 1fr; gap: 8px; font-size: calc(12px * var(--text)); }
     }
 
-    /* ── POSITIVE MESSAGE + FLOATING PARTICLES ── */
-    #particles { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 9550; pointer-events: none; }
-    #cheer {
-      position: fixed; top: calc(56px + env(safe-area-inset-top)); left: 50%; z-index: 9600;
-      width: max-content; max-width: min(420px, calc(100% - 32px)); padding: 14px 20px;
-      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md);
-      box-shadow: var(--shadow-md); color: var(--text); font-size: calc(16px * var(--text)); font-weight: 600; line-height: 1.4; text-align: center;
-      pointer-events: none; opacity: 0; transform: translate(-50%, -12px); transition: opacity 0.3s, transform 0.3s;
-    }
-    #cheer.show { opacity: 1; transform: translate(-50%, 0); }
-    @media (prefers-reduced-motion: reduce) { #cheer { transition: none; } }
 
     /* ── VIEWS & TABS ── */
     [hidden] { display: none !important; }
@@ -228,7 +212,7 @@
     .bn-kicker { font-size: calc(10px * var(--text)); font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: #d9c4ab; }
     #bnName {
       margin-top: 4px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-      font-family: 'Pacifico', cursive; font-size: calc(32px * var(--text)); font-weight: 400; line-height: 1.35;
+      font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(32px * var(--text)); font-weight: 400; line-height: 1.35;
     }
     .bn-play {
       flex-shrink: 0; width: 88px; height: 88px; border: none; border-radius: 50%;
@@ -330,7 +314,6 @@
     .toast.info { background: #5a6a7a; }
 
     /* ── SELF-CONTAINED LOGO FONT ── */
-    @font-face { font-family: 'Pacifico'; font-style: normal; font-weight: 400; font-display: swap; src: url(data:font/woff2;base64,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) format('woff2'); }
 
     /* ── TOAST ACTION ── */
     .toast { display: inline-flex; align-items: center; gap: 12px; }
@@ -415,11 +398,6 @@
       transition: transform 0.35s cubic-bezier(.2,1.4,.4,1), box-shadow 0.35s;
     }
     .bn-play:active { transform: scale(0.94); }
-    .bn-play[aria-pressed="true"] { animation: breathe 5s ease-in-out infinite; }
-    @keyframes breathe {
-      0%, 100% { box-shadow: 0 0 40px rgba(var(--glow),0.25), inset 0 0 22px rgba(var(--glow),0.1); }
-      50% { box-shadow: 0 0 84px rgba(var(--glow),0.55), inset 0 0 34px rgba(var(--glow),0.24); }
-    }
     @media (hover: hover) {
       .bn-play:hover { transform: scale(1.05); box-shadow: 0 0 70px rgba(var(--glow),0.48), inset 0 0 30px rgba(var(--glow),0.18); }
       .bn-btn.primary:hover { box-shadow: 0 0 34px rgba(var(--glow),0.38); }
@@ -459,13 +437,6 @@
     .empty-title { font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(17px * var(--text)); font-weight: 400; }
     #bnSaveName { background: rgba(14,11,9,0.42); }
 
-    #cheer {
-      background: rgba(34,27,21,0.78); border-color: rgba(var(--glow),0.5); border-radius: 20px;
-      -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-      font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(19px * var(--text)); font-weight: 400;
-      box-shadow: 0 0 44px rgba(var(--glow),0.3);
-    }
-    .cheer-from { margin-top: 4px; font-size: calc(14px * var(--text)); color: var(--accent); }
 
     @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
     .view:not([hidden]) > * { animation: rise 0.7s cubic-bezier(.2,.8,.2,1) both; }
@@ -475,7 +446,6 @@
     .view:not([hidden]) > *:nth-child(5) { animation-delay: 0.32s; }
     @media (prefers-reduced-motion: reduce) {
       .view:not([hidden]) > * { animation: none; }
-      .bn-play[aria-pressed="true"] { animation: none; }
     }
 
     /* ── TOOLS, SETTINGS, LAYOUTS ── */
@@ -539,40 +509,6 @@
     .sheet-range { display: block; margin-top: 14px; font-size: calc(15px * var(--text)); color: var(--text-mid); }
     .sheet-range .bn-range { display: block; }
 
-    /* Layout: Focus keeps just the sound and its colors */
-    [data-layout="focus"] #viewBrown > .bn-panel ~ .bn-panel { display: none; }
-    [data-layout="focus"] #viewBrown .bn-hero { height: clamp(380px, 62vh, 620px); }
-    [data-layout="focus"] .app-eyebrow { visibility: hidden; }
-
-    /* Layout: Compact fits more on one screen */
-    [data-layout="compact"] main { gap: 8px; }
-    [data-layout="compact"] .view { gap: 8px; }
-    [data-layout="compact"] header { padding-bottom: 8px; }
-    [data-layout="compact"] .brand-name { font-size: calc(clamp(36px, 8vw, 48px) * var(--text)); }
-    [data-layout="compact"] .view-tabs { margin-bottom: 10px; }
-    [data-layout="compact"] .bn-hero { height: 250px; }
-    [data-layout="compact"] #bnName { font-size: calc(30px * var(--text)); }
-    [data-layout="compact"] .bn-play, [data-layout="compact"] .bn-play:hover { width: 72px; height: 72px; }
-    [data-layout="compact"] .bn-play svg { width: 24px; height: 24px; }
-    [data-layout="compact"] .bn-panel, [data-layout="compact"] .card-body { padding: 14px; }
-    [data-layout="compact"] .card-header { padding: 12px 14px 10px; }
-    [data-layout="compact"] .bn-sliders { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px 18px; }
-    [data-layout="compact"] .bn-chip { min-height: 34px; padding: 0 12px; font-size: calc(13px * var(--text)); }
-    [data-layout="compact"] .bn-label { margin-bottom: 8px; }
-    [data-layout="compact"] .bn-label-gap { margin-top: 12px; }
-    [data-layout="compact"] .bn-actions { margin-top: 12px; padding-top: 12px; }
-    @media (pointer: coarse) { [data-layout="compact"] .bn-chip { min-height: 44px; } }
-
-    /* Layout: Stage sets the sound beside its controls on a big screen */
-    @media (min-width: 980px) {
-      [data-layout="stage"] main { max-width: 1180px; }
-      [data-layout="stage"] .view:not([hidden]) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px 22px; align-items: start; }
-      [data-layout="stage"] #viewBrown .bn-hero { grid-column: 1; grid-row: 1 / span 3; position: sticky; top: 24px; height: calc(100vh - 210px); min-height: 420px; }
-      [data-layout="stage"] #viewBrown > .bn-panel { grid-column: 2; }
-      [data-layout="stage"] #viewStudio > article[aria-labelledby="mix-title"] { grid-column: 2; grid-row: 1 / span 3; }
-      [data-layout="stage"] #viewStudio > article[aria-labelledby="step1-title"], [data-layout="stage"] #viewStudio > article[aria-labelledby="step2-title"] { grid-column: 1; }
-    }
-
     /* ── QUICK CONTROLS + PHONE SETTINGS ── */
     #bnMini {
       position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 15; transform: translateX(-50%);
@@ -589,7 +525,7 @@
     .switch span { padding-right: 14px; }
     .bn-ends { font-size: calc(12px * var(--text)); }
     .bn-hint { font-size: calc(12px * var(--text)); }
-    .app-eyebrow, .bn-kicker { font-size: calc(12px * var(--text)); letter-spacing: 0.2em; }
+    .bn-kicker { font-size: calc(12px * var(--text)); letter-spacing: 0.2em; }
     @media (pointer: coarse) { .bn-range::-webkit-slider-thumb { width: 28px; height: 28px; margin-top: -12.5px; } }
 
     /* ── DISPLAY PREFERENCES ── */
@@ -641,15 +577,6 @@
     .take-btn:disabled { opacity: 0.6; cursor: default; }
     .library-all { width: 100%; margin-top: 12px; }
 
-    /* ── FAVORITE ON YOUTUBE ── */
-    .yt-frame { overflow: hidden; margin-bottom: 14px; border-radius: 14px; aspect-ratio: 16 / 9; background: #000; }
-    .yt-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
-    .yt-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-    .yt-link { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
-    .yt-note { margin: 12px 0 0; }
-
-    .shower-input { display: block; width: 100%; min-height: 44px; margin-bottom: 12px; padding: 0 12px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: rgba(14,11,9,0.42); color: var(--text); font: inherit; font-size: max(16px, calc(16px * var(--text))); }
-    .shower-input:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; }
     .sound-check { margin: 0; padding: 10px 12px; border-radius: 12px; background: rgba(14,11,9,0.42); color: var(--text-mid); font-size: calc(13px * var(--text)); line-height: 1.6; font-variant-numeric: tabular-nums; }
 
     /* ── REVIEW FIXES ── */
@@ -663,20 +590,11 @@
     .sheet-group .sheet-label:first-of-type { margin-top: 8px; }
     .bn-btn { font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(15px * var(--text)); font-weight: 400; }
     .bn-hint { display: block; margin: 0; }
-    #cheer {
-      top: auto; bottom: calc(84px + env(safe-area-inset-bottom)); padding: 10px 40px 10px 16px;
-      font-size: calc(16px * var(--text)); transform: translate(-50%, 12px);
-    }
-    #cheer.show { transform: translate(-50%, 0); }
-    .cheer-from { font-size: calc(12px * var(--text)); margin-top: 2px; }
-    .cheer-close { position: absolute; top: 2px; right: 2px; width: 36px; height: 36px; border: none; border-radius: 50%; background: transparent; color: var(--text-mid); font-size: 13px; cursor: pointer; pointer-events: auto; }
-    .cheer-close:focus-visible { outline: 3px solid var(--accent); }
     #toastBox { bottom: calc(160px + env(safe-area-inset-bottom)); }
     #bnMini { left: auto; right: calc(16px + env(safe-area-inset-right)); transform: none; }
     .mix-strip { grid-template-columns: 124px 96px 1fr 30px; }
     .mix-val { text-align: right; font-size: calc(12px * var(--text)); font-weight: 500; color: var(--text-muted); font-variant-numeric: tabular-nums; }
     .playlist-switch span { white-space: nowrap; }
-    [data-layout="focus"] article[aria-labelledby="library-title"], [data-layout="focus"] .mix-controls { display: none; }
     @media (max-width: 700px) {
       .top-tools { position: absolute; }
       #bnMini { padding: 6px; }
@@ -686,7 +604,47 @@
       .mix-strip { grid-template-columns: 76px 72px 1fr 26px; gap: 6px; }
     }
 
-  </style>
+  
+    /* ── LAYERS: one page, the mix comes first ── */
+    header { padding: 44px 0 26px; text-align: center; }
+    .brand-name { font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-weight: 400; font-size: calc(clamp(44px, 9vw, 60px) * var(--text)); letter-spacing: 0.01em; color: var(--accent); text-shadow: none; }
+    .tagline { margin: 10px 0 0; font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(18px * var(--text)); color: var(--text-mid); }
+    main { max-width: 560px; }
+    .layers { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 20px; background: rgba(14,11,9,0.5); }
+    :root[data-panels="solid"] .layers { background: #221b15; }
+    :root[data-panels="clear"] .layers { background: rgba(34,27,21,0.28); }
+    .layer { padding: var(--pad); }
+    .layer + .layer { border-top: 1px solid var(--border); }
+    .layer-top { display: flex; align-items: center; gap: 12px; min-height: 44px; }
+    .layer-name { flex: 0 0 auto; font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(19px * var(--text)); color: var(--text); }
+    .layer-pick { flex: 1 1 auto; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: calc(14px * var(--text)); color: var(--text-muted); }
+    .layer-action { flex: 0 0 auto; min-height: 44px; padding: 0 4px; border: 0; background: transparent; color: var(--accent); font: inherit; font-size: calc(14px * var(--text)); cursor: pointer; }
+    .layer-action:hover { text-decoration: underline; text-underline-offset: 4px; }
+    .layer-action:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+    .layer > .bn-range { display: block; width: 100%; margin-top: 6px; }
+    .layer-drawer { margin-top: 18px; padding-top: 4px; border-top: 1px solid var(--border); }
+    .layer-drawer[hidden] { display: none; }
+    .layer-drawer .bn-panel, .layer-drawer .card { margin: 0; padding: 14px 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+    .layer-drawer .card-header, .layer-drawer .card-body { padding-left: 0; padding-right: 0; border: 0; background: transparent; }
+    .beats-note { margin: 0 0 16px; }
+    .beats-switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; color: var(--text); }
+    .beats-switch .mix-toggle { flex: 0 0 auto; width: 64px; }
+    #layerBeats[data-off] > .bn-range { display: none; }
+    .layer-toggle { flex: 0 0 auto; width: 44px; height: 44px; border: 1px solid var(--border); border-radius: 50%; background: transparent; color: var(--text); font-size: 14px; cursor: pointer; }
+    .layer-toggle[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+    .layer-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+    .layer-types { flex-wrap: nowrap; gap: 8px; margin: 14px -20px 0; padding: 0 20px 4px; overflow-x: auto; scrollbar-width: none; }
+    .layer-types::-webkit-scrollbar { display: none; }
+    .layer-types .bn-chip { flex: 0 0 auto; }
+    .layer-list { margin-top: 12px; }
+    .layer-list .playlist-bar[hidden] { display: none; }
+    .layer-list .empty-state { min-height: 0; padding: 8px 0 0; }
+    @media (min-width: 600px) { .layer-types { flex-wrap: wrap; margin: 14px 0 0; padding: 0; overflow: visible; } }
+    .layer-list .empty-title { display: none; }
+    .mix-hero { display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 34px 0 40px; }
+    .bn-play, .bn-play:hover { box-shadow: none; }
+    #bnName { font-family: inherit; font-size: calc(14px * var(--text)); font-weight: 400; line-height: 1.4; color: var(--text-muted); text-shadow: none; margin: 0; }
+</style>
 </head>
 <body>
 
@@ -716,14 +674,6 @@
 
     <details class="sheet-group" open>
       <summary data-t="group.look"></summary>
-    <div class="sheet-label" data-t="set.layout">Layout</div>
-    <div class="layout-grid">
-      <button class="layout-card" data-set="layout:flow"><span class="wire wire-flow" aria-hidden="true"><i></i><i></i><i></i></span><span data-t="layout.flow">Flow</span></button>
-      <button class="layout-card" data-set="layout:focus"><span class="wire wire-focus" aria-hidden="true"><i></i></span><span data-t="layout.focus">Focus</span></button>
-      <button class="layout-card" data-set="layout:compact"><span class="wire wire-compact" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span data-t="layout.compact">Compact</span></button>
-      <button class="layout-card" data-set="layout:stage"><span class="wire wire-stage" aria-hidden="true"><i></i><i></i><i></i></span><span data-t="layout.stage">Stage</span></button>
-    </div>
-
     <div class="sheet-label" data-t="set.bg">Background</div>
     <div class="bn-chips">
       <button class="bn-chip" data-set="bg:threads" data-t="bg.threads">Threads</button>
@@ -773,14 +723,6 @@
 
     </details>
     <details class="sheet-group">
-      <summary data-t="group.joy"></summary>
-    <div class="sheet-label" data-t="set.joy">Little joys</div>
-    <div class="bn-chips"><button class="bn-chip" data-set="messageRate:rarely" data-t="rate.rarely"></button><button class="bn-chip" data-set="messageRate:sometimes" data-t="rate.sometimes"></button><button class="bn-chip" data-set="messageRate:often" data-t="rate.often"></button></div>
-    <label class="switch"><span data-t="set.messages">Positive messages</span><input type="checkbox" role="switch" id="setMessages"><i aria-hidden="true"></i></label>
-    <label class="switch"><span data-t="set.particles">Floating particles</span><input type="checkbox" role="switch" id="setParticles"><i aria-hidden="true"></i></label>
-
-    </details>
-    <details class="sheet-group">
       <summary data-t="group.phone"></summary>
     <div class="sheet-label" data-t="set.phone">Phone and Sonos</div>
     <label class="switch"><span data-t="set.keep">Keep screen on while playing</span><input type="checkbox" role="switch" id="setKeep"><i aria-hidden="true"></i></label>
@@ -795,39 +737,26 @@
 </div>
 
 <header>
-  <div class="app-eyebrow" data-t="eyebrow">Music Production App</div>
   <h1 class="brand-name">alot</h1>
+  <p class="tagline" data-t="tagline">Layer sounds. Make your own mix.</p>
 </header>
-
-<div class="view-tabs" role="tablist" data-t-aria="tabs">
-  <button class="view-tab" role="tab" id="tabBrown" aria-controls="viewBrown" aria-selected="true"><span data-t="tab.noise">Noise</span><span class="live-dot" id="bnLiveDot" data-t-aria="playing" aria-hidden="true" style="visibility:hidden"></span></button>
-  <button class="view-tab" role="tab" id="tabStudio" aria-controls="viewStudio" aria-selected="false" tabindex="-1"><span data-t="tab.studio">Studio</span></button>
-</div>
-
-
 
 <main id="main">
 
-  <!-- BROWN NOISE VIEW -->
-  <section class="view" id="viewBrown" role="tabpanel" aria-labelledby="tabBrown">
-    <div class="bn-hero">
-      <div class="bn-hero-top">
-        <div class="bn-kicker" id="bnKicker">Brown Noise</div>
-        <h2 id="bnName" aria-live="polite">Warm</h2>
-      </div>
-      <button class="bn-play" id="bnPlay" aria-pressed="false" data-t-aria="aria.play.noise">
-        <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17a1 1 0 0 0 1.5.86l14-8.5a1 1 0 0 0 0-1.72l-14-8.5A1 1 0 0 0 6 3.5z"/></svg>
-        <svg class="icon-stop" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
-      </button>
-      <label class="bn-volume"><span data-t="volume">Volume</span>
-        <input class="bn-range" type="range" id="bnVolume" min="0" max="100" value="50">
-      </label>
-    </div>
+  <section class="layers" data-t-aria="tagline">
 
+    <div class="layer" id="layerNoise">
+      <div class="layer-top">
+        <button class="layer-toggle" id="noiseBtn" aria-pressed="false" data-t-aria="aria.play.noise">▶</button>
+        <span class="layer-name" id="layerNoiseName" data-t="layer.noise">Noise</span>
+        <span class="layer-pick" id="bnName" aria-live="polite"></span>
+        <button class="layer-action" id="layerNoiseBtn" aria-expanded="false" aria-controls="drawerNoise" data-t="layer.configure">Configure</button>
+      </div>
+      <input class="bn-range" type="range" id="bnVolume" min="0" max="100" value="50" aria-labelledby="layerNoiseName">
+      <div class="bn-chips layer-types" id="bnColors" role="group" aria-labelledby="layerNoiseName"></div>
+      <div class="layer-drawer" id="drawerNoise" hidden>
     <div class="bn-panel">
-      <div class="bn-label" id="bnColorsLabel" data-t="color.label">Noise color</div>
-      <div class="bn-chips" id="bnColors" role="group" aria-labelledby="bnColorsLabel"></div>
-      <div class="bn-label bn-label-gap" id="bnPresetsLabel" data-t="preset.label">Start from</div>
+      <div class="bn-label" id="bnPresetsLabel" data-t="preset.label">Start from</div>
       <div class="bn-chips" id="bnPresets" role="group" aria-labelledby="bnPresetsLabel"></div>
     </div>
 
@@ -851,10 +780,42 @@
       <div class="bn-label" data-t="saved">Saved versions</div>
       <div class="bn-chips" id="bnSaved"></div>
     </div>
-  </section>
+      </div>
+    </div>
 
-  <!-- STUDIO VIEW -->
-  <div class="view" id="viewStudio" role="tabpanel" aria-labelledby="tabStudio" hidden>
+    <div class="layer" id="layerMusic">
+      <div class="layer-top">
+        <span class="layer-name" id="layerMusicName" data-t="layer.playlist">Playlist</span>
+        <span class="layer-pick"></span>
+        <button class="layer-action" id="layerMusicBtn" aria-expanded="false" aria-controls="drawerMusic" data-t="layer.add">Add</button>
+      </div>
+      <input class="bn-range" type="range" id="mixTracks" min="0" max="100" aria-labelledby="layerMusicName">
+      <div class="layer-list" id="layerList">
+      <div class="playlist-bar">
+        <label class="switch playlist-switch"><span data-t="tracks.playlist">Loop playlist</span><input type="checkbox" role="switch" id="playlistLoop"><i aria-hidden="true"></i></label>
+        <button class="take-btn" id="playlistNext" data-t="tracks.next">⏭ Next</button>
+      </div>
+      <div id="takesList" role="list" data-t-aria="tracks.list">
+        <div class="empty-state" role="listitem">
+          <div class="empty-title" data-t="tracks.empty">No tracks yet</div>
+          <div class="empty-msg" data-t="tracks.emptymsg">Tap Add to choose music</div>
+        </div>
+      </div>
+      </div>
+      <div class="layer-drawer" id="drawerMusic" hidden>
+  <!-- TRACK LIBRARY -->
+  <article class="card" aria-labelledby="library-title">
+    <div class="card-header">
+      <div class="card-titles">
+        <h2 class="card-title" id="library-title" data-t="library.title">Library</h2>
+        <div class="card-sub" data-t="library.sub"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div id="libraryList" class="library-list" role="list"></div>
+      <button class="bn-btn library-all" id="libraryAll" data-t="library.all">Add all</button>
+    </div>
+  </article>
 
   <!-- STEP 1 -->
   <article class="card" aria-labelledby="step1-title">
@@ -875,89 +836,20 @@
     </div>
   </article>
 
-  <!-- STEP 2 -->
-  <article class="card" aria-labelledby="step2-title">
-    <div class="card-header">
-      <div class="card-titles">
-        <h2 class="card-title" id="step2-title" data-t="tracks.title">My Tracks</h2>
-        <div class="card-sub" data-t="tracks.sub">Play, loop or delete your tracks here</div>
       </div>
     </div>
-    <div class="card-body">
-      <div class="playlist-bar">
-        <label class="switch playlist-switch"><span data-t="tracks.playlist">Loop playlist</span><input type="checkbox" role="switch" id="playlistLoop"><i aria-hidden="true"></i></label>
-        <button class="take-btn" id="playlistNext" data-t="tracks.next">⏭ Next</button>
-      </div>
-      <div id="takesList" role="list" data-t-aria="tracks.list">
-        <div class="empty-state" role="listitem">
-          <div class="empty-title" data-t="tracks.empty">No tracks yet</div>
-          <div class="empty-msg" data-t="tracks.emptymsg">Choose an audio file above to get started</div>
-        </div>
-      </div>
-    </div>
-  </article>
 
-  <!-- FAVORITE ON YOUTUBE -->
-  <article class="card" aria-labelledby="yt-title">
-    <div class="card-header">
-      <div class="card-titles">
-        <h2 class="card-title" id="yt-title" data-t="yt.title">Ian's favorite</h2>
-        <div class="card-sub">21 savage - a lot - Soulful Version</div>
+    <div class="layer" id="layerBeats">
+      <div class="layer-top">
+        <span class="layer-name" id="layerBeatsName" data-t="layer.beats">Beats</span>
+        <span class="layer-pick" id="layerBeatsPick">—</span>
+        <button class="layer-action" id="layerBeatsBtn" aria-expanded="false" aria-controls="drawerBeats" data-t="layer.on">Turn on</button>
       </div>
-    </div>
-    <div class="card-body">
-      <div class="yt-frame" id="ytFrame" hidden></div>
-      <div class="yt-actions">
-        <button class="bn-btn primary" id="ytPlay" data-t="yt.play">▶ Play</button>
-        <a class="bn-btn yt-link" href="https://www.youtube.com/watch?v=Vy8FvmZRhXw" target="_blank" rel="noopener" data-t="yt.open">Open on YouTube</a>
-      </div>
-      <p class="sheet-note yt-note" data-t="yt.note"></p>
-    </div>
-  </article>
-
-  <!-- SHOWER PLAYLIST -->
-  <article class="card" aria-labelledby="shower-title">
-    <div class="card-header">
-      <div class="card-titles">
-        <h2 class="card-title" id="shower-title" data-t="shower.title">Shower music</h2>
-        <div class="card-sub" data-t="shower.sub"></div>
-      </div>
-    </div>
-    <div class="card-body">
-      <div class="yt-frame" id="showerFrame" hidden></div>
-      <input class="shower-input" id="showerLink" type="url" inputmode="url" autocomplete="off" enterkeyhint="done" data-t-aria="shower.link">
-      <div class="yt-actions">
-        <button class="bn-btn primary" id="showerPlay" data-t="shower.play">▶ Play</button>
-        <a class="bn-btn yt-link" id="showerFind" target="_blank" rel="noopener" data-t="shower.find">Find a playlist ↗</a>
-      </div>
-      <p class="sheet-note yt-note" data-t="shower.note"></p>
-    </div>
-  </article>
-
-  <!-- TRACK LIBRARY -->
-  <article class="card" aria-labelledby="library-title">
-    <div class="card-header">
-      <div class="card-titles">
-        <h2 class="card-title" id="library-title" data-t="library.title">Library</h2>
-        <div class="card-sub" data-t="library.sub"></div>
-      </div>
-    </div>
-    <div class="card-body">
-      <div id="libraryList" class="library-list" role="list"></div>
-      <button class="bn-btn library-all" id="libraryAll" data-t="library.all">Add all</button>
-    </div>
-  </article>
-
-  <!-- NEURAL BEATS MIXER -->
-  <article class="card" aria-labelledby="mix-title">
-    <div class="card-header">
-      <div class="card-titles">
-        <h2 class="card-title" id="mix-title" data-t="mix.title">Neural Beats Mixer</h2>
-        <div class="card-sub" data-t="mix.sub">Binaural beats, mixed with your tracks and noise. Use headphones: each ear gets a slightly different tone.</div>
-      </div>
-    </div>
-    <div class="card-body">
-      <div class="bn-label" id="mixTypesLabel" data-t="mix.type">Beat type</div>
+      <input class="bn-range" type="range" id="mixBeats" min="0" max="100" aria-labelledby="layerBeatsName">
+      <div class="layer-drawer" id="drawerBeats" hidden>
+        <div class="bn-panel">
+          <p class="sheet-note beats-note" data-t="mix.sub"></p>
+          <div class="bn-label" id="mixTypesLabel" data-t="mix.type">Beat type</div>
       <div class="bn-chips" id="mixTypes" role="group" aria-labelledby="mixTypesLabel"></div>
       <div class="mix-controls">
         <div>
@@ -969,32 +861,25 @@
           <input class="bn-range" type="range" id="mixPitch" min="100" max="400">
         </div>
       </div>
-      <div class="mix-strips">
-        <div class="mix-strip">
-          <label for="mixBeats" data-t="mix.beats">Neural Beats</label>
-          <button class="take-btn mix-toggle" id="mixBeatsBtn" aria-pressed="false">▶</button>
-          <input class="bn-range" type="range" id="mixBeats" min="0" max="100"><span class="mix-val" id="mixBeatsVal"></span>
-        </div>
-        <div class="mix-strip">
-          <label for="mixTracks" data-t="mix.tracks">My Tracks</label>
-          <button class="take-btn mix-toggle" id="mixTracksBtn" aria-pressed="false">Mute</button>
-          <input class="bn-range" type="range" id="mixTracks" min="0" max="100"><span class="mix-val" id="mixTracksVal"></span>
-        </div>
-        <div class="mix-strip">
-          <label for="mixBrown" data-t="mix.noise">Noise</label>
-          <button class="take-btn mix-toggle" id="mixBrownBtn" aria-pressed="false">▶</button>
-          <input class="bn-range" type="range" id="mixBrown" min="0" max="100"><span class="mix-val" id="mixBrownVal"></span>
-        </div>
-        <div class="mix-strip">
-          <label for="mixMaster" data-t="mix.master">Master</label>
-          <span></span>
-          <input class="bn-range" type="range" id="mixMaster" min="0" max="100"><span class="mix-val" id="mixMasterVal"></span>
+      <div class="beats-switch">
+            <span data-t="mix.beats">Neural Beats</span>
+            <button class="take-btn mix-toggle" id="mixBeatsBtn" aria-pressed="false">■</button>
+          </div>
         </div>
       </div>
     </div>
-  </article>
 
-  </div>
+  </section>
+
+  <section class="mix-hero">
+    <button class="bn-play" id="bnPlay" aria-pressed="false" data-t-aria="aria.play.mix">
+      <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17a1 1 0 0 0 1.5.86l14-8.5a1 1 0 0 0 0-1.72l-14-8.5A1 1 0 0 0 6 3.5z"/></svg>
+      <svg class="icon-stop" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
+    </button>
+    <label class="bn-volume"><span data-t="layer.master">Master volume</span>
+      <input class="bn-range" type="range" id="mixMaster" min="0" max="100">
+    </label>
+  </section>
 
 </main>
 
@@ -1004,8 +889,6 @@
   <span id="bnMiniName"></span>
 </div>
 
-<canvas id="particles" aria-hidden="true" hidden></canvas>
-<div id="cheer" role="status" aria-live="polite"></div>
 
 <div id="toastBox" role="status" aria-live="polite" aria-label="Notifications"></div>
 
@@ -1018,38 +901,37 @@
   ═══════════════════════════════════════════ */
   var I18N = {
     en: {
-      'title': 'alot — Music Production App', 'skip': 'Skip to main content', 'eyebrow': 'Music Production App',
-      'tabs': 'Sections', 'tab.noise': 'Noise', 'tab.studio': 'Studio', 'playing': 'playing',
+      'title': 'alot — Layer sounds. Make your own mix.', 'skip': 'Skip to main content', 'playing': 'playing',
       'noise': '{c} Noise', 'volume': 'Volume', 'color.label': 'Noise color', 'preset.label': 'Start from', 'shape': 'Shape your sound',
       'color.brown': 'Brown', 'color.pink': 'Pink', 'color.white': 'White', 'color.gray': 'Gray', 'color.green': 'Green', 'color.blue': 'Blue', 'color.violet': 'Violet',
       'preset.Deep': 'Deep', 'preset.Warm': 'Warm', 'preset.Ocean': 'Ocean', 'preset.Bright': 'Bright', 'preset.Rain': 'Rain', 'preset.Waterfall': 'Waterfall', 'preset.Wind': 'Wind', 'preset.Campfire': 'Campfire', 'preset.Night train': 'Night train', 'preset.Cave': 'Cave', 'preset.Breeze': 'Breeze', 'preset.Storm': 'Storm',
       'slider.tone': 'Tone', 'low.tone': 'Deep', 'high.tone': 'Bright', 'slider.rumble': 'Rumble', 'low.rumble': 'Light', 'high.rumble': 'Heavy', 'slider.swell': 'Swell', 'low.swell': 'Steady', 'high.swell': 'Waves', 'slider.pace': 'Pace', 'low.pace': 'Slow', 'high.pace': 'Fast', 'slider.space': 'Space', 'low.space': 'Close', 'high.space': 'Wide', 'slider.drift': 'Drift', 'low.drift': 'Still', 'high.drift': 'Wandering', 'slider.grain': 'Grain', 'low.grain': 'Clean', 'high.grain': 'Crackling',
       'hint.pace': 'Turn up Swell to use Pace',
       'generate': '✦ Generate new version', 'surprise': '✧ Surprise me', 'prev': '↩ Previous', 'save': 'Save', 'save.version': 'Save version', 'cancel': 'Cancel', 'save.name': 'Name this version', 'saved': 'Saved versions', 'saved.empty': 'Versions you save will appear here.', 'toast.saved': 'Version saved', 'toast.deleted': 'Version deleted', 'undo': 'Undo', 'mix.your': 'Your mix', 'mix.n': 'Mix {n}', 'version.n': 'New version {n}', 'aria.play.noise': 'Play noise', 'aria.stop.noise': 'Stop noise', 'aria.delete': 'Delete {n}',
-      'add.title': 'Add Your Tracks', 'add.sub': 'Choose audio files from your device', 'add.main': 'Choose tracks', 'add.hint': 'Tap to choose, or drag and drop', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.title': 'My Tracks', 'tracks.sub': 'Your list plays in order. Play or delete tracks here', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Choose an audio file above to get started', 'play': '▶ Play', 'stop': '■ Stop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
-      'mix.title': 'Neural Beats Mixer', 'mix.sub': 'Binaural beats, mixed with your tracks and noise. Use headphones: each ear gets a slightly different tone.', 'mix.type': 'Beat type', 'mix.rate': 'Beat rate', 'mix.pitch': 'Pitch', 'mix.beats': 'Neural Beats', 'mix.tracks': 'My Tracks', 'mix.noise': 'Noise', 'mix.master': 'Master', 'mute': 'Mute', 'muted': 'Muted', 'aria.play.beats': 'Play neural beats', 'aria.stop.beats': 'Stop neural beats',
-      'settings': 'Settings', 'close': 'Close', 'set.layout': 'Layout', 'layout.flow': 'Flow', 'layout.focus': 'Focus', 'layout.compact': 'Compact', 'layout.stage': 'Stage', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.ripples': 'Ripples', 'bg.fireflies': 'Fireflies', 'bg.constellation': 'Constellation', 'bg.aurora': 'Aurora', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'set.joy': 'Little joys', 'group.sound': 'Sound', 'set.crossfade': 'Transition between tracks', 'cross.0': 'Off', 'cross.2': 'Short', 'cross.4': 'Medium', 'cross.8': 'Long', 'check.title': 'Sound check', 'check.note': 'Press play and listen for a few minutes. If you hear a skip, tell Blossom these numbers.', 'check.dropouts': 'Dropouts', 'check.gaps': 'Audio clock gaps', 'check.state': 'Audio', 'check.na': 'not measured in this browser', 'check.none': 'not started yet', 'check.interrupted': 'Interruptions', 'group.look': 'Look', 'group.sizes': 'Sizes and spacing', 'group.joy': 'Messages and particles', 'group.phone': 'Phone and Sonos', 'meta': 'Shape your own noise, loop your tracks and mix them with binaural beats, right in your browser.', 'beat.Alpha': 'Alpha', 'set.messages': 'Positive messages', 'set.particles': 'Floating particles', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'cheer.from': '— Blossom',
-      'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'yt.title': 'Ian’s favorite', 'yt.play': '▶ Play', 'yt.close': '✕ Close player', 'yt.open': 'Open on YouTube ↗', 'yt.note': 'Plays and repeats in YouTube’s own player. It has its own volume, so it isn’t part of your list or the mixer, and it may stop when the screen locks.', 'shower.title': 'Shower music', 'shower.sub': 'Paste a YouTube playlist link. It’s remembered on this device.', 'shower.link': 'YouTube playlist link', 'shower.play': '▶ Play', 'shower.close': '✕ Close player', 'shower.find': 'Find a playlist ↗', 'shower.bad': 'That link has no playlist in it', 'shower.note': 'Plays in YouTube’s own player, with its own volume, so it isn’t part of your list or the mixer. The playlist must be public, and YouTube may show ads.', 'library.title': 'Library', 'library.sub': 'Original downtempo and lo-fi tracks, made in your browser. Add them to your list to play, loop or mix.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Lo-fi bossa', 'library.waltz': 'Lo-fi waltz', 'library.triphop': 'Trip-hop', 'library.electronic': 'Electronic downtempo', 'library.ambient': 'Ambient downtempo', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', 'rate.rarely': 'Rarely', 'rate.sometimes': 'Sometimes', 'rate.often': 'Often'
-    },
+      'add.title': 'Add Your Tracks', 'add.sub': 'Choose audio files from your device', 'add.main': 'Choose tracks', 'add.hint': 'Tap to choose, or drag and drop', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.title': 'My Tracks', 'tracks.sub': 'Your list plays in order. Play or delete tracks here', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Tap Add to choose music', 'play': '▶ Play', 'stop': '■ Stop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
+      'mix.sub': 'Binaural beats, mixed with your tracks and noise. Use headphones: each ear gets a slightly different tone.', 'mix.type': 'Beat type', 'mix.rate': 'Beat rate', 'mix.pitch': 'Pitch', 'mix.beats': 'Neural Beats', 'mute': 'Mute', 'muted': 'Muted', 'aria.play.beats': 'Play neural beats', 'aria.stop.beats': 'Stop neural beats',
+      'tagline': 'Layer sounds. Make your own mix.', 'layer.noise': 'Noise', 'layer.playlist': 'Playlist', 'layer.beats': 'Beats', 'layer.configure': 'Configure', 'layer.add': 'Add', 'layer.adjust': 'Adjust', 'layer.on': 'Turn on', 'layer.master': 'Master volume', 'aria.play.mix': 'Play mix', 'aria.stop.mix': 'Stop mix',
+      'settings': 'Settings', 'close': 'Close', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.ripples': 'Ripples', 'bg.fireflies': 'Fireflies', 'bg.constellation': 'Constellation', 'bg.aurora': 'Aurora', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'group.sound': 'Sound', 'set.crossfade': 'Transition between tracks', 'cross.0': 'Off', 'cross.2': 'Short', 'cross.4': 'Medium', 'cross.8': 'Long', 'check.title': 'Sound check', 'check.note': 'Press play and listen for a few minutes. If you hear a skip, tell Blossom these numbers.', 'check.dropouts': 'Dropouts', 'check.gaps': 'Audio clock gaps', 'check.state': 'Audio', 'check.na': 'not measured in this browser', 'check.none': 'not started yet', 'check.interrupted': 'Interruptions', 'group.look': 'Look', 'group.sizes': 'Sizes and spacing', 'group.phone': 'Phone and Sonos', 'meta': 'Shape your own noise, loop your tracks and mix them with binaural beats, right in your browser.', 'beat.Alpha': 'Alpha', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'library.title': 'Library', 'library.sub': 'Original downtempo and lo-fi tracks, made in your browser. Add them to your list to play, loop or mix.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Lo-fi bossa', 'library.waltz': 'Lo-fi waltz', 'library.triphop': 'Trip-hop', 'library.electronic': 'Electronic downtempo', 'library.ambient': 'Ambient downtempo', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', },
     es: {
-      'title': 'alot — App de producción musical', 'skip': 'Saltar al contenido principal', 'eyebrow': 'App de producción musical',
-      'tabs': 'Secciones', 'tab.noise': 'Ruido', 'tab.studio': 'Estudio', 'playing': 'sonando',
+      'title': 'alot — Combina sonidos. Crea tu propia mezcla.', 'skip': 'Saltar al contenido principal', 'playing': 'sonando',
       'noise': 'Ruido {c}', 'volume': 'Volumen', 'color.label': 'Color del ruido', 'preset.label': 'Empieza con', 'shape': 'Da forma a tu sonido',
       'color.brown': 'Marrón', 'color.pink': 'Rosa', 'color.white': 'Blanco', 'color.gray': 'Gris', 'color.green': 'Verde', 'color.blue': 'Azul', 'color.violet': 'Violeta',
       'preset.Deep': 'Profundo', 'preset.Warm': 'Cálido', 'preset.Ocean': 'Océano', 'preset.Bright': 'Brillante', 'preset.Rain': 'Lluvia', 'preset.Waterfall': 'Cascada', 'preset.Wind': 'Viento', 'preset.Campfire': 'Fogata', 'preset.Night train': 'Tren nocturno', 'preset.Cave': 'Cueva', 'preset.Breeze': 'Brisa', 'preset.Storm': 'Tormenta',
       'slider.tone': 'Tono', 'low.tone': 'Profundo', 'high.tone': 'Brillante', 'slider.rumble': 'Graves', 'low.rumble': 'Suave', 'high.rumble': 'Intenso', 'slider.swell': 'Oleaje', 'low.swell': 'Constante', 'high.swell': 'Olas', 'slider.pace': 'Ritmo', 'low.pace': 'Lento', 'high.pace': 'Rápido', 'slider.space': 'Espacio', 'low.space': 'Cerca', 'high.space': 'Amplio', 'slider.drift': 'Deriva', 'low.drift': 'Quieta', 'high.drift': 'Errante', 'slider.grain': 'Grano', 'low.grain': 'Limpio', 'high.grain': 'Crepitante',
       'hint.pace': 'Sube el Oleaje para usar el Ritmo',
       'generate': '✦ Generar nueva versión', 'surprise': '✧ Sorpréndeme', 'prev': '↩ Anterior', 'save': 'Guardar', 'save.version': 'Guardar versión', 'cancel': 'Cancelar', 'save.name': 'Ponle nombre a esta versión', 'saved': 'Versiones guardadas', 'saved.empty': 'Las versiones que guardes aparecerán aquí.', 'toast.saved': 'Versión guardada', 'toast.deleted': 'Versión eliminada', 'undo': 'Deshacer', 'mix.your': 'Tu mezcla', 'mix.n': 'Mezcla {n}', 'version.n': 'Nueva versión {n}', 'aria.play.noise': 'Reproducir ruido', 'aria.stop.noise': 'Detener ruido', 'aria.delete': 'Eliminar {n}',
-      'add.title': 'Añade tus pistas', 'add.sub': 'Elige archivos de audio de tu dispositivo', 'add.main': 'Elegir pistas', 'add.hint': 'Toca para elegir, o arrastra y suelta', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.title': 'Mis pistas', 'tracks.sub': 'Tu lista suena en orden. Reproduce o elimina pistas aquí', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Elige un archivo de audio arriba para empezar', 'play': '▶ Reproducir', 'stop': '■ Detener', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
-      'mix.title': 'Mezclador de ritmos neuronales', 'mix.sub': 'Ritmos binaurales mezclados con tus pistas y el ruido. Usa audífonos: cada oído recibe un tono ligeramente distinto.', 'mix.type': 'Tipo de ritmo', 'mix.rate': 'Frecuencia del ritmo', 'mix.pitch': 'Altura', 'mix.beats': 'Ritmos neuronales', 'mix.tracks': 'Mis pistas', 'mix.noise': 'Ruido', 'mix.master': 'General', 'mute': 'Silenciar', 'muted': 'Silenciado', 'aria.play.beats': 'Reproducir ritmos neuronales', 'aria.stop.beats': 'Detener ritmos neuronales',
-      'settings': 'Ajustes', 'close': 'Cerrar', 'set.layout': 'Diseño', 'layout.flow': 'Fluido', 'layout.focus': 'Enfoque', 'layout.compact': 'Compacto', 'layout.stage': 'Escenario', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.ripples': 'Ondas', 'bg.fireflies': 'Luciérnagas', 'bg.constellation': 'Constelación', 'bg.aurora': 'Aurora', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'set.joy': 'Pequeñas alegrías', 'group.sound': 'Sonido', 'set.crossfade': 'Transición entre pistas', 'cross.0': 'Sin transición', 'cross.2': 'Corta', 'cross.4': 'Media', 'cross.8': 'Larga', 'check.title': 'Prueba de sonido', 'check.note': 'Toca reproducir y escucha unos minutos. Si oyes un corte, dile estos números a Blossom.', 'check.dropouts': 'Cortes', 'check.gaps': 'Saltos del reloj de audio', 'check.state': 'Audio', 'check.na': 'no se mide en este navegador', 'check.none': 'aún no empieza', 'check.interrupted': 'Interrupciones', 'group.look': 'Apariencia', 'group.sizes': 'Tamaños y espacio', 'group.joy': 'Mensajes y partículas', 'group.phone': 'Teléfono y Sonos', 'meta': 'Crea tu propio ruido, repite tus pistas y mézclalas con ritmos binaurales, directamente en tu navegador.', 'beat.Alpha': 'Alfa', 'set.messages': 'Mensajes positivos', 'set.particles': 'Partículas flotantes', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'cheer.from': '— Blossom',
-      'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'yt.title': 'La favorita de Ian', 'yt.play': '▶ Reproducir', 'yt.close': '✕ Cerrar reproductor', 'yt.open': 'Abrir en YouTube ↗', 'yt.note': 'Suena y se repite en el reproductor de YouTube. Tiene su propio volumen, así que no forma parte de tu lista ni del mezclador, y puede detenerse al bloquear la pantalla.', 'shower.title': 'Música para la ducha', 'shower.sub': 'Pega el enlace de una lista de YouTube. Se recuerda en este dispositivo.', 'shower.link': 'Enlace de la lista de YouTube', 'shower.play': '▶ Reproducir', 'shower.close': '✕ Cerrar reproductor', 'shower.find': 'Buscar una lista ↗', 'shower.bad': 'Ese enlace no contiene una lista', 'shower.note': 'Suena en el reproductor de YouTube, con su propio volumen, así que no forma parte de tu lista ni del mezclador. La lista debe ser pública y YouTube puede mostrar anuncios.', 'library.title': 'Biblioteca', 'library.sub': 'Pistas originales de downtempo y lo-fi, creadas en tu navegador. Añádelas a tu lista para reproducirlas, repetirlas o mezclarlas.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Bossa lo-fi', 'library.waltz': 'Vals lo-fi', 'library.triphop': 'Trip-hop', 'library.electronic': 'Downtempo electrónico', 'library.ambient': 'Downtempo ambiental', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', 'rate.rarely': 'Rara vez', 'rate.sometimes': 'A veces', 'rate.often': 'Seguido'
-    }
+      'add.title': 'Añade tus pistas', 'add.sub': 'Elige archivos de audio de tu dispositivo', 'add.main': 'Elegir pistas', 'add.hint': 'Toca para elegir, o arrastra y suelta', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.title': 'Mis pistas', 'tracks.sub': 'Tu lista suena en orden. Reproduce o elimina pistas aquí', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Toca Añadir para elegir música', 'play': '▶ Reproducir', 'stop': '■ Detener', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
+      'mix.sub': 'Ritmos binaurales mezclados con tus pistas y el ruido. Usa audífonos: cada oído recibe un tono ligeramente distinto.', 'mix.type': 'Tipo de ritmo', 'mix.rate': 'Frecuencia del ritmo', 'mix.pitch': 'Altura', 'mix.beats': 'Ritmos neuronales', 'mute': 'Silenciar', 'muted': 'Silenciado', 'aria.play.beats': 'Reproducir ritmos neuronales', 'aria.stop.beats': 'Detener ritmos neuronales',
+      'tagline': 'Combina sonidos. Crea tu propia mezcla.', 'layer.noise': 'Ruido', 'layer.playlist': 'Lista', 'layer.beats': 'Ritmos', 'layer.configure': 'Configurar', 'layer.add': 'Añadir', 'layer.adjust': 'Ajustar', 'layer.on': 'Activar', 'layer.master': 'Volumen general', 'aria.play.mix': 'Reproducir mezcla', 'aria.stop.mix': 'Detener mezcla',
+      'settings': 'Ajustes', 'close': 'Cerrar', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.ripples': 'Ondas', 'bg.fireflies': 'Luciérnagas', 'bg.constellation': 'Constelación', 'bg.aurora': 'Aurora', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'group.sound': 'Sonido', 'set.crossfade': 'Transición entre pistas', 'cross.0': 'Sin transición', 'cross.2': 'Corta', 'cross.4': 'Media', 'cross.8': 'Larga', 'check.title': 'Prueba de sonido', 'check.note': 'Toca reproducir y escucha unos minutos. Si oyes un corte, dile estos números a Blossom.', 'check.dropouts': 'Cortes', 'check.gaps': 'Saltos del reloj de audio', 'check.state': 'Audio', 'check.na': 'no se mide en este navegador', 'check.none': 'aún no empieza', 'check.interrupted': 'Interrupciones', 'group.look': 'Apariencia', 'group.sizes': 'Tamaños y espacio', 'group.phone': 'Teléfono y Sonos', 'meta': 'Crea tu propio ruido, repite tus pistas y mézclalas con ritmos binaurales, directamente en tu navegador.', 'beat.Alpha': 'Alfa', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'library.title': 'Biblioteca', 'library.sub': 'Pistas originales de downtempo y lo-fi, creadas en tu navegador. Añádelas a tu lista para reproducirlas, repetirlas o mezclarlas.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Bossa lo-fi', 'library.waltz': 'Vals lo-fi', 'library.triphop': 'Trip-hop', 'library.electronic': 'Downtempo electrónico', 'library.ambient': 'Downtempo ambiental', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', }
   };
   var SETTINGS_STORE = 'alot.settings.v1';
-  var SETTINGS_DEFAULT = { lang: 'es', layout: 'flow', bg: 'threads', accent: 'amber', messages: true, particles: true, keepAwake: true, background: false, playlistLoop: true, crossfade: '4', textSize: 'm', sliderSize: 'm', controlSize: 'm', spacing: 'normal', panels: 'glass', messageRate: 'sometimes', bgLevel: 100, calm: false };
+  var BN_TOUCH = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+  var SETTINGS_DEFAULT = { lang: 'es', layout: 'flow', bg: 'threads', accent: 'amber', keepAwake: BN_TOUCH, background: false, playlistLoop: true, crossfade: '4', textSize: 'm', sliderSize: 'm', controlSize: 'm', spacing: 'normal', panels: 'glass', bgLevel: 100, calm: false };
   var settings = Object.assign({}, SETTINGS_DEFAULT);
   try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_STORE)) || {}); } catch (e) { /* defaults */ }
+  // Saved settings from before 2026-11 hold the old always-on default; a choice made after this sticks.
+  if (!settings.powerV) { if (!BN_TOUCH) settings.keepAwake = false; settings.powerV = 1; }
   (function () {
     var fromLink = new URLSearchParams(location.search).get('lang');
     if (fromLink === 'en' || fromLink === 'es') settings.lang = fromLink;
@@ -1209,6 +1091,7 @@
     playingAudio = null;
     playingId = null;
     syncWakeLock();
+    layersSync();
   }
 
   function crossfadeSeconds() {
@@ -1289,6 +1172,7 @@
   }
 
   function renderTakes() {
+    layersSync();
     takesList.textContent = '';
     renderLibrary();
     mixRender();
@@ -1469,12 +1353,7 @@
     saveName: document.getElementById('bnSaveName'),
     saveCancel: document.getElementById('bnSaveCancel'),
     saved: document.getElementById('bnSaved'),
-    canvas: document.getElementById('bnCanvas'),
-    dot: document.getElementById('bnLiveDot'),
-    viewBrown: document.getElementById('viewBrown'),
-    viewStudio: document.getElementById('viewStudio'),
-    tabBrown: document.getElementById('tabBrown'),
-    tabStudio: document.getElementById('tabStudio')
+    canvas: document.getElementById('bnCanvas')
   };
   var bnReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -1810,14 +1689,9 @@
     bnPlaying = on;
     if (on) lastSource = 'noise';
     bnPulse = 1;
-    bnEl.play.setAttribute('aria-pressed', String(on));
-    bnEl.play.setAttribute('aria-label', t(on ? 'aria.stop.noise' : 'aria.play.noise'));
-    bnEl.dot.style.visibility = on ? 'visible' : 'hidden'; // keeps the tab width steady
-    bnEl.dot.setAttribute('aria-hidden', String(!on));
     bnUpdateMediaSession();
-    mixSyncBrown();
     syncWakeLock();
-    bnMiniSync();
+    layersSync();
     bnStartVisual();
   }
 
@@ -2132,9 +2006,20 @@
     g.globalCompositeOperation = 'source-over';
   }
 
+  var BN_IDLE = 60000;
+  var bnLastActive = performance.now();
+  ['pointerdown', 'pointermove', 'keydown'].forEach(function (type) {
+    document.addEventListener(type, function () {
+      bnLastActive = performance.now();
+      if (!bnRaf) bnStartVisual();
+    }, { passive: true });
+  });
+
   function bnVisualLoop(now) {
     bnRaf = null;
     if (document.hidden || settings.bg === 'still' || bnCalm()) return;
+    // Nobody is looking: leave the last frame up. Sound does not depend on this.
+    if (now - bnLastActive > BN_IDLE) return;
     if (bnFrameSeen && now - bnFrameSeen > 45 && now - bnFrameSeen < 500) bnSlowFrames++;
     bnFrameSeen = now;
     if (bnSlowFrames > 20) bnLowPower = true;
@@ -2167,7 +2052,10 @@
       bnRaf = requestAnimationFrame(bnVisualLoop);
     }
   }
-  document.addEventListener('visibilitychange', bnStartVisual);
+  document.addEventListener('visibilitychange', function () {
+    bnLastActive = performance.now();
+    bnStartVisual();
+  });
 
   /* ═══════════════════════════════════════════
      PHONE: KEEP AWAKE, LOCKED-SCREEN LOOP, AIRPLAY
@@ -2194,7 +2082,7 @@
   var wakeLock = null;
 
   function syncWakeLock() {
-    var wanted = settings.keepAwake && !document.hidden && (bnPlaying || !!mixOscillators || playingId !== null);
+    var wanted = settings.keepAwake && !settings.background && !document.hidden && (bnPlaying || !!mixOscillators || playingId !== null);
     if (wanted && !wakeLock && navigator.wakeLock) {
       wakeLock = 'pending';
       navigator.wakeLock.request('screen').then(function (lock) {
@@ -2218,7 +2106,7 @@
       bgPlayer.preload = 'auto';
       bgPlayer.setAttribute('x-webkit-airplay', 'allow');
       bgPlayer.addEventListener('ended', function () {
-        if (!bgActive) return;
+        if (!bgActive || !bgLoaded) return; // the silent placeholder ends at once: not a restart
         if (bgWaiting) { bgLoad(); return; }
         bgPlayer.currentTime = 0; // the loop setting should cover this; silence must never stay
         bgPlayer.play().catch(function () {});
@@ -2444,8 +2332,7 @@
   function bnRenderControls() {
     bnEl.name.textContent = bnDisplayName();
     document.getElementById('bnMiniName').textContent = bnDisplayName();
-    document.getElementById('bnKicker').textContent = t('noise', { c: settings.lang === 'es' ? t('color.' + bn.color).toLowerCase() : t('color.' + bn.color) });
-    bnEl.play.setAttribute('aria-label', t(bnPlaying ? 'aria.stop.noise' : 'aria.play.noise'));
+    layersSync();
     Array.prototype.forEach.call(document.getElementById('bnColors').children, function (chip, i) {
       chip.setAttribute('aria-pressed', String(BN_COLORS[i].id === bn.color));
     });
@@ -2657,7 +2544,7 @@
     bnEl.presets.appendChild(chip);
   });
 
-  bnEl.play.addEventListener('click', function () { bnSetPlaying(!bnPlaying); });
+  bnEl.play.addEventListener('click', playMix);
   bnEl.generate.addEventListener('click', bnGenerate);
   document.getElementById('bnSurprise').addEventListener('click', bnSurprise);
   bnEl.prev.addEventListener('click', function () {
@@ -2665,7 +2552,7 @@
   });
   bnEl.volume.addEventListener('input', function () {
     bnEl.volume.style.setProperty('--v', bnEl.volume.value + '%');
-    mixSyncBrown();
+    layersSync();
     if (bgPlayer) bgPlayer.volume = bnVolumeLevel();
     if (bnAudio) bnAudio.master.gain.setTargetAtTime(bnVolumeLevel(), bnAudio.ctx.currentTime, 0.02);
     bnPersist();
@@ -2704,51 +2591,18 @@
 
   // Space bar plays and stops, unless the focus is on something that uses it.
   document.addEventListener('keydown', function (e) {
-    if (e.code !== 'Space' || bnEl.viewBrown.hidden) return;
+    if (e.code !== 'Space') return;
     if (e.target !== document.body) return;
     e.preventDefault();
-    bnSetPlaying(!bnPlaying);
-    cheerOnInteraction();
+    playMix();
   });
 
-  /* ── Tabs ── */
-  function showView(name, moveFocus) {
-    var brown = name === 'brown';
-    bnEl.viewBrown.hidden = !brown;
-    bnEl.viewStudio.hidden = brown;
-    bnEl.tabBrown.setAttribute('aria-selected', String(brown));
-    bnEl.tabStudio.setAttribute('aria-selected', String(!brown));
-    bnEl.tabBrown.tabIndex = brown ? 0 : -1;
-    bnEl.tabStudio.tabIndex = brown ? -1 : 0;
-    if (moveFocus) (brown ? bnEl.tabBrown : bnEl.tabStudio).focus();
-    try { history.replaceState(null, '', brown ? '#noise' : '#studio'); } catch (e) { /* not needed to work */ }
-    bnMiniSync();
-    if (brown) bnStartVisual();
-  }
-  function goToView(name, moveFocus) {
-    showView(name, moveFocus);
-  }
-  bnEl.tabBrown.addEventListener('click', function () { goToView('brown'); });
-  bnEl.tabStudio.addEventListener('click', function () { goToView('studio'); });
-  [bnEl.tabBrown, bnEl.tabStudio].forEach(function (tab) {
-    tab.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-        e.preventDefault();
-        goToView(tab === bnEl.tabBrown ? 'studio' : 'brown', true);
-        cheerOnInteraction();
-      }
-    });
-  });
   if (window.ResizeObserver) {
     new ResizeObserver(function () { if (!bnRaf) bnDraw(0); }).observe(bnEl.canvas);
   }
 
   bnLoadStored();
   bnRenderControls();
-  showView(location.hash === '#studio' ? 'studio' : 'brown');
-  window.addEventListener('hashchange', function () {
-    showView(location.hash === '#studio' ? 'studio' : 'brown');
-  });
 
   /* ═══════════════════════════════════════════
      NEURAL BEATS MIXER
@@ -2768,7 +2622,7 @@
   var mixFade = null;
   var mixEl = {};
   ['mixTypes', 'mixRate', 'mixRateValue', 'mixPitch', 'mixPitchValue', 'mixBeats', 'mixBeatsBtn',
-    'mixTracks', 'mixTracksBtn', 'mixBrown', 'mixBrownBtn', 'mixMaster'].forEach(function (id) {
+    'mixTracks', 'mixMaster'].forEach(function (id) {
     mixEl[id] = document.getElementById(id);
   });
 
@@ -2864,15 +2718,6 @@
     return { node: node, gain: gain };
   }
 
-  function mixSyncBrown() {
-    mixEl.mixBrown.value = bnEl.volume.value;
-    mixEl.mixBrown.style.setProperty('--v', bnEl.volume.value + '%');
-    document.getElementById('mixBrownVal').textContent = bnEl.volume.value;
-    mixEl.mixBrownBtn.textContent = bnPlaying ? '■' : '▶';
-    mixEl.mixBrownBtn.setAttribute('aria-label', t(bnPlaying ? 'aria.stop.noise' : 'aria.play.noise'));
-    mixEl.mixBrownBtn.setAttribute('aria-pressed', String(bnPlaying));
-  }
-
   // Screen readers announce sliders with their unit, not a bare number.
   function rangeText() {
     Array.prototype.forEach.call(document.querySelectorAll('input[type="range"]'), function (r) {
@@ -2894,21 +2739,15 @@
     show(mixEl.mixTracks, mixState.tracks, 0, 100);
     show(mixEl.mixMaster, mixState.master, 0, 100);
     rangeText();
-    document.getElementById('mixBeatsVal').textContent = mixState.beats;
-    document.getElementById('mixTracksVal').textContent = mixState.tracks;
-    document.getElementById('mixMasterVal').textContent = mixState.master;
-    mixEl.mixTracksBtn.disabled = !recordings.length;
     mixEl.mixRateValue.textContent = mixState.rate + ' Hz';
     mixEl.mixPitchValue.textContent = mixState.pitch + ' Hz';
-    mixEl.mixBeatsBtn.textContent = mixOscillators ? '■' : '▶';
-    mixEl.mixBeatsBtn.setAttribute('aria-label', t(mixOscillators ? 'aria.stop.beats' : 'aria.play.beats'));
-    mixEl.mixBeatsBtn.setAttribute('aria-pressed', String(!!mixOscillators));
-    mixEl.mixTracksBtn.textContent = t(mixState.muted ? 'muted' : 'mute');
-    mixEl.mixTracksBtn.setAttribute('aria-pressed', String(mixState.muted));
+    mixEl.mixBeatsBtn.textContent = beatsWanted ? '■' : '▶';
+    mixEl.mixBeatsBtn.setAttribute('aria-label', t(beatsWanted ? 'aria.stop.beats' : 'aria.play.beats'));
+    mixEl.mixBeatsBtn.setAttribute('aria-pressed', String(beatsWanted));
     Array.prototype.forEach.call(mixEl.mixTypes.children, function (chip, i) {
       chip.setAttribute('aria-pressed', String(MIX_TYPES[i].rate === mixState.rate));
     });
-    mixSyncBrown();
+    layersSync();
   }
 
   function mixChanged() {
@@ -2925,7 +2764,6 @@
       ['beats', 'tracks', 'master'].forEach(function (k) {
         if (typeof mixStored[k] === 'number') mixState[k] = clamp(mixStored[k]);
       });
-      mixState.muted = mixStored.muted === true;
     }
   } catch (e) { /* nothing usable stored: start from the defaults */ }
 
@@ -2949,156 +2787,8 @@
       mixChanged();
     });
   });
-  mixEl.mixBeatsBtn.addEventListener('click', function () { mixSetBeats(!mixOscillators); });
-  mixEl.mixTracksBtn.addEventListener('click', function () {
-    mixState.muted = !mixState.muted;
-    mixChanged();
-  });
-  mixEl.mixBrownBtn.addEventListener('click', function () { bnSetPlaying(!bnPlaying); });
-  mixEl.mixBrown.addEventListener('input', function () {
-    bnEl.volume.value = mixEl.mixBrown.value;
-    bnEl.volume.dispatchEvent(new Event('input'));
-  });
+  mixEl.mixBeatsBtn.addEventListener('click', function () { setBeatsWanted(!beatsWanted); });
   mixRender();
-
-  /* ═══════════════════════════════════════════
-     POSITIVE MESSAGE + FLOATING PARTICLES, shown when switching tabs
-  ═══════════════════════════════════════════ */
-  var CHEER_MESSAGES = {
-    en: [
-      'Ian, you’re doing better than you think!', 'Small steps still count, Ian!', 'Something good is on its way to you, Ian!', 'Ian, you’ve made it through every hard day so far!',
-      'Be as kind to yourself as you are to others, Ian!', 'Today has room for something good, Ian!', 'Your ideas are worth making, Ian!', 'Breathe, Ian. You have time!',
-      'Ian, your curiosity is a gift!', 'You make things better, Ian!', 'Ian, you’ve got this!', 'Nice choice, Ian!',
-      'Good things take time, Ian!', 'Keep going, Ian!', 'The world is better with you in it, Ian!', 'Ian, enjoy this moment!',
-      'Ian, you light up every room, no flashlight needed!', 'Keep your flashlight handy and your heart bright, Ian!', 'Even the darkest night is no match for a good flashlight, Ian!',
-      'Ian, you’re the flashlight in someone’s dark moment!', 'One small beam goes a long way, Ian!', 'Click! Ian, let your light shine!'
-    ],
-    es: [
-      '¡Ian, lo estás haciendo mejor de lo que crees!', '¡Cada pasito cuenta, Ian!', '¡Algo bueno viene en camino, Ian!', '¡Ian, has superado cada día difícil hasta hoy!',
-      '¡Trátate con la misma bondad que das a los demás, Ian!', '¡Hoy hay lugar para algo bueno, Ian!', '¡Tus ideas merecen existir, Ian!', 'Respira, Ian. ¡Tienes tiempo!',
-      '¡Ian, tu curiosidad es un regalo!', '¡Contigo todo mejora, Ian!', '¡Ian, tú puedes!', '¡Buena elección, Ian!',
-      '¡Lo bueno toma tiempo, Ian!', '¡Sigue adelante, Ian!', '¡El mundo es mejor contigo, Ian!', '¡Ian, disfruta este momento!',
-      'Ian, iluminas cada lugar, ¡sin necesidad de linterna!', '¡Ten tu linterna a la mano y el corazón encendido, Ian!', '¡Ninguna noche oscura puede con una buena linterna, Ian!',
-      '¡Ian, eres la linterna de alguien en un momento oscuro!', '¡Un pequeño haz de luz llega muy lejos, Ian!', '¡Clic! ¡Ian, deja brillar tu luz!'
-    ]
-  };
-  var cheerEl = document.getElementById('cheer');
-  var particlesEl = document.getElementById('particles');
-  var cheerLast = -1;
-  var cheerTimer = null;
-  var particlesRaf = null;
-
-  function runParticles() {
-    if (bnCalm()) return;
-    if (particlesRaf) cancelAnimationFrame(particlesRaf);
-    var w = window.innerWidth;
-    var h = window.innerHeight;
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    particlesEl.width = Math.round(w * dpr);
-    particlesEl.height = Math.round(h * dpr);
-    particlesEl.hidden = false;
-    var g = particlesEl.getContext('2d');
-    g.setTransform(dpr, 0, 0, dpr, 0, 0);
-    var glow = getComputedStyle(document.documentElement).getPropertyValue('--glow').trim();
-    var LIFE = 4800;
-    function makeSprite(color) { // drawn once: far cheaper than a new gradient per particle per frame
-      var sprite = document.createElement('canvas');
-      sprite.width = sprite.height = 64;
-      var c = sprite.getContext('2d');
-      var light = c.createRadialGradient(32, 32, 0, 32, 32, 32);
-      light.addColorStop(0, 'rgba(' + color + ',1)');
-      light.addColorStop(0.25, 'rgba(' + color + ',0.45)');
-      light.addColorStop(1, 'rgba(' + color + ',0)');
-      c.fillStyle = light;
-      c.fillRect(0, 0, 64, 64);
-      return sprite;
-    }
-    var warm = makeSprite(glow);
-    var pale = makeSprite('255,246,232');
-    var motes = [];
-    for (var i = 0; i < (w < 600 ? 30 : 56); i++) {
-      motes.push({
-        x: Math.random() * w,
-        y: h * (0.2 + Math.random() * 0.8),
-        rise: 8 + Math.random() * 22,
-        sway: 6 + Math.random() * 18,
-        phase: Math.random() * 6.28,
-        size: 1.5 + Math.pow(Math.random(), 2) * 5,
-        delay: Math.random() * 900,
-        white: Math.random() < 0.25
-      });
-    }
-    var start = null;
-    function frame(now) {
-      if (start === null) start = now;
-      var age = now - start;
-      g.clearRect(0, 0, w, h);
-      if (age > LIFE) {
-        particlesEl.hidden = true;
-        particlesRaf = null;
-        return;
-      }
-      g.globalCompositeOperation = 'lighter';
-      motes.forEach(function (m) {
-        var t = (age - m.delay) / (LIFE - m.delay);
-        if (t <= 0) return;
-        var alpha = Math.sin(Math.PI * Math.min(1, t)) * (0.55 + 0.45 * Math.sin(age * 0.002 + m.phase));
-        if (alpha <= 0) return;
-        var seconds = age / 1000;
-        var x = m.x + Math.sin(seconds * 0.7 + m.phase) * m.sway;
-        var y = m.y - m.rise * seconds;
-        var radius = m.size * 3.5;
-        g.globalAlpha = alpha;
-        g.drawImage(m.white ? pale : warm, x - radius, y - radius, radius * 2, radius * 2);
-      });
-      g.globalAlpha = 1;
-      g.globalCompositeOperation = 'source-over';
-      particlesRaf = requestAnimationFrame(frame);
-    }
-    particlesRaf = requestAnimationFrame(frame);
-  }
-
-  function showCheer() {
-    if (settings.particles) runParticles();
-    if (!settings.messages) return;
-    var messages = CHEER_MESSAGES[settings.lang];
-    var pick = Math.floor(Math.random() * messages.length);
-    if (pick === cheerLast) pick = (pick + 1) % messages.length;
-    cheerLast = pick;
-    cheerEl.textContent = messages[pick];
-    var from = document.createElement('div');
-    from.className = 'cheer-from';
-    from.textContent = t('cheer.from');
-    cheerEl.appendChild(from);
-    var close = document.createElement('button');
-    close.className = 'cheer-close';
-    close.textContent = '✕';
-    close.setAttribute('aria-label', t('close'));
-    close.addEventListener('click', function () { cheerEl.classList.remove('show'); });
-    cheerEl.appendChild(close);
-    cheerEl.classList.add('show');
-    clearTimeout(cheerTimer);
-    cheerTimer = setTimeout(function () { cheerEl.classList.remove('show'); }, 3500);
-  }
-
-  var cheerLastShown = -Infinity;
-  function cheerOnInteraction() {
-    // Keeps messages occasional, however many controls get touched.
-    var gaps = { rarely: 300000, sometimes: 60000, often: 15000 };
-    var now = Date.now();
-    if (now - cheerLastShown < (gaps[settings.messageRate] || gaps.sometimes)) return;
-    cheerLastShown = now;
-    showCheer();
-  }
-  document.addEventListener('click', function (e) {
-    var el = e.target.closest ? e.target.closest('button, label, a, input') : null;
-    if (!el || el.matches('input[type="text"], input[type="range"], .cheer-close')) return;
-    if (el.matches('label') && el.control && (el.control.type === 'range' || el.control.type === 'text')) return;
-    cheerOnInteraction();
-  });
-  document.addEventListener('change', function (e) {
-    if (e.target.matches && e.target.matches('input[type="range"]')) cheerOnInteraction();
-  });
 
   /* ═══════════════════════════════════════════
      TRACK LIBRARY
@@ -3465,13 +3155,19 @@
     if (libraryBusy[def.id] || recordings.some(function (r) { return r.libraryId === def.id; })) return Promise.resolve();
     libraryBusy[def.id] = true;
     renderLibrary();
-    return renderLibraryTrack(def).then(function (made) {
+    // Published tracks are already files; the rest are composed here on request.
+    var making = def.file ?
+      Promise.resolve({ url: def.file, size: def.size || 0, duration: def.duration }) :
+      renderLibraryTrack(def).then(function (made) {
+        return { url: URL.createObjectURL(made.blob), size: made.blob.size, duration: made.duration };
+      });
+    return making.then(function (made) {
       recordings.push({
         id: nextId++,
         libraryId: def.id,
         name: def.name,
-        size: made.blob.size,
-        url: URL.createObjectURL(made.blob),
+        size: made.size,
+        url: made.url,
         duration: made.duration
       });
       libraryBusy[def.id] = false;
@@ -3483,70 +3179,31 @@
     });
   }
 
-  // Loads nothing from YouTube until it is tapped. The official player has to stay
-  // visible, and it repeats by being told to loop its own one-video playlist.
-  document.getElementById('ytPlay').addEventListener('click', function () {
-    var frame = document.getElementById('ytFrame');
-    if (!frame.hidden) {
-      frame.textContent = '';
-      frame.hidden = true;
-      this.setAttribute('data-t', 'yt.play');
-      this.textContent = t('yt.play');
-      return;
-    }
-    var player = document.createElement('iframe');
-    player.src = 'https://www.youtube-nocookie.com/embed/Vy8FvmZRhXw?autoplay=1&playsinline=1&loop=1&playlist=Vy8FvmZRhXw&rel=0';
-    player.title = '21 savage - a lot - Soulful Version';
-    player.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-    player.allowFullscreen = true;
-    player.referrerPolicy = 'strict-origin-when-cross-origin';
-    frame.appendChild(player);
-    frame.hidden = false;
-    this.setAttribute('data-t', 'yt.close');
-    this.textContent = t('yt.close');
-  });
-
-  // Shower music: any public YouTube playlist, remembered on this device.
-  var SHOWER_STORE = 'alot.shower.v1';
-  var showerLink = document.getElementById('showerLink');
-  var showerFrame = document.getElementById('showerFrame');
-  var showerPlay = document.getElementById('showerPlay');
-  try { showerLink.value = localStorage.getItem(SHOWER_STORE) || ''; } catch (e) { /* starts empty */ }
-
-  function showerListId(text) {
-    var found = /[?&]list=([A-Za-z0-9_-]{10,})/.exec(text.trim());
-    return found ? found[1] : null;
+  // Tracks from the music pipeline, listed in tracks/manifest.json. If it is missing or
+  // unreadable, the library simply stays as it is.
+  function loadPublishedTracks() {
+    if (location.protocol === 'file:') return; // browsers refuse this on a page opened as a file
+    return fetch('tracks/manifest.json', { cache: 'no-cache' }).then(function (response) {
+      return response.ok ? response.json() : null;
+    }).then(function (data) {
+      if (!data || !Array.isArray(data.tracks)) return;
+      data.tracks.forEach(function (track) {
+        if (!track || !/^tracks\/[a-z0-9-]+\.m4a$/.test(track.file) || !track.name) return;
+        if (!/^[a-z]+$/.test(track.style) || !(Number(track.bpm) > 0) || !(Number(track.duration) > 0)) return;
+        LIBRARY.push({
+          id: 'file:' + track.file,
+          name: String(track.name),
+          style: track.style,
+          bpm: Number(track.bpm),
+          file: track.file,
+          size: Number(track.size) || 0,
+          duration: Number(track.duration)
+        });
+      });
+      renderLibrary();
+    }).catch(function () { /* the built-in library still works */ });
   }
-
-  function showerSetButton(key) {
-    showerPlay.setAttribute('data-t', key);
-    showerPlay.textContent = t(key);
-  }
-
-  showerPlay.addEventListener('click', function () {
-    if (!showerFrame.hidden) {
-      showerFrame.textContent = '';
-      showerFrame.hidden = true;
-      showerSetButton('shower.play');
-      return;
-    }
-    var list = showerListId(showerLink.value);
-    if (!list) {
-      toast(t('shower.bad'), 'error');
-      showerLink.focus();
-      return;
-    }
-    try { localStorage.setItem(SHOWER_STORE, showerLink.value.trim()); } catch (e) { /* lasts for this visit */ }
-    var player = document.createElement('iframe');
-    player.src = 'https://www.youtube-nocookie.com/embed/videoseries?list=' + list + '&autoplay=1&playsinline=1&loop=1&rel=0';
-    player.title = t('shower.title');
-    player.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-    player.allowFullscreen = true;
-    player.referrerPolicy = 'strict-origin-when-cross-origin';
-    showerFrame.appendChild(player);
-    showerFrame.hidden = false;
-    showerSetButton('shower.close');
-  });
+  loadPublishedTracks();
 
   document.getElementById('libraryAll').addEventListener('click', function () {
     LIBRARY.reduce(function (chain, def) {
@@ -3557,7 +3214,6 @@
   /* ═══════════════════════════════════════════
      SETTINGS PANEL + LANGUAGE TOGGLE
   ═══════════════════════════════════════════ */
-  var cheerLang = settings.lang;
   var settingsEl = document.getElementById('settings');
   var gearEl = document.getElementById('gear');
 
@@ -3566,6 +3222,7 @@
   }
 
   function applySettings() {
+    setTimeout(layersSync, 0); // words on the layer rows follow the language
     var root = document.documentElement;
     root.lang = settings.lang;
     root.setAttribute('data-layout', settings.layout);
@@ -3583,17 +3240,6 @@
     rangeText();
     document.title = t('title');
     document.getElementById('metaDescription').setAttribute('content', t('meta'));
-    document.getElementById('showerFind').href = 'https://www.youtube.com/results?sp=EgIQAw%253D%253D&search_query=' + encodeURIComponent(settings.lang === 'es' ? 'música para la ducha' : 'shower music');
-    if (cheerLang !== settings.lang) { // a message shown in the old language shouldn't linger
-      cheerEl.classList.remove('show');
-      cheerEl.textContent = '';
-      cheerLang = settings.lang;
-    }
-    if (bnCalm() && particlesRaf) {
-      cancelAnimationFrame(particlesRaf);
-      particlesRaf = null;
-      particlesEl.hidden = true;
-    }
     translateIn(document);
     translateIn(emptyState);
     bnRenderControls();
@@ -3605,8 +3251,6 @@
       var parts = el.getAttribute('data-set').split(':');
       el.setAttribute('aria-pressed', String(settings[parts[0]] === parts[1]));
     });
-    document.getElementById('setMessages').checked = settings.messages;
-    document.getElementById('setParticles').checked = settings.particles;
     document.getElementById('setKeep').checked = settings.keepAwake;
     document.getElementById('playlistLoop').checked = settings.playlistLoop;
     document.getElementById('setBackground').checked = settings.background;
@@ -3642,14 +3286,6 @@
       saveSettings();
       applySettings();
     });
-  });
-  document.getElementById('setMessages').addEventListener('change', function (e) {
-    settings.messages = e.target.checked;
-    saveSettings();
-  });
-  document.getElementById('setParticles').addEventListener('change', function (e) {
-    settings.particles = e.target.checked;
-    saveSettings();
   });
   function setBackgroundMode(on) {
     var wasPlaying = bnPlaying;
@@ -3720,33 +3356,24 @@
   if ('mediaSession' in navigator) {
     var controls = {
       play: function () {
-        if (lastSource === 'tracks') {
-          if (playingAudio) playingAudio.play().catch(function () {});
-          else if (recordings.length) play(recordings[0]);
-        } else if (!bnPlaying) {
-          bnSetPlaying(true);
-        }
+        if (!bnPlaying) bnSetPlaying(true);
+        if (beatsWanted && !mixOscillators) mixSetBeats(true);
+        if (playingAudio) { lastSource = 'tracks'; playingAudio.play().catch(function () {}); }
+        else if (recordings.length) play(recordings[0]);
         bnUpdateMediaSession();
+        layersSync();
       },
       pause: function () {
-        if (lastSource === 'tracks') {
-          if (playingAudio) playingAudio.pause();
-        } else if (bnPlaying) {
-          bnSetPlaying(false);
-        }
+        if (bnPlaying) bnSetPlaying(false);
+        if (mixOscillators) mixSetBeats(false);
+        if (playingAudio) playingAudio.pause();
         bnUpdateMediaSession();
+        layersSync();
       },
-      stop: function () {
-        if (lastSource === 'tracks') {
-          stopPlayback();
-          renderTakes();
-        } else if (bnPlaying) {
-          bnSetPlaying(false);
-        }
-      },
+      stop: function () { stopMix(); },
       nexttrack: function () {
         var current = recordings.filter(function (r) { return r.id === playingId; })[0];
-        if (lastSource === 'tracks' && current) playNext(current, true);
+        if (current) playNext(current, true);
       }
     };
     Object.keys(controls).forEach(function (action) {
@@ -3756,23 +3383,121 @@
     });
   }
 
-  // Quick controls: shown once the main play button scrolls away, or while noise plays in Studio
+  // Quick controls: shown once the main play button scrolls away
   var bnPlayInView = true;
   function bnMiniSync() {
-    var mini = document.getElementById('bnMini');
-    mini.hidden = bnEl.viewBrown.hidden ? !bnPlaying : bnPlayInView;
+    var on = mixIsPlaying();
+    document.getElementById('bnMini').hidden = bnPlayInView;
     var button = document.getElementById('bnMiniPlay');
-    button.textContent = bnPlaying ? '■' : '▶';
-    button.setAttribute('aria-pressed', String(bnPlaying));
-    button.setAttribute('aria-label', t(bnPlaying ? 'aria.stop.noise' : 'aria.play.noise'));
+    button.textContent = on ? '■' : '▶';
+    button.setAttribute('aria-pressed', String(on));
+    button.setAttribute('aria-label', t(on ? 'aria.stop.mix' : 'aria.play.mix'));
   }
-  document.getElementById('bnMiniPlay').addEventListener('click', function () { bnSetPlaying(!bnPlaying); });
+  document.getElementById('bnMiniPlay').addEventListener('click', playMix);
   if (window.IntersectionObserver) {
     new IntersectionObserver(function (entries) {
       bnPlayInView = entries[entries.length - 1].isIntersecting;
       bnMiniSync();
     }).observe(bnEl.play);
   }
+
+  /* ═══════════════════════════════════════════
+     LAYERS: one play button for noise, music and beats together
+  ═══════════════════════════════════════════ */
+  var beatsWanted = false;
+  var mixStarting = false;
+  var layersReady = true;
+
+  function mixIsPlaying() {
+    return !!(bnPlaying || playingId !== null && playingId !== undefined || mixOscillators || mixStarting);
+  }
+
+  function layersSync() {
+    if (!layersReady) return; // the page is still being set up
+    var on = mixIsPlaying();
+    bnEl.play.setAttribute('aria-pressed', String(on));
+    bnEl.play.setAttribute('data-t-aria', on ? 'aria.stop.mix' : 'aria.play.mix');
+    bnEl.play.setAttribute('aria-label', t(on ? 'aria.stop.mix' : 'aria.play.mix'));
+    var noiseBtn = document.getElementById('noiseBtn');
+    noiseBtn.textContent = bnPlaying ? '■' : '▶';
+    noiseBtn.setAttribute('aria-pressed', String(bnPlaying));
+    noiseBtn.setAttribute('aria-label', t(bnPlaying ? 'aria.stop.noise' : 'aria.play.noise'));
+    document.querySelector('.playlist-bar').hidden = !recordings.length;
+    var type = MIX_TYPES.filter(function (x) { return x.rate === mixState.rate; })[0];
+    document.getElementById('layerBeatsPick').textContent = !beatsWanted ? '—' : (type ? (type.name === 'Alpha' ? t('beat.Alpha') : type.name) + ' · ' : '') + mixState.rate + ' Hz';
+    document.getElementById('layerBeats').toggleAttribute('data-off', !beatsWanted);
+    var action = document.getElementById('layerBeatsBtn');
+    var key = beatsWanted ? 'layer.adjust' : 'layer.on';
+    action.setAttribute('data-t', key);
+    action.textContent = t(key);
+    bnMiniSync();
+  }
+
+  function startMusic() {
+    if (recordings.length) {
+      play(recordings[0]);
+      renderTakes();
+      return Promise.resolve();
+    }
+    if (!LIBRARY.length) return Promise.resolve();
+    return addLibraryTrack(LIBRARY[0]).then(function () {
+      if (mixStarting && recordings.length) {
+        play(recordings[0]);
+        renderTakes();
+      }
+    });
+  }
+
+  function playMix() {
+    if (mixIsPlaying()) { stopMix(); return; }
+    trackPlayers(); // phones only allow later starts if the players are unlocked by this tap
+    mixStarting = true;
+    bnSetPlaying(true);
+    if (beatsWanted) mixSetBeats(true);
+    startMusic().then(function () {
+      mixStarting = false;
+      layersSync();
+    });
+    layersSync();
+  }
+
+  function stopMix() {
+    mixStarting = false;
+    if (bnPlaying) bnSetPlaying(false);
+    if (mixOscillators) mixSetBeats(false);
+    stopPlayback();
+    renderTakes();
+    layersSync();
+  }
+
+  function setBeatsWanted(on) {
+    beatsWanted = on;
+    if (on && (bnPlaying || playingId !== null && playingId !== undefined) && !mixOscillators) mixSetBeats(true);
+    if (!on && mixOscillators) mixSetBeats(false);
+    mixRender();
+  }
+
+  var LAYER_DRAWERS = { Noise: 'drawerNoise', Music: 'drawerMusic', Beats: 'drawerBeats' };
+  function layerToggle(name, open) {
+    Object.keys(LAYER_DRAWERS).forEach(function (key) {
+      var drawer = document.getElementById(LAYER_DRAWERS[key]);
+      var show = key === name && (open === undefined ? drawer.hidden : open);
+      drawer.hidden = !show;
+      document.getElementById('layer' + key + 'Btn').setAttribute('aria-expanded', String(show));
+    });
+  }
+  document.getElementById('noiseBtn').addEventListener('click', function () { bnSetPlaying(!bnPlaying); });
+  document.getElementById('layerNoiseBtn').addEventListener('click', function () { layerToggle('Noise'); });
+  document.getElementById('layerMusicBtn').addEventListener('click', function () { layerToggle('Music'); });
+  document.getElementById('layerBeatsBtn').addEventListener('click', function () {
+    if (!beatsWanted) { setBeatsWanted(true); layerToggle('Beats', true); return; }
+    layerToggle('Beats');
+  });
+  // Older links to the Studio tab open the music list.
+  function layerFromLink() { if (location.hash === '#studio') layerToggle('Music', true); }
+  layerFromLink();
+  window.addEventListener('hashchange', layerFromLink);
+  layersSync();
 
   applySettings();
   bnMiniSync();
