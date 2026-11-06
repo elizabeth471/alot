@@ -19,6 +19,8 @@ RELEASES = [
     'globular-entangled-everything', 'zoungla-there-will-be-dub', 'sephira-the-master-work',
     'globular-holobiont', 'greatowl-lilia-sin-mi', 'huuhaa-frostient',
     'saluberrimae-time-is-a-flat-circle', 'ajnia-oasis', 'ajnia-elements', 'shinjibomb-shinjibomb',
+    'mellow-sonic-twisted-worlds', 'one-arc-degree-cybernetika-nether-moon', 'cryomatter-cryomatter',
+    'octogoat-robot-reproduction', 'barby-nexus',
 ]
 
 def get(url):

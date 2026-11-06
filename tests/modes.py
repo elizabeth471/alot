@@ -21,7 +21,7 @@ async def run(p, name):
     await c.route('**/vote', vote)
     await q.add_init_script(INIT); await q.goto(U); await q.wait_for_timeout(1200)
     rows = q.locator('.mode-row')
-    check(name + ' four purposes listed', await rows.count() == 4, await q.inner_text('#modeList'))
+    check(name + ' five purposes listed', await rows.count() == 5, await q.inner_text('#modeList'))
     check(name + ' question shown', await q.inner_text('.tagline') == 'What do you need right now?')
     check(name + ' first screen: all purposes visible', await q.evaluate("document.querySelector('#modeList').getBoundingClientRect().bottom<innerHeight"))
     check(name + ' mixer tucked under Customize', not await q.locator('#bnPlay').is_visible() and await q.locator('#customizeBtn').is_visible() and await q.locator('#mixMaster').is_visible())
@@ -50,6 +50,11 @@ async def run(p, name):
     check(name + ' switching leaves one stream playing', len(st) == 1, st)
     await q.locator('.mode-row', has_text='Meditate').click(); await q.wait_for_timeout(400)
     check(name + ' tapping again stops it', await q.evaluate(ON) == [] and not await q.locator('#modeNow').is_visible())
+    # Run climbs in tempo
+    run = [m for m in ch if m['id'] == 'run'][0]
+    check(name + ' Run has the new music and starts on the slower tracks', len(run['chapters']) == 34 and ('Barby' in run['chapters'][0]['name'] or 'Octogoat' in run['chapters'][0]['name']), run['chapters'][0]['name'])
+    await rows.filter(has_text='Run').click(); await q.wait_for_function(ON + ".some(x=>x.s=='run.m4a'&&x.t>1)", timeout=40000)
+    check(name + ' Run plays', ' – ' in await q.inner_text('#modeNowName'))
     # Sleep arc: music, then noise only
     await rows.filter(has_text='Sleep').click(); await q.wait_for_function(ON + ".some(x=>x.t>0.5)", timeout=40000); st = await q.evaluate(ON)
     check(name + ' Sleep plays the Night Arc, does not repeat', 'night-arc' in st[0]['s'] and not st[0]['l'] and st[0]['d'] == 21600, st)

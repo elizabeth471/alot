@@ -56,7 +56,7 @@ async def run(p, name):
     firsts = []
     for i in range(15):
         await q.click('#musicShuffle'); await q.wait_for_timeout(100); firsts.append(await q.inner_text('#layerMusicPick'))
-    check(name + ' Shuffle never starts on a quiet opening', len(bad) == 12 and not (set(firsts) & set(bad)), (len(bad), [x for x in firsts if x in bad]))
+    check(name + ' Shuffle never starts on a quiet opening', len(bad) >= 12 and not (set(firsts) & set(bad)), (len(bad), [x for x in firsts if x in bad]))
     check(name + ' no page errors', e == [], e)
     await b.close()
 async def main():

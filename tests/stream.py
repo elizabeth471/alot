@@ -20,8 +20,8 @@ async def run(p, name):
     await q.add_init_script(INIT); await q.goto(U); await q.wait_for_timeout(1000)
     await q.click('#layerMusicBtn'); await q.wait_for_timeout(300)
     await q.click('#tabLibrary'); await q.wait_for_timeout(200)
-    check(name + ' 10 albums listed, none built in', await q.locator('.album').count() == 10, await q.locator('.album').count())
-    check(name + ' album counts add to 66', sum([int((await x.inner_text()).split()[0]) for x in await q.locator('.album-meta').all()]) == 66)
+    check(name + ' 15 albums listed, none built in', await q.locator('.album').count() == 15, await q.locator('.album').count())
+    check(name + ' album counts add to 100', sum([int((await x.inner_text()).split()[0]) for x in await q.locator('.album-meta').all()]) == 100)
     items = q.locator('#libraryList .library-item')
     for album, t in [('Ajnia: Oasis', 'Oasis'), ('HuuHaa: Frostient', 'Flake Genesis')]:
         await q.locator('.album-open', has_text=album).click(); await q.wait_for_timeout(200)
@@ -65,7 +65,7 @@ async def ratings(p, name):
     order = "[...document.querySelectorAll('#takesList .take-name')].map(x=>x.textContent)"
     check(name + ' Like and Dislike wait until there is a track', await q.is_disabled('#musicLike') and await q.is_disabled('#musicDislike'))
     await q.click('#musicShuffle'); await q.wait_for_function(TRK + ".some(x=>x.t>0.5)", timeout=40000); one = await q.evaluate(order)
-    check(name + ' Shuffle: one tap, all 66 queued and playing', len(one) == 66, len(one))
+    check(name + ' Shuffle: one tap, all 100 queued and playing', len(one) == 100, len(one))
     await q.click('#musicShuffle'); await q.wait_for_timeout(1500); two = await q.evaluate(order)
     check(name + ' Shuffle again gives a new order', sorted(one) == sorted(two) and one != two)
     noise = await q.get_attribute('#noiseBtn', 'aria-pressed'); check(name + ' Shuffle leaves noise alone', noise == 'false')
@@ -88,7 +88,7 @@ async def ratings(p, name):
     check(name + ' rating stored on this device', list(bads[0].values()).count(-1) == 1, bads[0])
     for i in range(3):
         await q.click('#musicShuffle'); await q.wait_for_timeout(500)
-        check(f'{name} shuffle {i + 1} keeps the disliked track out', disliked not in await q.evaluate(order) and len(await q.evaluate(order)) == 65)
+        check(f'{name} shuffle {i + 1} keeps the disliked track out', disliked not in await q.evaluate(order) and len(await q.evaluate(order)) == 99)
     # a vote made with no connection waits, and goes when the page next loads
     online['ok'] = False; n = len(sent); await q.click('#musicLike'); await q.wait_for_timeout(400)
     waiting = await q.evaluate("Object.keys(JSON.parse(localStorage.getItem('alot.ratings.waiting.v1')||'{}')).length")
@@ -102,7 +102,7 @@ async def ratings(p, name):
     spots = []
     for i in range(60):  # random order: enough tries that chance can't decide this check
         await q.click('#musicShuffle'); spots.append((await q.evaluate(order)).index(liked_id['name']))
-    check(name + ' a liked track averages early in the order', sum(spots) / len(spots) < 22, spots)
+    check(name + ' a liked track averages early in the order', sum(spots) / len(spots) < 33, spots)
     await q.wait_for_timeout(1500); check(name + ' fast Shuffle taps: still playing, no false error', await q.get_attribute('#musicBtn', 'aria-pressed') == 'true' and await q.evaluate(TRK) != [] and 'file' not in await q.inner_text('#toastBox'))
     await q.click('#musicBtn'); await q.wait_for_timeout(700)
     check(name + ' playlist button stops music', await q.evaluate(TRK) == [])
@@ -110,7 +110,7 @@ async def ratings(p, name):
     check(name + ' playlist button starts music', await q.get_attribute('#musicBtn', 'aria-pressed') == 'true'); await q.click('#musicBtn')
     await q.goto(U.split('?')[0] + 'credits.html'); await q.wait_for_timeout(300)
     txt = await q.inner_text('body')
-    check(name + ' credits: every release, license and non-commercial note', txt.count('CC BY') == 10 and 'non-commercial' in txt and await q.locator('li').count() == 66, txt.count('CC BY'))
+    check(name + ' credits: every release, license and non-commercial note', txt.count('CC BY') == 15 and 'non-commercial' in txt and await q.locator('li').count() == 100, txt.count('CC BY'))
     check(name + ' no page errors', e == [], e)
     await b.close()
 async def main():

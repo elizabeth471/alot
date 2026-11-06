@@ -16,7 +16,7 @@ Open the link in a phone or computer browser. There is nothing to install and no
 - Publish from this folder only: `vercel deploy --prod --yes` (Vercel project `teamblossom/alot`). Run the tests first; a push alone does not publish.
 
 ## Music
-- 66 tracks from 10 Ektoplazm releases, Creative Commons, loudness adjusted. Treat all of them as **non-commercial**. Credits and licenses: `credits.html`.
+- 100 tracks from 15 Ektoplazm releases, Creative Commons, loudness adjusted. Treat all of them as **non-commercial**. Credits and licenses: `credits.html`.
 - Files are streamed from Cloudflare R2, bucket `alot-music`, account teamblossom.ops@gmail.com. Public address: https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev (rate-limited by Cloudflare; needs a real domain before alot is promoted).
 - Allowed web addresses for streaming are set in the bucket's CORS policy: the live site and `127.0.0.1:8765`/`localhost:8765`.
 - `tools/` holds the download, encode, upload and publish scripts. Audio files are not in git. The scripts expect `~/music-pipeline/ektoplazm` and were written for one Mac, so paths may need changing.

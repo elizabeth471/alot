@@ -228,6 +228,184 @@
    ]
   },
   {
+   "id": "run",
+   "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/run.m4a",
+   "loop": true,
+   "duration": 13678,
+   "chapters": [
+    {
+     "t": 0.0,
+     "id": "barby-nexus-nexus",
+     "name": "Barby – Nexus"
+    },
+    {
+     "t": 507.33,
+     "id": "barby-nexus-phobos-anomaly",
+     "name": "Barby – Phobos Anomaly"
+    },
+    {
+     "t": 968.0,
+     "id": "barby-nexus-cerberus",
+     "name": "Barby – Cerberus"
+    },
+    {
+     "t": 1395.33,
+     "id": "octogoat-robot-reproduction-metabolism",
+     "name": "Signa vs OctoGoat – Metabolism"
+    },
+    {
+     "t": 1941.67,
+     "id": "octogoat-robot-reproduction-electrisize",
+     "name": "OctoGoat – Electrisize"
+    },
+    {
+     "t": 2402.53,
+     "id": "octogoat-robot-reproduction-change-the-world",
+     "name": "OctoGoat – Change The World"
+    },
+    {
+     "t": 2814.5,
+     "id": "cryomatter-cryomatter-the-collapse-of-time",
+     "name": "Cryomatter – The Collapse Of Time"
+    },
+    {
+     "t": 3250.33,
+     "id": "cryomatter-cryomatter-shifted-machines",
+     "name": "Xenofish – Shifted Machines"
+    },
+    {
+     "t": 3541.42,
+     "id": "cryomatter-cryomatter-lunar-maze",
+     "name": "Cryomatter – Lunar Maze"
+    },
+    {
+     "t": 3685.78,
+     "id": "cryomatter-cryomatter-twisted-horizon",
+     "name": "Xenofish – Twisted Horizon"
+    },
+    {
+     "t": 4188.21,
+     "id": "cryomatter-cryomatter-7-dimensional-stasis",
+     "name": "Cryomatter – 7-Dimensional Stasis"
+    },
+    {
+     "t": 4700.36,
+     "id": "cryomatter-cryomatter-azure-particles",
+     "name": "Cryomatter – Azure Particles"
+    },
+    {
+     "t": 4824.75,
+     "id": "cryomatter-cryomatter-decaying-timelines",
+     "name": "Cryomatter – Decaying Timelines"
+    },
+    {
+     "t": 5007.3,
+     "id": "cryomatter-cryomatter-conversion",
+     "name": "Cryomatter – Conversion"
+    },
+    {
+     "t": 5328.14,
+     "id": "cryomatter-cryomatter-chrono-wave",
+     "name": "Cybernetika – Chrono Wave"
+    },
+    {
+     "t": 5997.16,
+     "id": "cryomatter-cryomatter-physical-limit",
+     "name": "Cybernetika – Physical Limit"
+    },
+    {
+     "t": 6410.39,
+     "id": "cryomatter-cryomatter-cold-dark-matter",
+     "name": "Cryomatter – Cold Dark Matter"
+    },
+    {
+     "t": 6877.14,
+     "id": "cryomatter-cryomatter-reassembly",
+     "name": "Cryomatter – Reassembly"
+    },
+    {
+     "t": 7157.99,
+     "id": "cryomatter-cryomatter-intro",
+     "name": "Cryomatter – Intro"
+    },
+    {
+     "t": 7388.78,
+     "id": "one-arc-degree-cybernetika-nether-moon-stinger-one-arc-degree-remix",
+     "name": "Cybernetika – Stinger (One Arc Degree Remix)"
+    },
+    {
+     "t": 7965.35,
+     "id": "one-arc-degree-cybernetika-nether-moon-ghost-comet",
+     "name": "One Arc Degree – Ghost Comet"
+    },
+    {
+     "t": 8343.03,
+     "id": "one-arc-degree-cybernetika-nether-moon-nether-moon",
+     "name": "One Arc Degree & Cybernetika – Nether Moon"
+    },
+    {
+     "t": 8789.95,
+     "id": "one-arc-degree-cybernetika-nether-moon-ghost-comet-cybernetika-remix",
+     "name": "One Arc Degree – Ghost Comet (Cybernetika Remix)"
+    },
+    {
+     "t": 9211.28,
+     "id": "mellow-sonic-twisted-worlds-interplanetary",
+     "name": "Mellow Sonic – Interplanetary"
+    },
+    {
+     "t": 9672.04,
+     "id": "mellow-sonic-twisted-worlds-heliophysics",
+     "name": "Mellow Sonic – Heliophysics"
+    },
+    {
+     "t": 10063.88,
+     "id": "mellow-sonic-twisted-worlds-fury",
+     "name": "Mellow Sonic – Fury"
+    },
+    {
+     "t": 10493.19,
+     "id": "mellow-sonic-twisted-worlds-xtreme",
+     "name": "Mellow Sonic – Xtreme"
+    },
+    {
+     "t": 10811.19,
+     "id": "mellow-sonic-twisted-worlds-eye-of-the-storm",
+     "name": "Mellow Sonic – Eye Of The Storm"
+    },
+    {
+     "t": 11183.05,
+     "id": "mellow-sonic-twisted-worlds-fusion",
+     "name": "Mellow Sonic – Fusion"
+    },
+    {
+     "t": 11539.55,
+     "id": "mellow-sonic-twisted-worlds-witchcraft",
+     "name": "Mellow Sonic – Witchcraft"
+    },
+    {
+     "t": 11945.9,
+     "id": "mellow-sonic-twisted-worlds-astral-traveller-feat-arikatoku-shimo",
+     "name": "Mellow Sonic – Astral Traveller (feat. Arikatoku Shimo)"
+    },
+    {
+     "t": 12414.4,
+     "id": "mellow-sonic-twisted-worlds-twisted-worlds",
+     "name": "Mellow Sonic – Twisted Worlds"
+    },
+    {
+     "t": 12887.68,
+     "id": "mellow-sonic-twisted-worlds-portal",
+     "name": "Mellow Sonic – Portal"
+    },
+    {
+     "t": 13373.92,
+     "id": "mellow-sonic-twisted-worlds-particles",
+     "name": "Mellow Sonic – Particles"
+    }
+   ]
+  },
+  {
    "id": "ground",
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/ground.m4a",
    "loop": true,

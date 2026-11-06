@@ -82,7 +82,7 @@ async def run(p, name):
     box = await q.evaluate("document.querySelector('#panePlaylist .drawer-scroll').getBoundingClientRect().height")
     check(name + ' long playlist stays in its own box', box <= 420 and tall < 2300, (box, tall))
     await q.click('#tabLibrary'); await q.wait_for_timeout(200)
-    check(name + ' Library shows 10 albums, closed', await q.locator('.album').count() == 10 and await q.locator('.library-item').count() == 0)
+    check(name + ' Library shows 10 albums, closed', await q.locator('.album').count() == 15 and await q.locator('.library-item').count() == 0)
     check(name + ' Library needs little scrolling', await q.evaluate('document.documentElement.scrollHeight') < 2300, await q.evaluate('document.documentElement.scrollHeight'))
     await q.locator('.album-open').first.click(); await q.wait_for_timeout(200)
     check(name + ' opening an album lists its tracks', await q.locator('.library-item').count() > 0)

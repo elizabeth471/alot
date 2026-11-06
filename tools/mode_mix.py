@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Render one pre-mixed stream per purpose, plus a chapter list so the app knows which track is playing.
 
-  python3 -I mode_mix.py            render the mixes and write ~/music-pipeline/ektoplazm/modes/modes.json
+  python3 -I mode_mix.py            render every mix and write ~/music-pipeline/ektoplazm/modes/modes.json
+  python3 -I mode_mix.py run        render only the named mixes, keeping the others as they are
 
 One file per purpose carries over AirPlay as a single stream, and no code has to run while it plays.
 Lists are a first draft from tempo, style and album: they need a person's ears, then votes refine them. Nothing here publishes.
@@ -16,6 +17,8 @@ MAX_SECONDS = 5 * 3600  # keeps a file under the 315 MB limit for a single uploa
 tracks = json.load(open(os.path.join(ROOT, 'preview/tracks/manifest.json'), encoding='utf-8'))['tracks']
 intros = json.load(open(os.path.join(ROOT, 'intros.json'), encoding='utf-8'))
 MODES = {
+    # Warms up on full-on psytrance, then climbs to drum and bass, with almost no noise.
+    'run': dict(pick=lambda t: t['release'] in ('barby-nexus', 'octogoat-robot-reproduction', 'cryomatter-cryomatter', 'one-arc-degree-cybernetika-nether-moon', 'mellow-sonic-twisted-worlds'), noise='brown', level=0.02, climb=True),
     'flow': dict(pick=lambda t: t['style'] == 'electronic' and t['bpm'] <= 83, noise='brown', level=0.10),
     'ground': dict(pick=lambda t: t['release'] in ('zoungla-there-will-be-dub', 'globular-holobiont'), noise='brown', level=0.16),
     'meditate': dict(pick=lambda t: t['release'] in ('ajnia-oasis', 'ajnia-elements'), noise='pink', level=0.05),
@@ -27,6 +30,9 @@ def render(mode, spec):
     pool.sort(key=lambda t: intros.get(t['name'], 0) >= 2)  # opens on a track that is audible at once
     head, rest = pool[:1], pool[1:]
     random.Random('alot2-' + mode).shuffle(rest)
+    if spec.get('climb'):
+        pool.sort(key=lambda t: t['bpm'])
+        head, rest = [], pool
     chosen, at, chapters = [], 0.0, []
     for t in head + rest:
         if at + t['duration'] > MAX_SECONDS:
@@ -67,17 +73,21 @@ def level(path, at):
     return [l.split()[-2] for l in e.splitlines() if 'mean_volume' in l or 'max_volume' in l]
 
 os.makedirs(OUT, exist_ok=True)
-modes = [sleep_mode()]
+ORDER = ['sleep', 'flow', 'run', 'ground', 'meditate']
+only = sys.argv[1:]
+path_json = os.path.join(OUT, 'modes.json')
+modes = {m['id']: m for m in json.load(open(path_json, encoding='utf-8'))['modes']} if only and os.path.exists(path_json) else {'sleep': sleep_mode()}
 for mode, spec in MODES.items():
+    if only and mode not in only:
+        continue
     entry, path = render(mode, spec)
-    modes.append(entry)
+    modes[mode] = entry
     size = os.path.getsize(path) / 1e6
     print(f'{mode}: {len(entry["chapters"])} tracks, {entry["duration"] / 3600:.1f} hours, {size:.0f} MB', flush=True)
     if size > 315:
         sys.exit(f'{mode} is too large for a single upload')
     for at in [60, entry['duration'] // 2, entry['duration'] - 90]:
         print('   at', at, 's mean/peak dB', level(path, at), flush=True)
-    for chapter in entry['chapters'][:3]:
+    for chapter in entry['chapters'][:4]:
         print('   ', chapter['name'], flush=True)
-print('sleep:', len(modes[0]['chapters']), 'music tracks in the Night Arc')
-json.dump({'modes': modes}, open(os.path.join(OUT, 'modes.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+json.dump({'modes': [modes[m] for m in ORDER if m in modes]}, open(path_json, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)

@@ -30,6 +30,8 @@ def probe(path):
 
 def encode(job):
     source, out = job
+    if os.path.exists(out):
+        return None  # already encoded
     first = subprocess.run(['ffmpeg', '-hide_banner', '-nostdin', '-i', source, '-af',
                             f'loudnorm=I={TARGET_LUFS}:TP={TRUE_PEAK}:LRA={RANGE}:print_format=json',
                             '-f', 'null', '-'], capture_output=True, text=True, check=True).stderr
@@ -50,6 +52,9 @@ def build():
     copy_site()
     releases = json.load(open(os.path.join(ROOT, 'releases.json'), encoding='utf-8'))
     entries, jobs, credits = [], [], []
+    old = {}
+    if os.path.exists(os.path.join(TRACKS, 'manifest.json')):
+        old = {t['id']: t for t in json.load(open(os.path.join(TRACKS, 'manifest.json'), encoding='utf-8'))['tracks']}
     for release in releases:
         if release.get('status') != 'ok':
             credits.append(f'- NOT INCLUDED: {release["slug"]} ({release.get("status")})')
@@ -80,7 +85,7 @@ def build():
         loudness = list(pool.map(encode, jobs))
     for entry, level in zip(entries, loudness):
         entry['size'] = os.path.getsize(os.path.join(PREVIEW, entry['file']))
-        entry['source_lufs'] = level
+        entry['source_lufs'] = level if level is not None else old.get(entry['id'], {}).get('source_lufs')
     json.dump({'tracks': entries}, open(os.path.join(TRACKS, 'manifest.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
     open(os.path.join(ROOT, 'CREDITS.md'), 'w', encoding='utf-8').write(
         '# Ektoplazm library: credits and licenses\n\nPrivate listening copy. License terms were read from each '
