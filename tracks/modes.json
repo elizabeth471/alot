@@ -1,0 +1,372 @@
+{
+ "modes": [
+  {
+   "id": "sleep",
+   "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/arcs/night-arc-v1.m4a",
+   "loop": false,
+   "duration": 21600,
+   "music_until": 3600,
+   "chapters": [
+    {
+     "t": 0.0,
+     "id": "saluberrimae-time-is-a-flat-circle-ciernobiela",
+     "name": "Saluberrimae – Čiernobiela"
+    },
+    {
+     "t": 339.6,
+     "id": "saluberrimae-time-is-a-flat-circle-frozen",
+     "name": "Saluberrimae – Frozen"
+    },
+    {
+     "t": 652.8,
+     "id": "saluberrimae-time-is-a-flat-circle-gestonkenflapped",
+     "name": "Saluberrimae – Gestonkenflapped"
+    },
+    {
+     "t": 1014.8,
+     "id": "saluberrimae-time-is-a-flat-circle-jennifer-connelly",
+     "name": "Saluberrimae – Jennifer Connelly"
+    },
+    {
+     "t": 1538.4,
+     "id": "huuhaa-frostient-flake-genesis",
+     "name": "HuuHaa – Flake Genesis"
+    },
+    {
+     "t": 1792.4,
+     "id": "huuhaa-frostient-freezings-from-the-fractarctica",
+     "name": "HuuHaa – Freezings From the Fractarctica"
+    },
+    {
+     "t": 2298.4,
+     "id": "huuhaa-frostient-kryos-zero",
+     "name": "HuuHaa – Kryos Zero"
+    },
+    {
+     "t": 2633.4,
+     "id": "ajnia-elements-air",
+     "name": "Ajnia – Air"
+    },
+    {
+     "t": 3180.17,
+     "id": "ajnia-elements-earth",
+     "name": "Ajnia – Earth"
+    }
+   ]
+  },
+  {
+   "id": "flow",
+   "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/flow.m4a",
+   "loop": true,
+   "duration": 15979,
+   "chapters": [
+    {
+     "t": 0.0,
+     "id": "greatowl-lilia-sin-mi-hiu-si",
+     "name": "GreatOwl – Hiu Si"
+    },
+    {
+     "t": 277.78,
+     "id": "sephira-the-master-work-the-dissolution-dichotomy",
+     "name": "Sephira – The Dissolution Dichotomy"
+    },
+    {
+     "t": 829.96,
+     "id": "greatowl-lilia-sin-mi-xinopua",
+     "name": "GreatOwl – Xinopua"
+    },
+    {
+     "t": 1301.59,
+     "id": "greatowl-lilia-sin-mi-einimali",
+     "name": "GreatOwl – Einimali"
+    },
+    {
+     "t": 1932.76,
+     "id": "globular-holobiont-tabula-rasa",
+     "name": "Globular – Tabula Rasa"
+    },
+    {
+     "t": 2657.42,
+     "id": "sephira-the-master-work-dormant-fermentation",
+     "name": "Sephira – Dormant Fermentation"
+    },
+    {
+     "t": 3070.96,
+     "id": "globular-holobiont-and-it-speaks-of-everything",
+     "name": "Globular – ...and It Speaks of Everything"
+    },
+    {
+     "t": 3498.24,
+     "id": "globular-entangled-everything-for-the-time-being",
+     "name": "Globular – For The Time Being"
+    },
+    {
+     "t": 4052.77,
+     "id": "globular-entangled-everything-this-strange-attractor",
+     "name": "Globular – This Strange Attractor"
+    },
+    {
+     "t": 4642.13,
+     "id": "greatowl-lilia-sin-mi-kiu-sei-kai",
+     "name": "GreatOwl – Kiu Sei Kai"
+    },
+    {
+     "t": 5203.49,
+     "id": "sephira-the-master-work-double-distillation",
+     "name": "Sephira – Double Distillation"
+    },
+    {
+     "t": 5659.54,
+     "id": "sephira-the-master-work-cave-of-calcination",
+     "name": "Sephira – Cave Of Calcination"
+    },
+    {
+     "t": 5980.66,
+     "id": "sephira-the-master-work-self-separation",
+     "name": "Sephira – Self Separation"
+    },
+    {
+     "t": 6349.39,
+     "id": "sephira-the-master-work-conjunction-event",
+     "name": "Sephira – Conjunction Event"
+    },
+    {
+     "t": 6782.2,
+     "id": "globular-entangled-everything-dreamland-overflow",
+     "name": "Globular – Dreamland Overflow"
+    },
+    {
+     "t": 7290.4,
+     "id": "globular-entangled-everything-popping-out",
+     "name": "Globular – Popping Out"
+    },
+    {
+     "t": 7356.88,
+     "id": "globular-holobiont-an-upwards-curve-in-the-horizon",
+     "name": "Globular – An Upwards Curve in the Horizon"
+    },
+    {
+     "t": 8048.69,
+     "id": "globular-entangled-everything-total-perspective-vortex",
+     "name": "Globular – Total Perspective Vortex"
+    },
+    {
+     "t": 8698.42,
+     "id": "globular-holobiont-the-might-of-chondria",
+     "name": "Globular – The Might of Chondria"
+    },
+    {
+     "t": 9163.39,
+     "id": "greatowl-lilia-sin-mi-rakate",
+     "name": "GreatOwl – Rakate"
+    },
+    {
+     "t": 9702.62,
+     "id": "globular-holobiont-42",
+     "name": "Globular – [42]"
+    },
+    {
+     "t": 10342.03,
+     "id": "globular-entangled-everything-dasein",
+     "name": "Globular – Dasein"
+    },
+    {
+     "t": 10892.38,
+     "id": "sephira-the-master-work-coagulation-feat-josh-lambert-price",
+     "name": "Sephira – Coagulation (feat. Josh Lambert-Price)"
+    },
+    {
+     "t": 11289.92,
+     "id": "globular-holobiont-overcoming-occhiolism",
+     "name": "Globular – Overcoming Occhiolism"
+    },
+    {
+     "t": 11841.44,
+     "id": "globular-entangled-everything-the-chalice",
+     "name": "Globular – The Chalice"
+    },
+    {
+     "t": 12332.49,
+     "id": "globular-entangled-everything-be-patient-towards-what-is-unsolved-in-your-heart",
+     "name": "Globular – Be Patient Towards What Is Unsolved In Your Heart"
+    },
+    {
+     "t": 12529.92,
+     "id": "globular-holobiont-temple-of-the-pollinator",
+     "name": "Globular – Temple of the Pollinator"
+    },
+    {
+     "t": 13306.19,
+     "id": "globular-holobiont-emergent-resurgence",
+     "name": "Globular – Emergent Resurgence"
+    },
+    {
+     "t": 13762.03,
+     "id": "globular-entangled-everything-kaleidoscope-tribe",
+     "name": "Globular – Kaleidoscope Tribe"
+    },
+    {
+     "t": 14171.57,
+     "id": "greatowl-lilia-sin-mi-strijistela",
+     "name": "GreatOwl – Strijistela"
+    },
+    {
+     "t": 14618.95,
+     "id": "sephira-the-master-work-stranger-at-the-oasis",
+     "name": "Sephira – Stranger At The Oasis"
+    },
+    {
+     "t": 15047.21,
+     "id": "sephira-the-master-work-a-fitting-end",
+     "name": "Sephira – A Fitting End"
+    },
+    {
+     "t": 15511.72,
+     "id": "globular-entangled-everything-one-step-beyond",
+     "name": "Globular – One Step Beyond"
+    }
+   ]
+  },
+  {
+   "id": "ground",
+   "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/ground.m4a",
+   "loop": true,
+   "duration": 8533,
+   "chapters": [
+    {
+     "t": 0.0,
+     "id": "globular-holobiont-the-might-of-chondria",
+     "name": "Globular – The Might of Chondria"
+    },
+    {
+     "t": 464.97,
+     "id": "globular-holobiont-and-it-speaks-of-everything",
+     "name": "Globular – ...and It Speaks of Everything"
+    },
+    {
+     "t": 892.25,
+     "id": "zoungla-there-will-be-dub-tune-out-the-world",
+     "name": "Zoungla – Tune Out The World"
+    },
+    {
+     "t": 1263.8,
+     "id": "globular-holobiont-an-upwards-curve-in-the-horizon",
+     "name": "Globular – An Upwards Curve in the Horizon"
+    },
+    {
+     "t": 1955.61,
+     "id": "zoungla-there-will-be-dub-young-man-2",
+     "name": "Zoungla – Young Man 2"
+    },
+    {
+     "t": 2344.19,
+     "id": "globular-holobiont-emergent-resurgence",
+     "name": "Globular – Emergent Resurgence"
+    },
+    {
+     "t": 2800.03,
+     "id": "zoungla-there-will-be-dub-sunday",
+     "name": "Zoungla – Sunday"
+    },
+    {
+     "t": 3442.61,
+     "id": "zoungla-there-will-be-dub-deep-sea-dubbin",
+     "name": "Zoungla – Deep Sea Dubbin'"
+    },
+    {
+     "t": 3989.85,
+     "id": "zoungla-there-will-be-dub-goodmorning-ozora",
+     "name": "Zoungla – Goodmorning Ozora"
+    },
+    {
+     "t": 4554.78,
+     "id": "zoungla-there-will-be-dub-flower-sun",
+     "name": "Zoungla – Flower Sun"
+    },
+    {
+     "t": 5185.49,
+     "id": "zoungla-there-will-be-dub-homage-to-the-dub-masters",
+     "name": "Zoungla – Homage To The Dub Masters"
+    },
+    {
+     "t": 5394.76,
+     "id": "globular-holobiont-tabula-rasa",
+     "name": "Globular – Tabula Rasa"
+    },
+    {
+     "t": 6119.42,
+     "id": "globular-holobiont-42",
+     "name": "Globular – [42]"
+    },
+    {
+     "t": 6758.83,
+     "id": "zoungla-there-will-be-dub-day-moon",
+     "name": "Zoungla – Day Moon"
+    },
+    {
+     "t": 7199.27,
+     "id": "globular-holobiont-temple-of-the-pollinator",
+     "name": "Globular – Temple of the Pollinator"
+    },
+    {
+     "t": 7975.54,
+     "id": "globular-holobiont-overcoming-occhiolism",
+     "name": "Globular – Overcoming Occhiolism"
+    }
+   ]
+  },
+  {
+   "id": "meditate",
+   "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/meditate.m4a",
+   "loop": true,
+   "duration": 4810,
+   "chapters": [
+    {
+     "t": 0.0,
+     "id": "ajnia-elements-water",
+     "name": "Ajnia – Water"
+    },
+    {
+     "t": 523.64,
+     "id": "ajnia-oasis-oasis",
+     "name": "Ajnia – Oasis"
+    },
+    {
+     "t": 953.07,
+     "id": "ajnia-oasis-simoon",
+     "name": "Ajnia – Simoon"
+    },
+    {
+     "t": 1495.84,
+     "id": "ajnia-elements-air",
+     "name": "Ajnia – Air"
+    },
+    {
+     "t": 2042.61,
+     "id": "ajnia-oasis-entre-las-dunas",
+     "name": "Ajnia – Entre Las Dunas"
+    },
+    {
+     "t": 2740.13,
+     "id": "ajnia-elements-ether",
+     "name": "Ajnia – Ether"
+    },
+    {
+     "t": 3159.19,
+     "id": "ajnia-elements-fire",
+     "name": "Ajnia – Fire"
+    },
+    {
+     "t": 3654.78,
+     "id": "ajnia-elements-earth",
+     "name": "Ajnia – Earth"
+    },
+    {
+     "t": 4166.5,
+     "id": "ajnia-oasis-la-gran-ruta-del-sur",
+     "name": "Ajnia – La Gran Ruta Del Sur"
+    }
+   ]
+  }
+ ]
+}

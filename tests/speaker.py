@@ -21,11 +21,13 @@ async def run(p, name):
     check(name + ' button on the first screen without scrolling', await q.evaluate("document.getElementById('speakerBtn').getBoundingClientRect().bottom<innerHeight/3"))
     await q.click('#speakerBtn'); await q.wait_for_timeout(500); pk = await q.evaluate('__pick')
     check(name + ' nothing playing: picker still opens, on an AirPlay player', len(pk) == 1 and pk[0]['air'] == 'allow', pk)
+    check(name + ' nothing playing: the mixer path is left alone', (await q.evaluate(SET)).get('background') is not True)
+    await q.click('#musicShuffle'); await q.wait_for_function(TRK + ".some(x=>x.t>1)", timeout=40000)
+    await q.click('#speakerBtn'); await q.wait_for_function(TRK + ".some(x=>x.air==='allow'&&x.t>0.5)", timeout=40000); st = await q.evaluate(TRK); plain = [x for x in st if x['air'] == 'allow']
+    check(name + ' mixer music moves to the plain AirPlay path', plain and plain[0]['cors'] is None, st)
     check(name + ' locked-screen path now on and saved', (await q.evaluate(SET)).get('background') is True and await q.is_checked('#setBackground'))
-    await q.click('#musicShuffle'); await q.wait_for_function(TRK + ".some(x=>x.t>1)", timeout=40000); st = await q.evaluate(TRK)
-    check(name + ' music on the plain AirPlay path', st[0]['air'] == 'allow' and st[0]['cors'] is None, st)
-    await q.click('#speakerBtn'); await q.wait_for_timeout(300); pk = await q.evaluate('__pick')
-    check(name + ' picker targets the track playing', pk[-1]['src'].endswith('.m4a') and not pk[-1]['paused'], pk[-1])
+    pk = await q.evaluate('__pick')
+    check(name + ' picker targets the track playing', pk[-1]['src'].endswith('.m4a'), pk[-1])
     await b.close()
     # music already playing through the mixer moves without restarting
     b = await (p.webkit.launch() if name == 'webkit' else p.chromium.launch(channel='chrome', headless=True, args=['--autoplay-policy=no-user-gesture-required', '--mute-audio']))

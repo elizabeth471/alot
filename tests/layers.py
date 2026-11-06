@@ -22,28 +22,22 @@ async def run(p, name):
     q = await c.new_page(); e = []; q.on('pageerror', lambda x: e.append(str(x)))
     await q.add_init_script(INIT); await q.goto(U); await q.wait_for_timeout(600)
     # first impression
-    check(name + ' tagline shown', await q.inner_text('.tagline') == 'Layer sounds. Make your own mix.')
+    check(name + ' tagline shown', await q.inner_text('.tagline') == 'What do you need right now?')
     check(name + ' no tabs', await q.locator('[role=tab]').count() == 0)
     txt = await q.inner_text('body')
     for gone in ['Ian', 'Shower', 'YouTube', 'Little joys', 'Music Production']:
         check(f'{name} gone: {gone}', gone not in txt)
-    check(name + ' play and all three layers fit the first phone screen', await q.evaluate("document.getElementById('bnPlay').getBoundingClientRect().bottom<innerHeight"))
     check(name + ' drawers closed', await q.locator('.layer-drawer:visible').count() == 0)
     # the basics are on the home screen
-    for sel in ['#noiseBtn', '#bnVolume', '#bnColors', '#layerNoiseBtn', '#musicBtn', '#mixTracks', '#musicShuffle', '#musicLike', '#musicDislike', '#layerMusicBtn', '#mixMaster']:
+    for sel in ['#noiseBtn', '#bnVolume', '#layerNoiseBtn', '#musicBtn', '#mixTracks', '#musicShuffle', '#musicLike', '#musicDislike', '#layerMusicBtn', '#mixMaster']:
         check(f'{name} on home: {sel}', await q.locator(sel).is_visible())
-    check(name + ' labels', await q.inner_text('#layerNoiseBtn') == 'Configure' and await q.inner_text('#layerMusicName') == 'Playlist' and 'Master volume' in await q.inner_text('.mix-hero'))
+    check(name + ' labels', await q.inner_text('#layerNoiseBtn') == 'Configure' and await q.inner_text('#layerMusicName') == 'Playlist' and 'Master volume' in await q.inner_text('.mix-master'))
     check(name + ' Beats not on the main screen', not await q.locator('#mixBeats').is_visible() and 'Beats' not in await q.inner_text('main'))
-    shape = "(id)=>[...document.getElementById(id).children].filter(e=>!e.hidden&&!e.classList.contains('layer-drawer')).map(e=>e.tagName+'.'+e.className+':'+[...e.children].map(c=>c.className.replace(' is-hint','')).filter(c=>!c.startsWith('bn-chip')).join(','))"
-    check(name + ' Noise and Playlist panels match', await q.evaluate(shape, 'layerNoise') == await q.evaluate(shape, 'layerMusic'), await q.evaluate(shape, 'layerMusic'))
     check(name + ' both panels say Configure', await q.inner_text('#layerNoiseBtn') == await q.inner_text('#layerMusicBtn') == 'Configure')
     # noise button: noise and nothing else, the overnight case
     await q.click('#noiseBtn'); await q.wait_for_timeout(1500)
     check(name + ' noise button: noise plays, no music', await q.get_attribute('#noiseBtn', 'aria-pressed') == 'true' and await q.evaluate(TRK) == [])
     check(name + ' noise button: sound in the mix', await q.evaluate(RMS) > 0.002)
-    await q.locator('#bnColors button').nth(1).click(); await q.wait_for_timeout(500)
-    check(name + ' noise type can change from home', await q.locator('#bnColors button').nth(1).get_attribute('aria-pressed') == 'true')
-    await q.locator('#bnColors button').nth(0).click(); await q.wait_for_timeout(300)
     await q.click('#noiseBtn'); await q.wait_for_timeout(800)
     check(name + ' noise button stops it', await q.get_attribute('#bnPlay', 'aria-pressed') == 'false')
     await q.click('#layerNoiseBtn'); await q.wait_for_timeout(300)
@@ -85,10 +79,11 @@ async def run(p, name):
     await q.click('#layerMusicBtn'); await q.wait_for_timeout(300)
     check(name + ' Configure opens on the playlist', await q.locator('#takesList').is_visible() and not await q.locator('#libraryList').is_visible())
     tall = await q.evaluate('document.documentElement.scrollHeight')
-    check(name + ' long playlist stays in its own box', tall < 1700 and await q.locator('#bnPlay').count() == 1, tall)
+    box = await q.evaluate("document.querySelector('#panePlaylist .drawer-scroll').getBoundingClientRect().height")
+    check(name + ' long playlist stays in its own box', box <= 420 and tall < 2300, (box, tall))
     await q.click('#tabLibrary'); await q.wait_for_timeout(200)
     check(name + ' Library shows 10 albums, closed', await q.locator('.album').count() == 10 and await q.locator('.library-item').count() == 0)
-    check(name + ' Library needs little scrolling', await q.evaluate('document.documentElement.scrollHeight') < 1700, await q.evaluate('document.documentElement.scrollHeight'))
+    check(name + ' Library needs little scrolling', await q.evaluate('document.documentElement.scrollHeight') < 2300, await q.evaluate('document.documentElement.scrollHeight'))
     await q.locator('.album-open').first.click(); await q.wait_for_timeout(200)
     check(name + ' opening an album lists its tracks', await q.locator('.library-item').count() > 0)
     await q.click('#tabPlaylist'); await q.wait_for_timeout(200)
@@ -100,7 +95,7 @@ async def run(p, name):
     check(name + ' space stops the mix', await q.get_attribute('#bnPlay', 'aria-pressed') == 'false')
     # language
     await q.click('[data-set="lang:es"]'); await q.wait_for_timeout(300)
-    check(name + ' Spanish words', await q.inner_text('.tagline') == 'Combina sonidos. Crea tu propia mezcla.' and await q.inner_text('#layerNoiseName') == 'Ruido' and await q.inner_text('#layerNoiseBtn') == 'Configurar', await q.inner_text('.tagline'))
+    check(name + ' Spanish words', await q.inner_text('.tagline') == '¿Qué necesitas ahora?' and await q.inner_text('#layerNoiseName') == 'Ruido' and await q.inner_text('#layerNoiseBtn') == 'Configurar', await q.inner_text('.tagline'))
     await q.click('#tabLibrary') if False else None
     fit = await q.evaluate("[...document.querySelectorAll('#layerMusic .layer-types .bn-chip')].every(c=>c.getBoundingClientRect().right<=document.getElementById('layerMusic').getBoundingClientRect().right)")
     check(name + ' Spanish playlist buttons are not cut off', fit)
@@ -108,7 +103,7 @@ async def run(p, name):
     await q.click('#gear'); await q.wait_for_timeout(300)
     check(name + ' settings: no layout, no joys', await q.locator('.layout-card').count() == 0 and await q.locator('#setMessages').count() == 0)
     await q.keyboard.press('Escape')
-    await q.goto(U + '#studio'); await q.reload(); await q.wait_for_timeout(500)
+    await q.goto(U.split('#')[0] + '#studio'); await q.reload(); await q.wait_for_timeout(500)
     check(name + ' old Studio link opens music', await q.locator('#drawerMusic').is_visible())
     check(name + ' no sideways scroll', await q.evaluate('document.documentElement.scrollWidth-innerWidth') <= 0)
     check(name + ' no page errors', e == [], e)

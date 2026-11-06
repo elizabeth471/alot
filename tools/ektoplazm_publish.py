@@ -53,8 +53,8 @@ p {{ margin: 4px 0; color: #cdbfae; }} a {{ color: #f0c48c; }} ul {{ margin: 8px
 </style></head><body>
 <p><a href="./">alot</a></p>
 <h1>Music credits</h1>
-<p>Free for non-commercial use. Loudness adjusted for this app.</p>
-<p class="es" lang="es">Uso libre no comercial. Volumen ajustado para esta app.</p>
+<p>Free for non-commercial use. Loudness adjusted and mixed with noise for this app.</p>
+<p class="es" lang="es">Uso libre no comercial. Volumen ajustado y mezclado con ruido para esta app.</p>
 {''.join(sections)}
 </body></html>
 '''

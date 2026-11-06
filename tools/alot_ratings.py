@@ -19,7 +19,7 @@ def read_votes():
     result = subprocess.run(['npx', '--yes', 'wrangler@4', 'd1', 'execute', 'alot-ratings', '--remote', '--json', '--command', QUERY],
                             cwd=os.path.expanduser('~/Documents/_bench-src/alot/worker'), env=ENV, capture_output=True, text=True)
     if result.returncode:
-        sys.exit('Could not read the ratings database: ' + result.stderr.strip()[-300:])
+        sys.exit('Could not read the ratings database: ' + (result.stderr + result.stdout).strip()[-300:])
     return json.loads(result.stdout)[0]['results']
 def decide(rows):
     removed, weights, watch = [], {}, []
@@ -31,7 +31,21 @@ def decide(rows):
     return removed, weights, watch
 if __name__ == '__main__':
     tracks = {t['id']: t['name'] for t in json.load(open(os.path.join(ROOT, 'preview/tracks/manifest.json'), encoding='utf-8'))['tracks']}
-    rows = [r for r in read_votes() if r['track'] in tracks]
+    votes = read_votes()
+    # Votes made in a purpose are stored as purpose--track, and only change that purpose's mix.
+    by_mode = {}
+    for r in votes:
+        if '--' in r['track']:
+            mode, track = r['track'].split('--', 1)
+            if track in tracks:
+                by_mode.setdefault(mode, []).append(dict(r, track=track))
+    for mode, mode_rows in sorted(by_mode.items()):
+        out, more, keep = decide(mode_rows)
+        names = lambda keys: ', '.join(sorted(tracks[k] for k in keys)) or 'none'
+        print(f'[{mode}] {len(mode_rows)} tracks rated. Take out: {names(out)}. Keep or play more: {names(more)}. Watch: {names(keep)}.')
+    if by_mode:
+        print('Purpose mixes change only by updating the list in mode_mix.py and rendering again.')
+    rows = [r for r in votes if r['track'] in tracks]
     removed, weights, watch = decide(rows)
     artists = {}
     for r in rows:

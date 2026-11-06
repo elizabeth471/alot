@@ -560,6 +560,27 @@
     .layer-list .empty-title { display: none; }
     #speakerBtn[hidden] { display: none; }
     #speakerBtn[aria-pressed="true"] { text-decoration: underline; text-underline-offset: 4px; }
+    .modes { border: 1px solid var(--border); border-radius: 20px; background: rgba(14,11,9,0.5); overflow: hidden; }
+    :root[data-panels="solid"] .modes { background: #221b15; }
+    :root[data-panels="clear"] .modes { background: rgba(34,27,21,0.28); }
+    .modes[hidden], #customize[hidden], #modeNow[hidden] { display: none; }
+    .mode-row { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 76px; padding: 12px var(--pad); border: 0; border-top: 1px solid var(--border); background: transparent; color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+    #modeList > .mode-row:first-child { border-top: 0; }
+    .mode-text { flex: 1 1 auto; min-width: 0; }
+    .mode-name { display: block; font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(21px * var(--text)); }
+    .mode-desc { display: block; margin-top: 2px; font-size: calc(13px * var(--text)); color: var(--text-muted); }
+    .mode-icon { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--border); border-radius: 50%; font-size: 14px; }
+    .mode-row[aria-pressed="true"] .mode-name, .mode-row[aria-pressed="true"] .mode-icon { color: var(--accent); border-color: var(--accent); }
+    .mode-row:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+    .mode-now { padding: 14px var(--pad) 18px; border-top: 1px solid var(--border); }
+    .mode-now-name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-bottom: 10px; font-size: calc(14px * var(--text)); color: var(--text-mid); }
+    #modeNow .layer-types { flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; overflow: visible; }
+    #modeNow .bn-chip { padding: 0 11px; font-size: calc(14px * var(--text)); }
+    #modeLike[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+    .mix-master { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 24px 0 10px; }
+    #customize:not([hidden]) { display: flex; flex-direction: column; gap: var(--gap); }
+    .library-noise { margin: 4px 0 8px; }
+    .library-noise-types { margin-bottom: 14px; }
     .mix-hero { display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 34px 0 40px; }
     .bn-play, .bn-play:hover { box-shadow: none; }
     #bnName { font-family: inherit; font-size: calc(14px * var(--text)); font-weight: 400; line-height: 1.4; color: var(--text-muted); text-shadow: none; margin: 0; }
@@ -686,12 +707,32 @@
 
 <header>
   <h1 class="brand-name">alot</h1>
-  <p class="tagline" data-t="tagline">Layer sounds. Make your own mix.</p>
+  <p class="tagline" data-t="tagline">What do you need right now?</p>
 </header>
 
 <main id="main">
 
-  <section class="layers" data-t-aria="tagline">
+  <section class="modes" id="modes" data-t-aria="tagline" hidden>
+    <div id="modeList" role="list"></div>
+    <div class="mode-now" id="modeNow" hidden>
+      <div class="mode-now-name" id="modeNowName" aria-live="polite"></div>
+      <div class="bn-chips layer-types" role="group" id="modeNowActions">
+        <button class="bn-chip" id="modeLike" aria-pressed="false" data-t="layer.like">Like</button>
+        <button class="bn-chip" id="modeDislike" data-t="layer.dislike">Dislike</button>
+        <button class="bn-chip" id="modeNext" data-t="mode.next">Next</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="mix-master">
+    <label class="bn-volume"><span data-t="layer.master">Master volume</span>
+      <input class="bn-range" type="range" id="mixMaster" min="0" max="100">
+    </label>
+    <button class="layer-action" id="customizeBtn" aria-expanded="false" aria-controls="customize" data-t="mode.customize">Customize</button>
+  </section>
+
+  <div id="customize" hidden>
+  <section class="layers">
 
     <div class="layer" id="layerNoise">
       <div class="layer-top">
@@ -701,7 +742,6 @@
         <button class="layer-action" id="layerNoiseBtn" aria-expanded="false" aria-controls="drawerNoise" data-t="layer.configure">Configure</button>
       </div>
       <input class="bn-range" type="range" id="bnVolume" min="0" max="100" value="50" aria-labelledby="layerNoiseName">
-      <div class="bn-chips layer-types" id="bnColors" role="group" aria-labelledby="layerNoiseName"></div>
       <div class="layer-drawer" id="drawerNoise" hidden>
     <div class="bn-panel">
       <div class="bn-label" id="bnPresetsLabel" data-t="preset.label">Start from</div>
@@ -766,6 +806,8 @@
         </div>
         <div id="paneLibrary" hidden>
           <p class="sheet-note library-note" data-t="library.sub"></p>
+          <div class="bn-label library-noise" id="libraryNoiseLabel" data-t="layer.noise">Noise</div>
+          <div class="bn-chips library-noise-types" id="bnColors" role="group" aria-labelledby="libraryNoiseLabel"></div>
           <div id="libraryList" class="library-list drawer-scroll" role="list"></div>
           <label class="upload-zone" id="uploadZone" data-t-aria="add.aria">
             <input type="file" id="uploadMp3" multiple accept=".mp3,.wav,.ogg,.flac,.aac,.m4a,audio/*" data-t-aria="add.main">
@@ -783,10 +825,8 @@
       <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17a1 1 0 0 0 1.5.86l14-8.5a1 1 0 0 0 0-1.72l-14-8.5A1 1 0 0 0 6 3.5z"/></svg>
       <svg class="icon-stop" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
     </button>
-    <label class="bn-volume"><span data-t="layer.master">Master volume</span>
-      <input class="bn-range" type="range" id="mixMaster" min="0" max="100">
-    </label>
   </section>
+  </div>
 
 </main>
 
@@ -817,7 +857,7 @@
       'generate': '✦ Generate new version', 'surprise': '✧ Surprise me', 'prev': '↩ Previous', 'save': 'Save', 'save.version': 'Save version', 'cancel': 'Cancel', 'save.name': 'Name this version', 'saved': 'Saved versions', 'saved.empty': 'Versions you save will appear here.', 'toast.saved': 'Version saved', 'toast.deleted': 'Version deleted', 'undo': 'Undo', 'mix.your': 'Your mix', 'mix.n': 'Mix {n}', 'version.n': 'My mix {n}', 'aria.play.noise': 'Play noise', 'aria.stop.noise': 'Stop noise', 'aria.delete': 'Delete {n}',
       'add.main': 'Choose tracks', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Tap Shuffle, or choose from the Library', 'play': '▶ Play', 'stop': '■ Stop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
       'mix.sub': 'Binaural beats, mixed with your tracks and noise. Use headphones: each ear gets a slightly different tone.', 'mix.type': 'Beat type', 'mix.rate': 'Beat rate', 'mix.pitch': 'Pitch', 'mix.beats': 'Neural Beats', 'mute': 'Mute', 'muted': 'Muted', 'aria.play.beats': 'Play neural beats', 'aria.stop.beats': 'Stop neural beats',
-      'tagline': 'Layer sounds. Make your own mix.', 'layer.noise': 'Noise', 'layer.playlist': 'Playlist', 'layer.beats': 'Beats', 'layer.configure': 'Configure', 'playlist.hint': 'Tap Shuffle to start', 'library.count': '{n} tracks', 'speaker.choose': 'Choose speaker', 'layer.shuffle': 'Shuffle', 'layer.like': 'Like', 'layer.dislike': 'Dislike', 'ratings.note': 'Likes and dislikes are saved with a random ID, not your name, to improve the playlist.', 'library.credits': 'Music credits', 'aria.play.music': 'Play playlist', 'aria.stop.music': 'Stop playlist', 'layer.master': 'Master volume', 'aria.play.mix': 'Play mix', 'aria.stop.mix': 'Stop mix',
+      'tagline': 'What do you need right now?', 'mode.sleep': 'Sleep', 'mode.sleep.d': 'Ambient, fading to noise', 'mode.flow': 'Flow', 'mode.flow.d': 'Steady downtempo', 'mode.ground': 'Ground', 'mode.ground.d': 'Dub and warm noise', 'mode.meditate': 'Meditate', 'mode.meditate.d': 'Slow, spacious ambient', 'mode.customize': 'Customize', 'mode.next': 'Next', 'mode.noise': 'Noise only', 'layer.noise': 'Noise', 'layer.playlist': 'Playlist', 'layer.beats': 'Beats', 'layer.configure': 'Configure', 'playlist.hint': 'Tap Shuffle to start', 'library.count': '{n} tracks', 'speaker.choose': 'Choose speaker', 'layer.shuffle': 'Shuffle', 'layer.like': 'Like', 'layer.dislike': 'Dislike', 'ratings.note': 'Likes and dislikes are saved with a random ID, not your name, to improve the playlist.', 'library.credits': 'Music credits', 'aria.play.music': 'Play playlist', 'aria.stop.music': 'Stop playlist', 'layer.master': 'Master volume', 'aria.play.mix': 'Play mix', 'aria.stop.mix': 'Stop mix',
       'settings': 'Settings', 'close': 'Close', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.ripples': 'Ripples', 'bg.fireflies': 'Fireflies', 'bg.constellation': 'Constellation', 'bg.aurora': 'Aurora', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'group.sound': 'Sound', 'set.crossfade': 'Transition between tracks', 'cross.0': 'Off', 'cross.2': 'Short', 'cross.4': 'Medium', 'cross.8': 'Long', 'check.title': 'Sound check', 'check.note': 'Press play and listen for a few minutes. If you hear a skip, tell Blossom these numbers.', 'check.dropouts': 'Dropouts', 'check.gaps': 'Audio clock gaps', 'check.state': 'Audio', 'check.na': 'not measured in this browser', 'check.none': 'not started yet', 'check.interrupted': 'Interruptions', 'group.look': 'Look', 'group.sizes': 'Sizes and spacing', 'group.phone': 'Phone and Sonos', 'meta': 'Layer noise and music. Make your own mix, right in your browser.', 'beat.Alpha': 'Alpha', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'library.title': 'Library', 'library.sub': 'Music from Ektoplazm under Creative Commons licenses.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', },
     es: {
       'title': 'alot — Combina sonidos. Crea tu propia mezcla.', 'skip': 'Saltar al contenido principal', 'playing': 'sonando',
@@ -829,7 +869,7 @@
       'generate': '✦ Generar nueva versión', 'surprise': '✧ Sorpréndeme', 'prev': '↩ Anterior', 'save': 'Guardar', 'save.version': 'Guardar versión', 'cancel': 'Cancelar', 'save.name': 'Ponle nombre a esta versión', 'saved': 'Versiones guardadas', 'saved.empty': 'Las versiones que guardes aparecerán aquí.', 'toast.saved': 'Versión guardada', 'toast.deleted': 'Versión eliminada', 'undo': 'Deshacer', 'mix.your': 'Tu mezcla', 'mix.n': 'Mezcla {n}', 'version.n': 'Mi mezcla {n}', 'aria.play.noise': 'Reproducir ruido', 'aria.stop.noise': 'Detener ruido', 'aria.delete': 'Eliminar {n}',
       'add.main': 'Elegir pistas', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Toca Aleatorio o elige en la Biblioteca', 'play': '▶ Reproducir', 'stop': '■ Detener', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
       'mix.sub': 'Ritmos binaurales mezclados con tus pistas y el ruido. Usa audífonos: cada oído recibe un tono ligeramente distinto.', 'mix.type': 'Tipo de ritmo', 'mix.rate': 'Frecuencia del ritmo', 'mix.pitch': 'Altura', 'mix.beats': 'Ritmos neuronales', 'mute': 'Silenciar', 'muted': 'Silenciado', 'aria.play.beats': 'Reproducir ritmos neuronales', 'aria.stop.beats': 'Detener ritmos neuronales',
-      'tagline': 'Combina sonidos. Crea tu propia mezcla.', 'layer.noise': 'Ruido', 'layer.playlist': 'Lista', 'layer.beats': 'Ritmos', 'layer.configure': 'Configurar', 'playlist.hint': 'Toca Aleatorio para empezar', 'library.count': '{n} pistas', 'speaker.choose': 'Elegir bocina', 'layer.shuffle': 'Aleatorio', 'layer.like': 'Me gusta', 'layer.dislike': 'No me gusta', 'ratings.note': 'Los me gusta y no me gusta se guardan con un ID aleatorio, no con tu nombre, para mejorar la lista.', 'library.credits': 'Créditos musicales', 'aria.play.music': 'Reproducir lista', 'aria.stop.music': 'Detener lista', 'layer.master': 'Volumen general', 'aria.play.mix': 'Reproducir mezcla', 'aria.stop.mix': 'Detener mezcla',
+      'tagline': '¿Qué necesitas ahora?', 'mode.sleep': 'Dormir', 'mode.sleep.d': 'Ambiente que se funde en ruido', 'mode.flow': 'Fluir', 'mode.flow.d': 'Downtempo constante', 'mode.ground': 'Centrarse', 'mode.ground.d': 'Dub y ruido cálido', 'mode.meditate': 'Meditar', 'mode.meditate.d': 'Ambiente lento y espacioso', 'mode.customize': 'Personalizar', 'mode.next': 'Siguiente', 'mode.noise': 'Solo ruido', 'layer.noise': 'Ruido', 'layer.playlist': 'Lista', 'layer.beats': 'Ritmos', 'layer.configure': 'Configurar', 'playlist.hint': 'Toca Aleatorio para empezar', 'library.count': '{n} pistas', 'speaker.choose': 'Elegir bocina', 'layer.shuffle': 'Aleatorio', 'layer.like': 'Me gusta', 'layer.dislike': 'No me gusta', 'ratings.note': 'Los me gusta y no me gusta se guardan con un ID aleatorio, no con tu nombre, para mejorar la lista.', 'library.credits': 'Créditos musicales', 'aria.play.music': 'Reproducir lista', 'aria.stop.music': 'Detener lista', 'layer.master': 'Volumen general', 'aria.play.mix': 'Reproducir mezcla', 'aria.stop.mix': 'Detener mezcla',
       'settings': 'Ajustes', 'close': 'Cerrar', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.ripples': 'Ondas', 'bg.fireflies': 'Luciérnagas', 'bg.constellation': 'Constelación', 'bg.aurora': 'Aurora', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'group.sound': 'Sonido', 'set.crossfade': 'Transición entre pistas', 'cross.0': 'Sin transición', 'cross.2': 'Corta', 'cross.4': 'Media', 'cross.8': 'Larga', 'check.title': 'Prueba de sonido', 'check.note': 'Toca reproducir y escucha unos minutos. Si oyes un corte, dile estos números a Blossom.', 'check.dropouts': 'Cortes', 'check.gaps': 'Saltos del reloj de audio', 'check.state': 'Audio', 'check.na': 'no se mide en este navegador', 'check.none': 'aún no empieza', 'check.interrupted': 'Interrupciones', 'group.look': 'Apariencia', 'group.sizes': 'Tamaños y espacio', 'group.phone': 'Teléfono y Sonos', 'meta': 'Combina ruido y música. Crea tu propia mezcla en tu navegador.', 'beat.Alpha': 'Alfa', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'library.title': 'Biblioteca', 'library.sub': 'Música de Ektoplazm con licencias Creative Commons.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', }
   };
   var SETTINGS_STORE = 'alot.settings.v1';
@@ -1010,6 +1050,7 @@
 
   var playJob = 0;
   function play(rec, fadeSeconds) {
+    if (modeCurrent) modeStop();
     var fade = fadeSeconds || 0.4;
     var pool = trackPlayers();
     var previous = trackCurrent;
@@ -1579,6 +1620,7 @@
 
   function bnSetPlaying(on) {
     if (on) {
+      if (modeCurrent) modeStop();
       bnPrepareAudioSession();
       if (settings.background) {
         bgStart();
@@ -1610,6 +1652,11 @@
   function bnUpdateMediaSession() {
     if (!('mediaSession' in navigator) || !window.MediaMetadata) return;
     try {
+      if (modeCurrent) {
+        navigator.mediaSession.metadata = new MediaMetadata({ title: modeChapter ? modeChapter.name : t('mode.noise'), artist: t('mode.' + modeCurrent.id), album: 'alot' });
+        navigator.mediaSession.playbackState = modeAudio && !modeAudio.paused ? 'playing' : 'paused';
+        return;
+      }
       var track = recordings.filter(function (r) { return r.id === playingId; })[0];
       var showTrack = lastSource === 'tracks' && track;
       navigator.mediaSession.metadata = new MediaMetadata({ title: showTrack ? track.name : bnDisplayName(), artist: 'alot' });
@@ -2567,6 +2614,7 @@
 
   function mixApply() {
     if (playingAudio && !playingNode) playingAudio.volume = mixState.muted ? 0 : mixLevel(mixState.tracks);
+    if (modeAudio) modeAudio.volume = mixLevel(mixState.master);
     if (!mixGraph) return;
     var t = mixGraph.ctx.currentTime;
     mixGraph.master.gain.setTargetAtTime(mixLevel(mixState.master), t, 0.02);
@@ -2837,7 +2885,10 @@
   }
 
   function applySettings() {
-    setTimeout(layersSync, 0); // words on the layer rows follow the language
+    setTimeout(function () { // words built by code follow the language
+      layersSync();
+      if (MODES.length) modeRender();
+    }, 0);
     var root = document.documentElement;
     root.lang = settings.lang;
     root.setAttribute('data-layout', settings.layout);
@@ -2971,6 +3022,7 @@
   if ('mediaSession' in navigator) {
     var controls = {
       play: function () {
+        if (modeCurrent) { modeAudio.play().catch(function () {}); bnUpdateMediaSession(); return; }
         if (!bnPlaying) bnSetPlaying(true);
         if (beatsWanted && !mixOscillators) mixSetBeats(true);
         if (playingAudio) { lastSource = 'tracks'; playingAudio.play().catch(function () {}); }
@@ -2979,14 +3031,16 @@
         layersSync();
       },
       pause: function () {
+        if (modeCurrent) { modeAudio.pause(); bnUpdateMediaSession(); return; }
         if (bnPlaying) bnSetPlaying(false);
         if (mixOscillators) mixSetBeats(false);
         if (playingAudio) playingAudio.pause();
         bnUpdateMediaSession();
         layersSync();
       },
-      stop: function () { stopMix(); },
+      stop: function () { if (modeCurrent) modeStop(); else stopMix(); },
       nexttrack: function () {
+        if (modeCurrent && modeChapter) { modeSkip(modeChapter); return; }
         var current = recordings.filter(function (r) { return r.id === playingId; })[0];
         if (current) playNext(current, true);
       }
@@ -3002,7 +3056,7 @@
   var bnPlayInView = true;
   function bnMiniSync() {
     var on = mixIsPlaying();
-    document.getElementById('bnMini').hidden = bnPlayInView;
+    document.getElementById('bnMini').hidden = bnPlayInView || customizeEl.hidden;
     var button = document.getElementById('bnMiniPlay');
     button.textContent = on ? '■' : '▶';
     button.setAttribute('aria-pressed', String(on));
@@ -3237,6 +3291,172 @@
   document.getElementById('tabPlaylist').addEventListener('click', function () { musicTab(false); });
   document.getElementById('tabLibrary').addEventListener('click', function () { musicTab(true); });
 
+
+  /* ═══════════════════════════════════════════
+     PURPOSES: one pre-mixed stream per purpose, listed in tracks/modes.json.
+     A single plain player carries over AirPlay, keeps going on a locked phone, and needs no mixer or screen.
+     Like, Dislike and Next act on the track playing, found from the chapter list. Votes count per purpose.
+  ═══════════════════════════════════════════ */
+  var MODES = [];
+  var modeAudio = null;
+  var modeCurrent = null;
+  var modeChapter = null;
+  var customizeEl = document.getElementById('customize');
+
+  function modeElement() {
+    if (modeAudio) return modeAudio;
+    modeAudio = new Audio();
+    modeAudio.preload = 'auto';
+    modeAudio.setAttribute('x-webkit-airplay', 'allow');
+    modeAudio.addEventListener('timeupdate', modeTick);
+    modeAudio.addEventListener('ended', function () { if (modeCurrent && !modeCurrent.loop) modeStop(); });
+    modeAudio.addEventListener('error', function () {
+      if (!modeCurrent) return;
+      modeStop();
+      toast(t('err.play'), 'error');
+    });
+    return modeAudio;
+  }
+  function modeChapterAt(mode, time) {
+    if (mode.music_until && time >= mode.music_until) return null;
+    var found = null;
+    mode.chapters.forEach(function (c) { if (c.t <= time) found = c; });
+    return found;
+  }
+  function modeKey(mode, chapter) { return mode.id + '--' + chapter.id; }
+  function modeTick() {
+    if (!modeCurrent) return;
+    var chapter = modeChapterAt(modeCurrent, modeAudio.currentTime);
+    if (chapter && ratings[modeKey(modeCurrent, chapter)] < 0) { modeSkip(chapter); return; }
+    if (chapter !== modeChapter) { modeChapter = chapter; modeSync(); }
+  }
+  function modeSkip(from) {
+    var list = modeCurrent.chapters;
+    var at = list.indexOf(from);
+    for (var i = 1; i <= list.length; i++) {
+      var next = at + i;
+      if (next >= list.length) {
+        if (modeCurrent.music_until) { modeAudio.currentTime = modeCurrent.music_until; return; }
+        next = next % list.length;
+      }
+      if (!(ratings[modeKey(modeCurrent, list[next])] < 0)) { modeAudio.currentTime = list[next].t + 0.5; return; }
+    }
+  }
+  function modeStart(mode) {
+    stopMix();
+    bnPrepareAudioSession();
+    var el = modeElement();
+    modeCurrent = mode;
+    modeChapter = mode.chapters[0] || null;
+    el.src = mode.file;
+    el.loop = !!mode.loop;
+    el.volume = mixState.muted ? 0 : mixLevel(mixState.master);
+    el.play().catch(function (error) {
+      if (modeCurrent !== mode || (error && error.name === 'AbortError')) return;
+      modeStop();
+      toast(t('err.play'), 'error');
+    });
+    lastSource = 'mode';
+    modeSync();
+  }
+  function modeStop() {
+    if (modeAudio) modeAudio.pause();
+    modeCurrent = null;
+    modeChapter = null;
+    modeSync();
+  }
+  function modeSync() {
+    Array.prototype.forEach.call(document.getElementById('modeList').children, function (row) {
+      var on = !!modeCurrent && row.getAttribute('data-mode') === modeCurrent.id;
+      row.setAttribute('aria-pressed', String(on));
+      row.querySelector('.mode-icon').textContent = on ? '■' : '▶';
+    });
+    document.getElementById('modeNow').hidden = !modeCurrent;
+    if (!modeCurrent) { bnUpdateMediaSession(); return; }
+    document.getElementById('modeNowName').textContent = modeChapter ? modeChapter.name : t('mode.noise');
+    var like = document.getElementById('modeLike');
+    like.setAttribute('aria-pressed', String(!!modeChapter && ratings[modeKey(modeCurrent, modeChapter)] > 0));
+    like.disabled = !modeChapter;
+    document.getElementById('modeDislike').disabled = !modeChapter;
+    document.getElementById('modeNext').disabled = !modeChapter;
+    bnUpdateMediaSession();
+  }
+  function modeRender() {
+    var list = document.getElementById('modeList');
+    list.textContent = '';
+    MODES.forEach(function (mode) {
+      var row = document.createElement('button');
+      row.className = 'mode-row';
+      row.setAttribute('data-mode', mode.id);
+      row.setAttribute('aria-pressed', 'false');
+      row.setAttribute('role', 'listitem');
+      var text = document.createElement('span');
+      text.className = 'mode-text';
+      var name = document.createElement('span');
+      name.className = 'mode-name';
+      name.textContent = t('mode.' + mode.id);
+      var desc = document.createElement('span');
+      desc.className = 'mode-desc';
+      desc.textContent = t('mode.' + mode.id + '.d');
+      text.appendChild(name);
+      text.appendChild(desc);
+      var icon = document.createElement('span');
+      icon.className = 'mode-icon';
+      icon.setAttribute('aria-hidden', 'true');
+      row.appendChild(text);
+      row.appendChild(icon);
+      row.addEventListener('click', function () {
+        if (modeCurrent === mode) modeStop(); else modeStart(mode);
+      });
+      list.appendChild(row);
+    });
+    modeSync();
+  }
+  function customizeShow(open) {
+    customizeEl.hidden = !open;
+    document.getElementById('customizeBtn').setAttribute('aria-expanded', String(open));
+    bnMiniSync();
+  }
+  document.getElementById('customizeBtn').addEventListener('click', function () { customizeShow(customizeEl.hidden); });
+  document.getElementById('modeLike').addEventListener('click', function () {
+    if (!modeCurrent || !modeChapter) return;
+    var key = modeKey(modeCurrent, modeChapter);
+    setRating(key, ratings[key] > 0 ? 0 : 1);
+    modeSync();
+  });
+  document.getElementById('modeDislike').addEventListener('click', function () {
+    if (!modeCurrent || !modeChapter) return;
+    var mode = modeCurrent;
+    var chapter = modeChapter;
+    var key = modeKey(mode, chapter);
+    var was = ratings[key];
+    setRating(key, -1);
+    modeSkip(chapter);
+    toast(t('layer.dislike'), 'info', t('undo'), function () {
+      setRating(key, was);
+      if (modeCurrent === mode) modeAudio.currentTime = chapter.t + 0.5;
+    });
+  });
+  document.getElementById('modeNext').addEventListener('click', function () {
+    if (modeCurrent && modeChapter) modeSkip(modeChapter);
+  });
+  if (location.protocol !== 'file:') {
+    fetch('tracks/modes.json', { cache: 'no-cache' }).then(function (response) {
+      return response.ok ? response.json() : null;
+    }).then(function (data) {
+      if (!data || !Array.isArray(data.modes)) { customizeShow(true); return; }
+      MODES = data.modes.filter(function (m) {
+        return m && /^[a-z]+$/.test(m.id) && t('mode.' + m.id) !== 'mode.' + m.id && Array.isArray(m.chapters) &&
+          /^https:\/\/pub-dfe2dc87a34d4016a8782237145e0938\.r2\.dev\/[a-z0-9\/-]+\.m4a$/.test(m.file);
+      });
+      document.getElementById('modes').hidden = !MODES.length;
+      if (!MODES.length) customizeShow(true);
+      modeRender();
+    }).catch(function () { customizeShow(true); });
+  } else {
+    customizeShow(true);
+  }
+
   /* ── Choosing a speaker: AirPlay takes plain players, so this moves the sound onto them first. ── */
   var speakerBtn = document.getElementById('speakerBtn');
   var IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -3277,9 +3497,14 @@
       return;
     }
     if (!HAS_AIRPLAY) { toast(t('set.sonos'), 'info'); return; }
-    speakerPlainPath();
-    trackPlayers();
-    var el = playingId !== null && playingAudio ? playingAudio : bgElement();
+    var el;
+    if (mixIsPlaying()) {
+      speakerPlainPath();
+      trackPlayers();
+      el = playingId !== null && playingAudio ? playingAudio : bgElement();
+    } else {
+      el = modeElement();
+    }
     if (!el.src) { el.src = BG_SILENCE; el.play().catch(function () {}); }
     speakerWatch(el);
     try { el.webkitShowPlaybackTargetPicker(); } catch (e) { toast(t('set.sonos'), 'info'); }
@@ -3306,7 +3531,10 @@
   document.getElementById('layerNoiseBtn').addEventListener('click', function () { layerToggle('Noise'); });
   document.getElementById('layerMusicBtn').addEventListener('click', function () { layerToggle('Music'); });
   // Older links to the Studio tab open the music list.
-  function layerFromLink() { if (location.hash === '#studio') layerToggle('Music', true); }
+  function layerFromLink() {
+    if (location.hash === '#studio' || location.hash === '#mix') customizeShow(true);
+    if (location.hash === '#studio') layerToggle('Music', true);
+  }
   layerFromLink();
   ratingsSend();
   window.addEventListener('hashchange', layerFromLink);
