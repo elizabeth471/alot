@@ -18,6 +18,7 @@ async def run(p, name):
     q = await (await b.new_context(viewport={'width': 390, 'height': 844})).new_page(); e = []; q.on('pageerror', lambda x: e.append(str(x)))
     await q.add_init_script(STUB); await q.goto(U); await q.wait_for_timeout(1000)
     check(name + ' button shown where AirPlay exists', await q.locator('#speakerBtn').is_visible())
+    check(name + ' button on the first screen without scrolling', await q.evaluate("document.getElementById('speakerBtn').getBoundingClientRect().bottom<innerHeight/3"))
     await q.click('#speakerBtn'); await q.wait_for_timeout(500); pk = await q.evaluate('__pick')
     check(name + ' nothing playing: picker still opens, on an AirPlay player', len(pk) == 1 and pk[0]['air'] == 'allow', pk)
     check(name + ' locked-screen path now on and saved', (await q.evaluate(SET)).get('background') is True and await q.is_checked('#setBackground'))
