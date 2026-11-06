@@ -634,6 +634,7 @@
     .drawer-scroll { max-height: min(46vh, 420px); overflow-y: auto; overscroll-behavior: contain; }
     #panePlaylist[hidden], #paneLibrary[hidden] { display: none; }
     .library-note { margin: 0 0 8px; }
+    .ratings-note { margin: 10px 0 0; }
     #drawerMusic .library-list { gap: 0; }
     .album { border-bottom: 1px solid var(--border); }
     .album:last-child { border-bottom: 0; }
@@ -866,6 +867,7 @@
           </div>
           </div>
           <button class="bn-btn library-all" id="ratingsCopy" data-t="ratings.copy">Copy my ratings</button>
+          <p class="sheet-note ratings-note" data-t="ratings.note">Likes and dislikes are saved with a random ID, not your name, to improve the playlist.</p>
         </div>
         <div id="paneLibrary" hidden>
           <p class="sheet-note library-note" data-t="library.sub"></p>
@@ -920,7 +922,7 @@
       'generate': '✦ Generate new version', 'surprise': '✧ Surprise me', 'prev': '↩ Previous', 'save': 'Save', 'save.version': 'Save version', 'cancel': 'Cancel', 'save.name': 'Name this version', 'saved': 'Saved versions', 'saved.empty': 'Versions you save will appear here.', 'toast.saved': 'Version saved', 'toast.deleted': 'Version deleted', 'undo': 'Undo', 'mix.your': 'Your mix', 'mix.n': 'Mix {n}', 'version.n': 'New version {n}', 'aria.play.noise': 'Play noise', 'aria.stop.noise': 'Stop noise', 'aria.delete': 'Delete {n}',
       'add.title': 'Add Your Tracks', 'add.sub': 'Choose audio files from your device', 'add.main': 'Choose tracks', 'add.hint': 'Tap to choose, or drag and drop', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.title': 'My Tracks', 'tracks.sub': 'Your list plays in order. Play or delete tracks here', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Tap Shuffle, or choose from the Library', 'play': '▶ Play', 'stop': '■ Stop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
       'mix.sub': 'Binaural beats, mixed with your tracks and noise. Use headphones: each ear gets a slightly different tone.', 'mix.type': 'Beat type', 'mix.rate': 'Beat rate', 'mix.pitch': 'Pitch', 'mix.beats': 'Neural Beats', 'mute': 'Mute', 'muted': 'Muted', 'aria.play.beats': 'Play neural beats', 'aria.stop.beats': 'Stop neural beats',
-      'tagline': 'Layer sounds. Make your own mix.', 'layer.noise': 'Noise', 'layer.playlist': 'Playlist', 'layer.beats': 'Beats', 'layer.configure': 'Configure', 'speaker.choose': 'Choose speaker', 'layer.shuffle': 'Shuffle', 'layer.like': 'Like', 'layer.dislike': 'Dislike', 'ratings.copy': 'Copy my ratings', 'ratings.copied': 'Ratings copied', 'library.credits': 'Music credits', 'aria.play.music': 'Play playlist', 'aria.stop.music': 'Stop playlist', 'layer.master': 'Master volume', 'aria.play.mix': 'Play mix', 'aria.stop.mix': 'Stop mix',
+      'tagline': 'Layer sounds. Make your own mix.', 'layer.noise': 'Noise', 'layer.playlist': 'Playlist', 'layer.beats': 'Beats', 'layer.configure': 'Configure', 'speaker.choose': 'Choose speaker', 'layer.shuffle': 'Shuffle', 'layer.like': 'Like', 'layer.dislike': 'Dislike', 'ratings.note': 'Likes and dislikes are saved with a random ID, not your name, to improve the playlist.', 'ratings.copy': 'Copy my ratings', 'ratings.copied': 'Ratings copied', 'library.credits': 'Music credits', 'aria.play.music': 'Play playlist', 'aria.stop.music': 'Stop playlist', 'layer.master': 'Master volume', 'aria.play.mix': 'Play mix', 'aria.stop.mix': 'Stop mix',
       'settings': 'Settings', 'close': 'Close', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.ripples': 'Ripples', 'bg.fireflies': 'Fireflies', 'bg.constellation': 'Constellation', 'bg.aurora': 'Aurora', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'group.sound': 'Sound', 'set.crossfade': 'Transition between tracks', 'cross.0': 'Off', 'cross.2': 'Short', 'cross.4': 'Medium', 'cross.8': 'Long', 'check.title': 'Sound check', 'check.note': 'Press play and listen for a few minutes. If you hear a skip, tell Blossom these numbers.', 'check.dropouts': 'Dropouts', 'check.gaps': 'Audio clock gaps', 'check.state': 'Audio', 'check.na': 'not measured in this browser', 'check.none': 'not started yet', 'check.interrupted': 'Interruptions', 'group.look': 'Look', 'group.sizes': 'Sizes and spacing', 'group.phone': 'Phone and Sonos', 'meta': 'Shape your own noise, loop your tracks and mix them with binaural beats, right in your browser.', 'beat.Alpha': 'Alpha', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'library.title': 'Library', 'library.sub': 'Music from Ektoplazm under Creative Commons licenses.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Lo-fi bossa', 'library.waltz': 'Lo-fi waltz', 'library.triphop': 'Trip-hop', 'library.electronic': 'Electronic downtempo', 'library.ambient': 'Ambient downtempo', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', },
     es: {
       'title': 'alot — Combina sonidos. Crea tu propia mezcla.', 'skip': 'Saltar al contenido principal', 'playing': 'sonando',
@@ -932,7 +934,7 @@
       'generate': '✦ Generar nueva versión', 'surprise': '✧ Sorpréndeme', 'prev': '↩ Anterior', 'save': 'Guardar', 'save.version': 'Guardar versión', 'cancel': 'Cancelar', 'save.name': 'Ponle nombre a esta versión', 'saved': 'Versiones guardadas', 'saved.empty': 'Las versiones que guardes aparecerán aquí.', 'toast.saved': 'Versión guardada', 'toast.deleted': 'Versión eliminada', 'undo': 'Deshacer', 'mix.your': 'Tu mezcla', 'mix.n': 'Mezcla {n}', 'version.n': 'Nueva versión {n}', 'aria.play.noise': 'Reproducir ruido', 'aria.stop.noise': 'Detener ruido', 'aria.delete': 'Eliminar {n}',
       'add.title': 'Añade tus pistas', 'add.sub': 'Elige archivos de audio de tu dispositivo', 'add.main': 'Elegir pistas', 'add.hint': 'Toca para elegir, o arrastra y suelta', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.title': 'Mis pistas', 'tracks.sub': 'Tu lista suena en orden. Reproduce o elimina pistas aquí', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Toca Aleatorio o elige en la Biblioteca', 'play': '▶ Reproducir', 'stop': '■ Detener', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
       'mix.sub': 'Ritmos binaurales mezclados con tus pistas y el ruido. Usa audífonos: cada oído recibe un tono ligeramente distinto.', 'mix.type': 'Tipo de ritmo', 'mix.rate': 'Frecuencia del ritmo', 'mix.pitch': 'Altura', 'mix.beats': 'Ritmos neuronales', 'mute': 'Silenciar', 'muted': 'Silenciado', 'aria.play.beats': 'Reproducir ritmos neuronales', 'aria.stop.beats': 'Detener ritmos neuronales',
-      'tagline': 'Combina sonidos. Crea tu propia mezcla.', 'layer.noise': 'Ruido', 'layer.playlist': 'Lista', 'layer.beats': 'Ritmos', 'layer.configure': 'Configurar', 'speaker.choose': 'Elegir bocina', 'layer.shuffle': 'Aleatorio', 'layer.like': 'Me gusta', 'layer.dislike': 'No me gusta', 'ratings.copy': 'Copiar mis valoraciones', 'ratings.copied': 'Valoraciones copiadas', 'library.credits': 'Créditos musicales', 'aria.play.music': 'Reproducir lista', 'aria.stop.music': 'Detener lista', 'layer.master': 'Volumen general', 'aria.play.mix': 'Reproducir mezcla', 'aria.stop.mix': 'Detener mezcla',
+      'tagline': 'Combina sonidos. Crea tu propia mezcla.', 'layer.noise': 'Ruido', 'layer.playlist': 'Lista', 'layer.beats': 'Ritmos', 'layer.configure': 'Configurar', 'speaker.choose': 'Elegir bocina', 'layer.shuffle': 'Aleatorio', 'layer.like': 'Me gusta', 'layer.dislike': 'No me gusta', 'ratings.note': 'Los me gusta y no me gusta se guardan con un ID aleatorio, no con tu nombre, para mejorar la lista.', 'ratings.copy': 'Copiar mis valoraciones', 'ratings.copied': 'Valoraciones copiadas', 'library.credits': 'Créditos musicales', 'aria.play.music': 'Reproducir lista', 'aria.stop.music': 'Detener lista', 'layer.master': 'Volumen general', 'aria.play.mix': 'Reproducir mezcla', 'aria.stop.mix': 'Detener mezcla',
       'settings': 'Ajustes', 'close': 'Cerrar', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.ripples': 'Ondas', 'bg.fireflies': 'Luciérnagas', 'bg.constellation': 'Constelación', 'bg.aurora': 'Aurora', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'group.sound': 'Sonido', 'set.crossfade': 'Transición entre pistas', 'cross.0': 'Sin transición', 'cross.2': 'Corta', 'cross.4': 'Media', 'cross.8': 'Larga', 'check.title': 'Prueba de sonido', 'check.note': 'Toca reproducir y escucha unos minutos. Si oyes un corte, dile estos números a Blossom.', 'check.dropouts': 'Cortes', 'check.gaps': 'Saltos del reloj de audio', 'check.state': 'Audio', 'check.na': 'no se mide en este navegador', 'check.none': 'aún no empieza', 'check.interrupted': 'Interrupciones', 'group.look': 'Apariencia', 'group.sizes': 'Tamaños y espacio', 'group.phone': 'Teléfono y Sonos', 'meta': 'Crea tu propio ruido, repite tus pistas y mézclalas con ritmos binaurales, directamente en tu navegador.', 'beat.Alpha': 'Alfa', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'library.title': 'Biblioteca', 'library.sub': 'Música de Ektoplazm con licencias Creative Commons.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Bossa lo-fi', 'library.waltz': 'Vals lo-fi', 'library.triphop': 'Trip-hop', 'library.electronic': 'Downtempo electrónico', 'library.ambient': 'Downtempo ambiental', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', }
   };
   var SETTINGS_STORE = 'alot.settings.v1';
@@ -2882,7 +2884,7 @@
     if (libraryBusy[def.id] || recordings.some(function (r) { return r.libraryId === def.id; })) return Promise.resolve();
     libraryBusy[def.id] = true;
     var ratedKey = ratingKey({ libraryId: def.id });
-    if (ratings[ratedKey] < 0) { delete ratings[ratedKey]; saveRatings(); }
+    if (ratings[ratedKey] < 0) setRating(ratedKey, 0);
     renderLibrary();
     return Promise.resolve({ url: def.file, size: def.size || 0, duration: def.duration }).then(function (made) {
       recordings.push({
@@ -3159,12 +3161,65 @@
     bnMiniSync();
   }
 
-  // Likes and dislikes live on this device. Copy my ratings is the only way they leave it.
+  // Likes and dislikes are kept on this device and sent to our ratings database (rules below).
   var RATING_STORE = 'alot.ratings.v1';
   var ratings = {};
   try { ratings = JSON.parse(localStorage.getItem(RATING_STORE)) || {}; } catch (e) { /* starts empty */ }
   function saveRatings() {
     try { localStorage.setItem(RATING_STORE, JSON.stringify(ratings)); } catch (e) { /* lasts for this visit */ }
+  }
+
+  /* What each rating does:
+     Like:    marks the track and makes it come up about 3x sooner in shuffles on this device. Tap again to take it back.
+     Dislike: skips to the next track, takes it off the list, and keeps it out of shuffles on this device. Undo reverses it;
+              adding it again from the Library clears it.
+     Both are sent to our ratings database with a random device id, never a name. Shared library changes are only made
+     after a person reviews them: see tools/alot_ratings.py for the rules.
+     Sending happens only on a tap, on load if something is waiting, or on reconnecting. No timers: this page runs all night. */
+  var RATING_URL = 'https://alot-ratings.alot-app.workers.dev/vote';
+  var RATING_DEVICE = 'alot.device.v1';
+  var RATING_WAITING = 'alot.ratings.waiting.v1';
+  var ratingsWaiting = {};
+  try { ratingsWaiting = JSON.parse(localStorage.getItem(RATING_WAITING)) || {}; } catch (e) { /* nothing waiting */ }
+  var ratingsSending = false;
+
+  function ratingDevice() {
+    var id = null;
+    try { id = localStorage.getItem(RATING_DEVICE); } catch (e) { /* made fresh below */ }
+    if (id) return id;
+    var bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    id = Array.prototype.map.call(bytes, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+    try { localStorage.setItem(RATING_DEVICE, id); } catch (e) { /* a new id next visit */ }
+    return id;
+  }
+  function ratingsSaveWaiting() {
+    try { localStorage.setItem(RATING_WAITING, JSON.stringify(ratingsWaiting)); } catch (e) { /* lasts for this visit */ }
+  }
+  function ratingsSend() {
+    var keys = Object.keys(ratingsWaiting).slice(0, 100);
+    if (ratingsSending || !keys.length || !window.fetch || location.protocol === 'file:' || navigator.onLine === false) return;
+    var votes = {};
+    keys.forEach(function (key) { votes[key] = ratingsWaiting[key]; });
+    ratingsSending = true;
+    fetch(RATING_URL, {
+      method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ device: ratingDevice(), votes: votes })
+    }).then(function (response) {
+      ratingsSending = false;
+      if (!response.ok) return;
+      keys.forEach(function (key) { if (ratingsWaiting[key] === votes[key]) delete ratingsWaiting[key]; });
+      ratingsSaveWaiting();
+      ratingsSend();
+    }).catch(function () { ratingsSending = false; /* stays waiting for the next tap, load or reconnect */ });
+  }
+  window.addEventListener('online', ratingsSend);
+  function setRating(key, vote) {
+    if (vote) ratings[key] = vote; else delete ratings[key];
+    saveRatings();
+    ratingsWaiting[key] = vote || 0;
+    ratingsSaveWaiting();
+    ratingsSend();
   }
   function ratingKey(rec) {
     var found = /([a-z0-9-]+)\.m4a$/.exec(rec.libraryId || '');
@@ -3255,8 +3310,7 @@
   document.getElementById('musicLike').addEventListener('click', function () {
     var key = currentRec() && ratingKey(currentRec());
     if (!key) return;
-    if (ratings[key] > 0) delete ratings[key]; else ratings[key] = 1;
-    saveRatings();
+    setRating(key, ratings[key] > 0 ? 0 : 1);
     layersSync();
   });
   document.getElementById('musicDislike').addEventListener('click', function () {
@@ -3266,8 +3320,7 @@
     var was = ratings[key];
     var at = recordings.indexOf(rec);
     var wasPlaying = rec.id === playingId;
-    ratings[key] = -1;
-    saveRatings();
+    setRating(key, -1);
     recordings = recordings.filter(function (r) { return r !== rec; });
     if (wasPlaying) {
       if (recordings.length) play(recordings[Math.min(at, recordings.length - 1)], crossfadeSeconds() || 0.4);
@@ -3275,8 +3328,7 @@
     }
     renderTakes();
     toast(t('layer.dislike'), 'info', t('undo'), function () {
-      if (was === undefined) delete ratings[key]; else ratings[key] = was;
-      saveRatings();
+      setRating(key, was);
       recordings.splice(Math.min(at, recordings.length), 0, rec);
       renderTakes();
     });
@@ -3361,6 +3413,7 @@
   // Older links to the Studio tab open the music list.
   function layerFromLink() { if (location.hash === '#studio') layerToggle('Music', true); }
   layerFromLink();
+  ratingsSend();
   window.addEventListener('hashchange', layerFromLink);
   layersSync();
 

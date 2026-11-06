@@ -1,0 +1,10 @@
+name = "alot-ratings"
+main = "index.js"
+compatibility_date = "2026-10-01"
+account_id = "d792657e1a9d7f2e2d5ab035ed9997cb"
+workers_dev = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "alot-ratings"
+database_id = "b5fdb692-c903-47e4-ac8a-b8ce5266a328"

@@ -1,6 +1,6 @@
 # Streaming from R2: tracks come from our storage, reach the mix (not silent), seek, hand over, and layer with noise.
 # Usage: ~/ComfyUI/venv/bin/python stream.py URL
-import asyncio, sys
+import asyncio, json, sys
 from playwright.async_api import async_playwright
 U = sys.argv[1]; R2 = 'pub-dfe2dc87a34d4016a8782237145e0938.r2.dev'; fails = []
 def check(n, ok, d=''):
@@ -52,6 +52,15 @@ async def run(p, name):
 async def ratings(p, name):
     b = await (p.webkit.launch() if name == 'webkit' else p.chromium.launch(channel='chrome', headless=True, args=['--autoplay-policy=no-user-gesture-required', '--mute-audio']))
     c = await b.new_context(viewport={'width': 390, 'height': 844}); q = await c.new_page(); e = []; q.on('pageerror', lambda x: e.append(str(x)))
+    sent = []; online = {'ok': False}
+    async def vote(route):
+        if route.request.method == 'POST':
+            sent.append(json.loads(route.request.post_data))
+            if online['ok']: await route.fulfill(status=204, headers={'Access-Control-Allow-Origin': route.request.headers.get('origin', '*')})
+            else: await route.abort()
+        else: await route.fulfill(status=204, headers={'Access-Control-Allow-Origin': route.request.headers.get('origin', '*'), 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Allow-Methods': 'POST'})
+    await c.route('**/vote', vote)  # never touches the real ratings database
+    online['ok'] = True
     await q.add_init_script(INIT); await q.goto(U); await q.wait_for_timeout(1000)
     order = "[...document.querySelectorAll('#takesList .take-name')].map(x=>x.textContent)"
     check(name + ' Like and Dislike wait until there is a track', await q.is_disabled('#musicLike') and await q.is_disabled('#musicDislike'))
@@ -63,11 +72,15 @@ async def ratings(p, name):
     await q.wait_for_function(TRK + ".some(x=>x.t>0.3)", timeout=40000)
     first = await q.inner_text('#layerMusicPick'); await q.click('#musicLike'); await q.wait_for_timeout(200)
     check(name + ' Like marks the track', await q.get_attribute('#musicLike', 'aria-pressed') == 'true', first)
+    last = sent[-1] if sent else {}
+    check(name + ' Like is sent: random device id, track and vote only', list(last.keys()) == ['device', 'votes'] and len(last.get('device', '')) == 32 and list(last['votes'].values()) == [1], last)
     await q.click('#musicDislike'); await q.wait_for_timeout(1200); after = await q.inner_text('#layerMusicPick')
     check(name + ' Dislike moves to another track', after != first, (first, after))
     check(name + ' Dislike takes it off the list', first not in await q.evaluate(order))
     check(name + ' next track is not marked liked', await q.get_attribute('#musicLike', 'aria-pressed') == 'false')
+    check(name + ' Dislike is sent', sent and -1 in sent[-1]['votes'].values(), sent[-1] if sent else None)
     await q.click('.toast-action'); await q.wait_for_timeout(400)
+    check(name + ' Undo sends the correction', sent[-1]['votes'] and list(sent[-1]['votes'].values())[-1] == 1, sent[-1])
     check(name + ' Undo puts it back', first in await q.evaluate(order))
     await q.click('#layerMusicPick', force=True, timeout=500) if False else None
     await q.click('#musicDislike'); await q.wait_for_timeout(1000); disliked = after
@@ -76,6 +89,13 @@ async def ratings(p, name):
     for i in range(3):
         await q.click('#musicShuffle'); await q.wait_for_timeout(500)
         check(f'{name} shuffle {i + 1} keeps the disliked track out', disliked not in await q.evaluate(order) and len(await q.evaluate(order)) == 65)
+    # a vote made with no connection waits, and goes when the page next loads
+    online['ok'] = False; n = len(sent); await q.click('#musicLike'); await q.wait_for_timeout(400)
+    waiting = await q.evaluate("Object.keys(JSON.parse(localStorage.getItem('alot.ratings.waiting.v1')||'{}')).length")
+    check(name + ' failed send is kept', waiting >= 1, waiting)
+    online['ok'] = True; await q.reload(); await q.wait_for_timeout(1000)
+    check(name + ' kept vote sends on next load', len(sent) > n and await q.evaluate("localStorage.getItem('alot.ratings.waiting.v1')") == '{}', await q.evaluate("localStorage.getItem('alot.ratings.waiting.v1')"))
+    n = len(sent); await q.wait_for_timeout(3000); check(name + ' sends nothing while idle', len(sent) == n)
     # liked tracks come up sooner, on average
     liked_id = await q.evaluate("(async()=>{const m=(await (await fetch('tracks/manifest.json')).json()).tracks;return m[0]})()")
     await q.evaluate("(id)=>{const r=JSON.parse(localStorage.getItem('alot.ratings.v1'));r[id]=1;localStorage.setItem('alot.ratings.v1',JSON.stringify(r))}", liked_id['id']); await q.reload(); await q.wait_for_timeout(1000)

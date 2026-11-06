@@ -1,48 +1,48 @@
 #!/usr/bin/env python3
-"""Turn likes and dislikes copied from alot into changes to the shared track list.
+"""Turn collected likes and dislikes into changes to the shared track list. A person reviews before anything changes.
 
-  python3 -I alot_ratings.py ratings1.json [ratings2.json ...]           show what would change
-  python3 -I alot_ratings.py --apply ratings1.json [ratings2.json ...]   save it, then run ektoplazm_publish.py
+  python3 -I alot_ratings.py            read the database and show what would change
+  python3 -I alot_ratings.py --apply    save the changes, then run ektoplazm_publish.py, test and publish
 
-Across people: a track with more dislikes than likes is removed, one with more likes comes up about 3x more in shuffle.
-A tie stays as it is. Also reports which artists are doing well, to guide finding more music. Never deploys.
+RULES, per track, counting one vote per device:
+  Remove from the library:  2 or more dislikes, and more dislikes than likes.
+  Favor in shuffles (3x):   more likes than dislikes.
+  Watch, no change:         1 dislike only, or a tie. That person's own device already skips it.
+Artist totals are printed to guide finding more music. This tool never publishes.
 """
-import json, os, sys
+import json, os, subprocess, sys
 ROOT = os.path.expanduser('~/music-pipeline/ektoplazm')
 SAVED = os.path.join(ROOT, 'ratings-applied.json')
-args = [a for a in sys.argv[1:] if a != '--apply']
-apply_it = '--apply' in sys.argv
-if not args:
-    sys.exit(__doc__)
-tracks = {t['id']: t for t in json.load(open(os.path.join(ROOT, 'preview/tracks/manifest.json'), encoding='utf-8'))['tracks']}
-state = json.load(open(SAVED, encoding='utf-8')) if os.path.exists(SAVED) else {'removed': [], 'weights': {}, 'votes': {}}
-state.setdefault('votes', {})
-for path in args:
-    data = json.load(open(path, encoding='utf-8'))
-    if data.get('app') != 'alot' or not isinstance(data.get('ratings'), dict):
-        sys.exit(f'{path}: not a set of alot ratings')
-    for key, vote in data['ratings'].items():
-        if key not in tracks:
-            print('ignored, not in the library:', str(key)[:60])
-        elif vote in (1, -1):
-            state['votes'].setdefault(key, {})[data.get('exported', path)] = vote
-removed, weights, artists = [], {}, {}
-for key, votes in state['votes'].items():
-    total = sum(votes.values())
-    artist = tracks[key]['name'].split(' – ')[0]
-    artists[artist] = artists.get(artist, 0) + total
-    if total < 0:
-        removed.append(key)
-    elif total > 0:
-        weights[key] = 3
-name = lambda k: tracks[k]['name']
-print(f'{len(state["votes"])} tracks rated')
-print('Remove:', *(f'\n  {name(k)}' for k in sorted(removed)) or [' none'])
-print('Play more often:', *(f'\n  {name(k)}' for k in sorted(weights)) or [' none'])
-print('Artists by score:', *(f'\n  {v:+d} {a}' for a, v in sorted(artists.items(), key=lambda x: -x[1])) or [' none'])
-if apply_it:
-    state['removed'], state['weights'] = removed, weights
-    json.dump(state, open(SAVED, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-    print('Saved. Next: ektoplazm_publish.py, tests, then publish.')
-else:
-    print('Nothing changed. Add --apply to save.')
+ENV = dict(os.environ, XDG_CONFIG_HOME=os.path.expanduser('~/.config/tb-cloudflare'), WRANGLER_SEND_METRICS='false')
+QUERY = 'SELECT track, SUM(vote = 1) AS likes, SUM(vote = -1) AS dislikes, COUNT(DISTINCT device) AS devices FROM votes GROUP BY track'
+def read_votes():
+    result = subprocess.run(['npx', '--yes', 'wrangler@4', 'd1', 'execute', 'alot-ratings', '--remote', '--json', '--command', QUERY],
+                            cwd=os.path.expanduser('~/Documents/_bench-src/alot/worker'), env=ENV, capture_output=True, text=True)
+    if result.returncode:
+        sys.exit('Could not read the ratings database: ' + result.stderr.strip()[-300:])
+    return json.loads(result.stdout)[0]['results']
+def decide(rows):
+    removed, weights, watch = [], {}, []
+    for row in rows:
+        likes, dislikes = row['likes'], row['dislikes']
+        if dislikes >= 2 and dislikes > likes: removed.append(row['track'])
+        elif likes > dislikes: weights[row['track']] = 3
+        elif dislikes: watch.append(row['track'])
+    return removed, weights, watch
+if __name__ == '__main__':
+    tracks = {t['id']: t['name'] for t in json.load(open(os.path.join(ROOT, 'preview/tracks/manifest.json'), encoding='utf-8'))['tracks']}
+    rows = [r for r in read_votes() if r['track'] in tracks]
+    removed, weights, watch = decide(rows)
+    artists = {}
+    for r in rows:
+        artist = tracks[r['track']].split(' – ')[0]
+        artists[artist] = artists.get(artist, 0) + r['likes'] - r['dislikes']
+    show = lambda keys: ''.join(f'\n  {tracks[k]}' for k in sorted(keys)) or ' none'
+    print(f'{len(rows)} tracks rated by {sum(r["devices"] for r in rows)} votes')
+    print('Remove:' + show(removed)); print('Favor:' + show(weights)); print('Watch:' + show(watch))
+    print('Artists:' + (''.join(f'\n  {v:+d} {a}' for a, v in sorted(artists.items(), key=lambda x: -x[1])) or ' none'))
+    if '--apply' in sys.argv:
+        json.dump({'removed': removed, 'weights': weights}, open(SAVED, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+        print('Saved. Next: ektoplazm_publish.py, tests, then publish.')
+    else:
+        print('Nothing changed. Add --apply after review.')

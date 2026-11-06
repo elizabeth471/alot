@@ -36,6 +36,20 @@ async def main():
         h2 = await q.evaluate(HASH); await q.wait_for_timeout(2500); h3 = await q.evaluate(HASH)
         check('after 60 s idle: background frozen', h2 == h3)
         check('after 60 s idle: never silent, about 66 s of music played', silent == 0 and moved > 60 and await q.get_attribute('#bnPlay', 'aria-pressed') == 'true', dict(silent=silent, moved=round(moved, 1)))
+        # Battery limit: idle while playing must stay this light. It was 41% before the 2026-11-06 fixes.
+        import subprocess, re
+        def cpu(root):
+            kids, times = {}, {}
+            for r in subprocess.run(['ps', '-axo', 'pid=,ppid=,time='], capture_output=True, text=True).stdout.splitlines():
+                x, y, z = r.split(); m = re.match(r'(?:(\d+):)?(\d+):(\d+(?:\.\d+)?)', z)
+                times[int(x)] = int(m.group(1) or 0) * 3600 + int(m.group(2)) * 60 + float(m.group(3)); kids.setdefault(int(y), []).append(int(x))
+            total, st = 0, [root]
+            while st:
+                n = st.pop(); total += times.get(n, 0); st += kids.get(n, [])
+            return total
+        root = min(int(x) for x in subprocess.run(['pgrep', '-f', 'remote-debugging-pipe'], capture_output=True, text=True).stdout.split())
+        a = cpu(root); await q.wait_for_timeout(20000); pct = (cpu(root) - a) / 20 * 100
+        check('battery limit: idle while playing under 10% of a core', pct < 10, f'{pct:.1f}%')
         await q.mouse.move(300, 300); await q.wait_for_timeout(1500); h4 = await q.evaluate(HASH)
         check('mouse movement wakes the background', h4 != h3)
         await q.click('#bnPlay'); await b.close()

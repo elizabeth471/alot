@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS votes (device TEXT NOT NULL, track TEXT NOT NULL, vote INTEGER NOT NULL, updated TEXT NOT NULL, PRIMARY KEY (device, track));

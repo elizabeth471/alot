@@ -22,10 +22,16 @@ Open the link in a phone or computer browser. There is nothing to install and no
 - `tools/` holds the download, encode, upload and publish scripts. Audio files are not in git. The scripts expect `~/music-pipeline/ektoplazm` and were written for one Mac, so paths may need changing.
 
 ## Ratings
-Likes and dislikes stay on the device. In Configure > Playlist, **Copy my ratings** copies them. `tools/alot_ratings.py` previews what they would change; add `--apply`, then run `tools/ektoplazm_publish.py`, test, and publish.
+- **Like:** marks the track; it comes up about 3x sooner in shuffles on that device. Tap again to take it back.
+- **Dislike:** skips to the next track, removes it from the list, and keeps it out of shuffles on that device. Undo reverses it; adding it again from the Library clears it.
+- Votes go to a Cloudflare Worker and D1 database (`worker/`, `alot-ratings`, account teamblossom.ops@gmail.com) with a random device ID, the track and the vote. No names, emails or IP addresses are stored. The address is write-only. Votes send only on a tap, on load if some are waiting, or on reconnecting.
+- Shared changes need a person's review. `tools/alot_ratings.py` shows them; `--apply` saves them; then run `tools/ektoplazm_publish.py`, test, and publish. Rules: remove at 2 or more dislikes with more dislikes than likes; favor when likes outnumber dislikes; otherwise no change.
+
+## Battery
+alot runs all night. No endless animation, polling or idle timers. `tests/overnight.py` fails if idle playback uses over 10% of a processor core.
 
 ## Tests
-Browser tests using Playwright, in `tests/`. Some paths are written for the original Mac. Example: `python tests/layers.py https://alot-indol.vercel.app/?lang=en`. Before publishing: `gate.py` (takes the Chrome path), then `audit.py`, `layers.py`, `stream.py`, `overnight.py`, `locked_screen.py`, `single_player.py`.
+Browser tests using Playwright, in `tests/`. Some paths are written for the original Mac. Example: `python tests/layers.py https://alot-indol.vercel.app/?lang=en`. Before publishing: `gate.py` (takes the Chrome path), then `audit.py`, `layers.py`, `stream.py`, `overnight.py`, `speaker.py`, `locked_screen.py`, `single_player.py`.
 
 ## Not verified
 - iPhone, AirPlay and Sonos have not passed a real test. Music was reported silent on an iPhone playing through AirPlay to Sonos on 2026-11-06; cause not yet confirmed.
