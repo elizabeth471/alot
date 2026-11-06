@@ -82,35 +82,6 @@
       display: flex; flex-direction: column; gap: 14px;
     }
 
-    /* ── CARDS ── */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
-      overflow: hidden;
-      transition: box-shadow 0.2s;
-    }
-    .card:focus-within { box-shadow: var(--shadow-md); }
-
-    .card-header {
-      display: flex; align-items: flex-start; gap: 12px;
-      padding: 18px 20px 14px;
-      border-bottom: 1px solid var(--border);
-      background: linear-gradient(135deg, var(--card), var(--bg) 200%);
-    }
-    .card-titles { flex: 1; }
-    .card-title { font-size: calc(16px * var(--text)); font-weight: 700; color: var(--text); }
-    .card-sub { font-size: calc(12px * var(--text)); color: var(--text-muted); margin-top: 2px; }
-    .card-body { padding: 20px; }
-
-    /* ── STEP 1: RECORD / UPLOAD ── */
-    .rec-layout {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px; align-items: start;
-    }
-
     .upload-zone {
       display: flex; flex-direction: column;
       align-items: center; justify-content: center; gap: 8px;
@@ -126,7 +97,6 @@
     .upload-zone:focus-within { outline: 3px solid var(--accent); outline-offset: 2px; }
     #uploadMp3 { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
     .uz-main { font-size: calc(14px * var(--text)); font-weight: 700; color: var(--accent); }
-    .uz-hint { font-size: calc(11px * var(--text)); color: var(--text-muted); }
 
     /* ── STEP 2: MY RECORDINGS ── */
     #takesList { display: flex; flex-direction: column; gap: 10px; min-height: 70px; }
@@ -146,7 +116,6 @@
     }
     @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
     .take-info { display: flex; align-items: center; gap: 11px; min-width: 0; }
-    .take-icon { font-size: calc(22px * var(--text)); flex-shrink: 0; }
     .take-name { font-size: calc(13px * var(--text)); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .take-meta { font-size: calc(11px * var(--text)); color: var(--text-muted); margin-top: 2px; }
     .take-btns { display: flex; gap: 8px; flex-shrink: 0; }
@@ -164,52 +133,18 @@
 
     /* ── MIXER ── */
     .mix-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 28px; margin-top: 18px; }
-    .mix-strips { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border); }
-    .mix-strip { display: grid; grid-template-columns: 124px 96px 1fr; align-items: center; gap: 12px; font-size: calc(13px * var(--text)); font-weight: 600; color: var(--text-mid); }
-    .mix-strip .take-btn { padding: 0 6px; }
     .take-btn.mix-toggle[aria-pressed="true"], .take-btn.mix-toggle[aria-pressed="true"]:hover {
       background: var(--accent-btn); border-color: var(--accent-btn); color: #fff;
     }
     @media (max-width: 560px) {
       .mix-controls { grid-template-columns: 1fr; }
-      .mix-strip { grid-template-columns: 86px 84px 1fr; gap: 8px; font-size: calc(12px * var(--text)); }
     }
 
 
     /* ── VIEWS & TABS ── */
     [hidden] { display: none !important; }
-    .view { display: flex; flex-direction: column; gap: 14px; }
-    .view-tabs {
-      display: flex; width: max-content; max-width: calc(100% - 32px);
-      margin: 0 auto 22px; padding: 4px; gap: 4px;
-      background: var(--surface); border-radius: 100px;
-    }
-    .view-tab {
-      display: flex; align-items: center; gap: 8px;
-      min-height: 40px; padding: 0 22px; border: none; border-radius: 100px;
-      background: transparent; color: var(--text-mid);
-      font-family: inherit; font-weight: 600; line-height: 1; cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-    .view-tab:hover { color: var(--text); }
-    .view-tab[aria-selected="true"] { background: #4a4238; color: #fff; box-shadow: var(--shadow-sm); }
-    .note-emoji { filter: invert(1); }
-    .view-tab:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #c06644; animation: livePulse 1.6s ease-in-out infinite; }
-    @keyframes livePulse { 50% { opacity: 0.35; } }
-
-    /* ── BROWN NOISE ── */
-    .bn-hero {
-      position: relative; height: 360px; overflow: hidden;
-      display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-      padding: 22px 24px 18px; border-radius: var(--radius-lg);
-      background: linear-gradient(180deg, #1d120b, #3a2415);
-      color: #f7efe4; border: 1px solid #3d2a1c; box-shadow: var(--shadow-md);
-    }
     #bnCanvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .bn-hero-top, .bn-play, .bn-volume { position: relative; }
-    .bn-hero-top { text-align: center; }
-    .bn-kicker { font-size: calc(10px * var(--text)); font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: #d9c4ab; }
+    .bn-play, .bn-volume { position: relative; }
     #bnName {
       margin-top: 4px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
       font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(32px * var(--text)); font-weight: 400; line-height: 1.35;
@@ -291,8 +226,7 @@
     .bn-del:hover { background: var(--red-light); border-color: #6b3a34; color: var(--red); }
     .bn-empty { font-size: calc(13px * var(--text)); color: var(--text-muted); }
     @media (prefers-reduced-motion: reduce) {
-      .live-dot { animation: none; }
-      .bn-play, .bn-chip, .bn-btn, .view-tab { transition: none; }
+      .bn-play, .bn-chip, .bn-btn { transition: none; }
     }
 
 /* ── TOAST ── */
@@ -333,7 +267,7 @@
     button, label, input { touch-action: manipulation; }
     #bnSaveName { font-size: max(16px, calc(16px * var(--text))); } /* below 16px, iPhones zoom the page on focus */
     @media (pointer: coarse) {
-      .view-tab, .bn-chip, .take-btn { min-height: 44px; }
+      .bn-chip, .take-btn { min-height: 44px; }
       .take-btn { height: 44px; }
       .bn-del { min-width: 44px; }
       .bn-range { height: 44px; }
@@ -360,35 +294,20 @@
     }
     body::before { display: none; }
     #bnCanvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-    header, .view-tabs, main { position: relative; z-index: 1; }
+    header, main { position: relative; z-index: 1; }
 
     .brand-name { font-weight: 400; color: var(--accent); text-shadow: 0 0 34px rgba(var(--glow),0.4); }
-    .view-tabs {
-      background: rgba(34,27,21,0.5); border: 1px solid var(--border);
-      -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
-    }
-    .view-tab { font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(16px * var(--text)); transition: background 0.3s, color 0.3s; }
-    .view-tab[aria-selected="true"] { background: rgba(var(--glow),0.16); color: var(--accent); box-shadow: inset 0 0 0 1px rgba(var(--glow),0.4); }
 
-    .card, .bn-panel {
+    .bn-panel {
       background: var(--card); border: 1px solid var(--border); border-radius: 22px;
       -webkit-backdrop-filter: blur(16px) saturate(1.2); backdrop-filter: blur(16px) saturate(1.2);
       box-shadow: 0 10px 40px rgba(0,0,0,0.25);
     }
-    .card-header { background: none; }
-    .card-title, .bn-label { font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-weight: 400; color: var(--text); }
-    .card-title { font-size: calc(21px * var(--text)); }
+    .bn-label { font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-weight: 400; color: var(--text); }
     .bn-label { font-size: calc(17px * var(--text)); }
-    .bn-label-gap { margin-top: 20px; }
     .bn-color { display: inline-flex; align-items: center; gap: 8px; }
     .bn-dot { width: 10px; height: 10px; border-radius: 50%; box-shadow: 0 0 8px currentColor; }
     .bn-hint { margin-left: 6px; font-size: calc(11px * var(--text)); font-weight: 400; color: var(--text-muted); }
-
-    .bn-hero {
-      height: clamp(340px, 56vh, 500px); padding: 8px 0 12px; overflow: visible;
-      background: none; border: none; box-shadow: none;
-    }
-    .bn-kicker { color: var(--text-mid); }
     #bnName { font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(44px * var(--text)); line-height: 1.2; text-shadow: 0 0 30px rgba(255,220,170,0.35); }
     .bn-play, .bn-play:hover {
       width: 108px; height: 108px; background: rgba(247,239,228,0.08); color: #fbeedb;
@@ -424,7 +343,7 @@
       background: rgba(var(--glow),0.12); border: 1px solid rgba(var(--glow),0.7); color: var(--accent);
       font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(17px * var(--text)); font-weight: 400;
     }
-    .bn-actions, .mix-strips { border-top-color: var(--border); }
+    .bn-actions { border-top-color: var(--border); }
     .bn-del { background: transparent; }
     .bn-saved-item .bn-chip { border-right: none; }
     .take-btn { background: transparent; border-radius: 100px; transition: background 0.25s, transform 0.2s; }
@@ -439,14 +358,7 @@
 
 
     @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-    .view:not([hidden]) > * { animation: rise 0.7s cubic-bezier(.2,.8,.2,1) both; }
-    .view:not([hidden]) > *:nth-child(2) { animation-delay: 0.08s; }
-    .view:not([hidden]) > *:nth-child(3) { animation-delay: 0.16s; }
-    .view:not([hidden]) > *:nth-child(4) { animation-delay: 0.24s; }
-    .view:not([hidden]) > *:nth-child(5) { animation-delay: 0.32s; }
-    @media (prefers-reduced-motion: reduce) {
-      .view:not([hidden]) > * { animation: none; }
-    }
+    
 
     /* ── TOOLS, SETTINGS, LAYOUTS ── */
     :root { --glow: 242,196,141; }
@@ -462,7 +374,7 @@
     #gear { width: 34px; height: 34px; padding: 7px; border: 1px solid var(--border); border-radius: 50%; background: rgba(34,27,21,0.55); color: var(--text-mid); cursor: pointer; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: color 0.25s, transform 0.5s cubic-bezier(.2,1.2,.4,1), box-shadow 0.25s; }
     #gear svg { display: block; width: 100%; height: 100%; fill: currentColor; fill-rule: evenodd; }
     @media (hover: hover) { #gear:hover { color: var(--accent); transform: rotate(60deg); box-shadow: 0 0 18px rgba(var(--glow),0.4); } }
-    #gear:focus-visible, .lang-toggle button:focus-visible, #settingsClose:focus-visible, .layout-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+    #gear:focus-visible, .lang-toggle button:focus-visible, #settingsClose:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
     @media (max-width: 560px) { header { padding-top: 56px; } }
 
     #settings { position: fixed; inset: 0; z-index: 9400; }
@@ -481,23 +393,6 @@
     #settingsTitle { font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(30px * var(--text)); font-weight: 400; color: var(--text); }
     #settingsClose { width: 44px; height: 44px; margin-right: -10px; border: none; border-radius: 50%; background: transparent; color: var(--text-mid); font-size: calc(16px * var(--text)); cursor: pointer; }
     .sheet-label { margin: 26px 0 12px; font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(17px * var(--text)); color: var(--text); }
-    .layout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .layout-card {
-      display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 14px 10px 12px;
-      border: 1px solid var(--border); border-radius: 16px; background: rgba(14,11,9,0.3);
-      color: var(--text-mid); font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(15px * var(--text)); cursor: pointer;
-      transition: border-color 0.25s, box-shadow 0.25s, color 0.25s, transform 0.2s;
-    }
-    .layout-card:active { transform: scale(0.97); }
-    .layout-card[aria-pressed="true"] { border-color: rgba(var(--glow),0.8); color: var(--accent); box-shadow: 0 0 24px rgba(var(--glow),0.2), inset 0 0 18px rgba(var(--glow),0.07); }
-    .wire { display: grid; gap: 3px; width: 66px; height: 50px; }
-    .wire i { display: block; border-radius: 3px; background: rgba(var(--glow),0.38); }
-    .wire-flow { grid-template-rows: 2fr 1fr 1fr; }
-    .wire-focus { padding: 7px 12px; }
-    .wire-focus i { border-radius: 50%; width: 36px; height: 36px; margin: auto; background: rgba(var(--glow),0.5); box-shadow: 0 0 12px rgba(var(--glow),0.5); }
-    .wire-compact { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
-    .wire-stage { grid-template-columns: 1.3fr 1fr; grid-template-rows: 1fr 1fr; }
-    .wire-stage i:first-child { grid-row: 1 / span 2; }
     .switch { display: flex; align-items: center; justify-content: space-between; min-height: 48px; font-size: calc(15px * var(--text)); color: var(--text-mid); cursor: pointer; }
     .switch input { position: absolute; width: 1px; height: 1px; opacity: 0; }
     .switch i { position: relative; flex-shrink: 0; width: 46px; height: 27px; border-radius: 100px; background: rgba(255,240,220,0.16); transition: background 0.3s, box-shadow 0.3s; }
@@ -525,7 +420,6 @@
     .switch span { padding-right: 14px; }
     .bn-ends { font-size: calc(12px * var(--text)); }
     .bn-hint { font-size: calc(12px * var(--text)); }
-    .bn-kicker { font-size: calc(12px * var(--text)); letter-spacing: 0.2em; }
     @media (pointer: coarse) { .bn-range::-webkit-slider-thumb { width: 28px; height: 28px; margin-top: -12.5px; } }
 
     /* ── DISPLAY PREFERENCES ── */
@@ -554,15 +448,15 @@
     .bn-range::-moz-range-track, .bn-range::-moz-range-progress { height: var(--track); border-radius: 100px; }
     .bn-range::-webkit-slider-thumb { width: var(--thumb-size); height: var(--thumb-size); margin-top: calc((var(--track) - var(--thumb-size)) / 2); }
     .bn-range::-moz-range-thumb { width: var(--thumb-size); height: var(--thumb-size); }
-    .bn-chip, .bn-btn, .take-btn, .view-tab { min-height: var(--ctl-h); }
+    .bn-chip, .bn-btn, .take-btn { min-height: var(--ctl-h); }
     .take-btn { height: var(--ctl-h); }
-    .bn-chip, .bn-btn, .view-tab { padding-left: var(--ctl-pad); padding-right: var(--ctl-pad); }
+    .bn-chip, .bn-btn { padding-left: var(--ctl-pad); padding-right: var(--ctl-pad); }
     .bn-play, .bn-play:hover { width: var(--play); height: var(--play); }
-    .view, main { gap: var(--gap); }
-    .bn-panel, .card-body { padding: var(--pad); }
+    main { gap: var(--gap); }
+    .bn-panel { padding: var(--pad); }
     #bnCanvas { opacity: var(--bg-level); }
-    :root[data-panels="solid"] .card, :root[data-panels="solid"] .bn-panel { background: #221b15; -webkit-backdrop-filter: none; backdrop-filter: none; }
-    :root[data-panels="clear"] .card, :root[data-panels="clear"] .bn-panel { background: rgba(34,27,21,0.28); }
+    :root[data-panels="solid"] .bn-panel { background: #221b15; -webkit-backdrop-filter: none; backdrop-filter: none; }
+    :root[data-panels="clear"] .bn-panel { background: rgba(34,27,21,0.28); }
     :root[data-calm="true"] *, :root[data-calm="true"] *::before, :root[data-calm="true"] *::after { animation: none !important; transition: none !important; }
 
     /* ── PLAYLIST + LIBRARY ── */
@@ -592,17 +486,13 @@
     .bn-hint { display: block; margin: 0; }
     #toastBox { bottom: calc(160px + env(safe-area-inset-bottom)); }
     #bnMini { left: auto; right: calc(16px + env(safe-area-inset-right)); transform: none; }
-    .mix-strip { grid-template-columns: 124px 96px 1fr 30px; }
-    .mix-val { text-align: right; font-size: calc(12px * var(--text)); font-weight: 500; color: var(--text-muted); font-variant-numeric: tabular-nums; }
     .playlist-switch span { white-space: nowrap; }
     @media (max-width: 700px) {
       .top-tools { position: absolute; }
       #bnMini { padding: 6px; }
       #bnMiniName { display: none; }
     }
-    @media (max-width: 560px) {
-      .mix-strip { grid-template-columns: 76px 72px 1fr 26px; gap: 6px; }
-    }
+    
 
   
     /* ── LAYERS: one page, the mix comes first ── */
@@ -624,8 +514,7 @@
     .layer > .bn-range { display: block; width: 100%; margin-top: 6px; }
     .layer-drawer { margin-top: 18px; padding-top: 4px; border-top: 1px solid var(--border); }
     .layer-drawer[hidden] { display: none; }
-    .layer-drawer .bn-panel, .layer-drawer .card { margin: 0; padding: 14px 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
-    .layer-drawer .card-header, .layer-drawer .card-body { padding-left: 0; padding-right: 0; border: 0; background: transparent; }
+    .layer-drawer .bn-panel { margin: 0; padding: 14px 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
     .beats-note { margin: 0 0 16px; }
     .beats-switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; color: var(--text); }
     .beats-switch .mix-toggle { flex: 0 0 auto; width: 64px; }
@@ -674,6 +563,13 @@
     .mix-hero { display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 34px 0 40px; }
     .bn-play, .bn-play:hover { box-shadow: none; }
     #bnName { font-family: inherit; font-size: calc(14px * var(--text)); font-weight: 400; line-height: 1.4; color: var(--text-muted); text-shadow: none; margin: 0; }
+    /* Spanish labels need room: the playlist chips wrap instead of cutting off */
+    #layerMusic .layer-types { flex-wrap: wrap; gap: 6px; overflow: visible; }
+    #layerMusic .layer-types .bn-chip { padding: 0 11px; font-size: calc(14px * var(--text)); }
+    /* The hint may take two lines; track names stay on one */
+    .layer-pick.is-hint { white-space: normal; line-height: 1.25; }
+    /* The small play button keeps clear of the list's play and remove buttons */
+    #bnMini { left: calc(16px + env(safe-area-inset-left)); right: auto; }
 </style>
 </head>
 <body>
@@ -839,7 +735,7 @@
       <div class="layer-top">
         <button class="layer-toggle" id="musicBtn" aria-pressed="false" data-t-aria="aria.play.music">▶</button>
         <span class="layer-name" id="layerMusicName" data-t="layer.playlist">Playlist</span>
-        <span class="layer-pick" id="layerMusicPick">—</span>
+        <span class="layer-pick" id="layerMusicPick"></span>
         <button class="layer-action" id="layerMusicBtn" aria-expanded="false" aria-controls="drawerMusic" data-t="layer.configure">Configure</button>
       </div>
       <input class="bn-range" type="range" id="mixTracks" min="0" max="100" aria-labelledby="layerMusicName">
@@ -866,7 +762,6 @@
             </div>
           </div>
           </div>
-          <button class="bn-btn library-all" id="ratingsCopy" data-t="ratings.copy">Copy my ratings</button>
           <p class="sheet-note ratings-note" data-t="ratings.note">Likes and dislikes are saved with a random ID, not your name, to improve the playlist.</p>
         </div>
         <div id="paneLibrary" hidden>
@@ -914,28 +809,28 @@
   var I18N = {
     en: {
       'title': 'alot — Layer sounds. Make your own mix.', 'skip': 'Skip to main content', 'playing': 'playing',
-      'noise': '{c} Noise', 'volume': 'Volume', 'color.label': 'Noise color', 'preset.label': 'Start from', 'shape': 'Shape your sound',
+      'noise': '{c} Noise', 'volume': 'Volume', 'preset.label': 'Start from', 'shape': 'Shape your sound',
       'color.brown': 'Brown', 'color.pink': 'Pink', 'color.white': 'White', 'color.gray': 'Gray', 'color.green': 'Green', 'color.blue': 'Blue', 'color.violet': 'Violet',
       'preset.Deep': 'Deep', 'preset.Warm': 'Warm', 'preset.Ocean': 'Ocean', 'preset.Bright': 'Bright', 'preset.Rain': 'Rain', 'preset.Waterfall': 'Waterfall', 'preset.Wind': 'Wind', 'preset.Campfire': 'Campfire', 'preset.Night train': 'Night train', 'preset.Cave': 'Cave', 'preset.Breeze': 'Breeze', 'preset.Storm': 'Storm',
       'slider.tone': 'Tone', 'low.tone': 'Deep', 'high.tone': 'Bright', 'slider.rumble': 'Rumble', 'low.rumble': 'Light', 'high.rumble': 'Heavy', 'slider.swell': 'Swell', 'low.swell': 'Steady', 'high.swell': 'Waves', 'slider.pace': 'Pace', 'low.pace': 'Slow', 'high.pace': 'Fast', 'slider.space': 'Space', 'low.space': 'Close', 'high.space': 'Wide', 'slider.drift': 'Drift', 'low.drift': 'Still', 'high.drift': 'Wandering', 'slider.grain': 'Grain', 'low.grain': 'Clean', 'high.grain': 'Crackling',
       'hint.pace': 'Turn up Swell to use Pace',
-      'generate': '✦ Generate new version', 'surprise': '✧ Surprise me', 'prev': '↩ Previous', 'save': 'Save', 'save.version': 'Save version', 'cancel': 'Cancel', 'save.name': 'Name this version', 'saved': 'Saved versions', 'saved.empty': 'Versions you save will appear here.', 'toast.saved': 'Version saved', 'toast.deleted': 'Version deleted', 'undo': 'Undo', 'mix.your': 'Your mix', 'mix.n': 'Mix {n}', 'version.n': 'New version {n}', 'aria.play.noise': 'Play noise', 'aria.stop.noise': 'Stop noise', 'aria.delete': 'Delete {n}',
-      'add.title': 'Add Your Tracks', 'add.sub': 'Choose audio files from your device', 'add.main': 'Choose tracks', 'add.hint': 'Tap to choose, or drag and drop', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.title': 'My Tracks', 'tracks.sub': 'Your list plays in order. Play or delete tracks here', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Tap Shuffle, or choose from the Library', 'play': '▶ Play', 'stop': '■ Stop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
+      'generate': '✦ Generate new version', 'surprise': '✧ Surprise me', 'prev': '↩ Previous', 'save': 'Save', 'save.version': 'Save version', 'cancel': 'Cancel', 'save.name': 'Name this version', 'saved': 'Saved versions', 'saved.empty': 'Versions you save will appear here.', 'toast.saved': 'Version saved', 'toast.deleted': 'Version deleted', 'undo': 'Undo', 'mix.your': 'Your mix', 'mix.n': 'Mix {n}', 'version.n': 'My mix {n}', 'aria.play.noise': 'Play noise', 'aria.stop.noise': 'Stop noise', 'aria.delete': 'Delete {n}',
+      'add.main': 'Choose tracks', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Tap Shuffle, or choose from the Library', 'play': '▶ Play', 'stop': '■ Stop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
       'mix.sub': 'Binaural beats, mixed with your tracks and noise. Use headphones: each ear gets a slightly different tone.', 'mix.type': 'Beat type', 'mix.rate': 'Beat rate', 'mix.pitch': 'Pitch', 'mix.beats': 'Neural Beats', 'mute': 'Mute', 'muted': 'Muted', 'aria.play.beats': 'Play neural beats', 'aria.stop.beats': 'Stop neural beats',
-      'tagline': 'Layer sounds. Make your own mix.', 'layer.noise': 'Noise', 'layer.playlist': 'Playlist', 'layer.beats': 'Beats', 'layer.configure': 'Configure', 'speaker.choose': 'Choose speaker', 'layer.shuffle': 'Shuffle', 'layer.like': 'Like', 'layer.dislike': 'Dislike', 'ratings.note': 'Likes and dislikes are saved with a random ID, not your name, to improve the playlist.', 'ratings.copy': 'Copy my ratings', 'ratings.copied': 'Ratings copied', 'library.credits': 'Music credits', 'aria.play.music': 'Play playlist', 'aria.stop.music': 'Stop playlist', 'layer.master': 'Master volume', 'aria.play.mix': 'Play mix', 'aria.stop.mix': 'Stop mix',
-      'settings': 'Settings', 'close': 'Close', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.ripples': 'Ripples', 'bg.fireflies': 'Fireflies', 'bg.constellation': 'Constellation', 'bg.aurora': 'Aurora', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'group.sound': 'Sound', 'set.crossfade': 'Transition between tracks', 'cross.0': 'Off', 'cross.2': 'Short', 'cross.4': 'Medium', 'cross.8': 'Long', 'check.title': 'Sound check', 'check.note': 'Press play and listen for a few minutes. If you hear a skip, tell Blossom these numbers.', 'check.dropouts': 'Dropouts', 'check.gaps': 'Audio clock gaps', 'check.state': 'Audio', 'check.na': 'not measured in this browser', 'check.none': 'not started yet', 'check.interrupted': 'Interruptions', 'group.look': 'Look', 'group.sizes': 'Sizes and spacing', 'group.phone': 'Phone and Sonos', 'meta': 'Shape your own noise, loop your tracks and mix them with binaural beats, right in your browser.', 'beat.Alpha': 'Alpha', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'library.title': 'Library', 'library.sub': 'Music from Ektoplazm under Creative Commons licenses.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Lo-fi bossa', 'library.waltz': 'Lo-fi waltz', 'library.triphop': 'Trip-hop', 'library.electronic': 'Electronic downtempo', 'library.ambient': 'Ambient downtempo', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', },
+      'tagline': 'Layer sounds. Make your own mix.', 'layer.noise': 'Noise', 'layer.playlist': 'Playlist', 'layer.beats': 'Beats', 'layer.configure': 'Configure', 'playlist.hint': 'Tap Shuffle to start', 'library.count': '{n} tracks', 'speaker.choose': 'Choose speaker', 'layer.shuffle': 'Shuffle', 'layer.like': 'Like', 'layer.dislike': 'Dislike', 'ratings.note': 'Likes and dislikes are saved with a random ID, not your name, to improve the playlist.', 'library.credits': 'Music credits', 'aria.play.music': 'Play playlist', 'aria.stop.music': 'Stop playlist', 'layer.master': 'Master volume', 'aria.play.mix': 'Play mix', 'aria.stop.mix': 'Stop mix',
+      'settings': 'Settings', 'close': 'Close', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.ripples': 'Ripples', 'bg.fireflies': 'Fireflies', 'bg.constellation': 'Constellation', 'bg.aurora': 'Aurora', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'group.sound': 'Sound', 'set.crossfade': 'Transition between tracks', 'cross.0': 'Off', 'cross.2': 'Short', 'cross.4': 'Medium', 'cross.8': 'Long', 'check.title': 'Sound check', 'check.note': 'Press play and listen for a few minutes. If you hear a skip, tell Blossom these numbers.', 'check.dropouts': 'Dropouts', 'check.gaps': 'Audio clock gaps', 'check.state': 'Audio', 'check.na': 'not measured in this browser', 'check.none': 'not started yet', 'check.interrupted': 'Interruptions', 'group.look': 'Look', 'group.sizes': 'Sizes and spacing', 'group.phone': 'Phone and Sonos', 'meta': 'Layer noise and music. Make your own mix, right in your browser.', 'beat.Alpha': 'Alpha', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'library.title': 'Library', 'library.sub': 'Music from Ektoplazm under Creative Commons licenses.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', },
     es: {
       'title': 'alot — Combina sonidos. Crea tu propia mezcla.', 'skip': 'Saltar al contenido principal', 'playing': 'sonando',
-      'noise': 'Ruido {c}', 'volume': 'Volumen', 'color.label': 'Color del ruido', 'preset.label': 'Empieza con', 'shape': 'Da forma a tu sonido',
+      'noise': 'Ruido {c}', 'volume': 'Volumen', 'preset.label': 'Empieza con', 'shape': 'Da forma a tu sonido',
       'color.brown': 'Marrón', 'color.pink': 'Rosa', 'color.white': 'Blanco', 'color.gray': 'Gris', 'color.green': 'Verde', 'color.blue': 'Azul', 'color.violet': 'Violeta',
       'preset.Deep': 'Profundo', 'preset.Warm': 'Cálido', 'preset.Ocean': 'Océano', 'preset.Bright': 'Brillante', 'preset.Rain': 'Lluvia', 'preset.Waterfall': 'Cascada', 'preset.Wind': 'Viento', 'preset.Campfire': 'Fogata', 'preset.Night train': 'Tren nocturno', 'preset.Cave': 'Cueva', 'preset.Breeze': 'Brisa', 'preset.Storm': 'Tormenta',
       'slider.tone': 'Tono', 'low.tone': 'Profundo', 'high.tone': 'Brillante', 'slider.rumble': 'Graves', 'low.rumble': 'Suave', 'high.rumble': 'Intenso', 'slider.swell': 'Oleaje', 'low.swell': 'Constante', 'high.swell': 'Olas', 'slider.pace': 'Ritmo', 'low.pace': 'Lento', 'high.pace': 'Rápido', 'slider.space': 'Espacio', 'low.space': 'Cerca', 'high.space': 'Amplio', 'slider.drift': 'Deriva', 'low.drift': 'Quieta', 'high.drift': 'Errante', 'slider.grain': 'Grano', 'low.grain': 'Limpio', 'high.grain': 'Crepitante',
       'hint.pace': 'Sube el Oleaje para usar el Ritmo',
-      'generate': '✦ Generar nueva versión', 'surprise': '✧ Sorpréndeme', 'prev': '↩ Anterior', 'save': 'Guardar', 'save.version': 'Guardar versión', 'cancel': 'Cancelar', 'save.name': 'Ponle nombre a esta versión', 'saved': 'Versiones guardadas', 'saved.empty': 'Las versiones que guardes aparecerán aquí.', 'toast.saved': 'Versión guardada', 'toast.deleted': 'Versión eliminada', 'undo': 'Deshacer', 'mix.your': 'Tu mezcla', 'mix.n': 'Mezcla {n}', 'version.n': 'Nueva versión {n}', 'aria.play.noise': 'Reproducir ruido', 'aria.stop.noise': 'Detener ruido', 'aria.delete': 'Eliminar {n}',
-      'add.title': 'Añade tus pistas', 'add.sub': 'Elige archivos de audio de tu dispositivo', 'add.main': 'Elegir pistas', 'add.hint': 'Toca para elegir, o arrastra y suelta', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.title': 'Mis pistas', 'tracks.sub': 'Tu lista suena en orden. Reproduce o elimina pistas aquí', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Toca Aleatorio o elige en la Biblioteca', 'play': '▶ Reproducir', 'stop': '■ Detener', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
+      'generate': '✦ Generar nueva versión', 'surprise': '✧ Sorpréndeme', 'prev': '↩ Anterior', 'save': 'Guardar', 'save.version': 'Guardar versión', 'cancel': 'Cancelar', 'save.name': 'Ponle nombre a esta versión', 'saved': 'Versiones guardadas', 'saved.empty': 'Las versiones que guardes aparecerán aquí.', 'toast.saved': 'Versión guardada', 'toast.deleted': 'Versión eliminada', 'undo': 'Deshacer', 'mix.your': 'Tu mezcla', 'mix.n': 'Mezcla {n}', 'version.n': 'Mi mezcla {n}', 'aria.play.noise': 'Reproducir ruido', 'aria.stop.noise': 'Detener ruido', 'aria.delete': 'Eliminar {n}',
+      'add.main': 'Elegir pistas', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Toca Aleatorio o elige en la Biblioteca', 'play': '▶ Reproducir', 'stop': '■ Detener', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
       'mix.sub': 'Ritmos binaurales mezclados con tus pistas y el ruido. Usa audífonos: cada oído recibe un tono ligeramente distinto.', 'mix.type': 'Tipo de ritmo', 'mix.rate': 'Frecuencia del ritmo', 'mix.pitch': 'Altura', 'mix.beats': 'Ritmos neuronales', 'mute': 'Silenciar', 'muted': 'Silenciado', 'aria.play.beats': 'Reproducir ritmos neuronales', 'aria.stop.beats': 'Detener ritmos neuronales',
-      'tagline': 'Combina sonidos. Crea tu propia mezcla.', 'layer.noise': 'Ruido', 'layer.playlist': 'Lista', 'layer.beats': 'Ritmos', 'layer.configure': 'Configurar', 'speaker.choose': 'Elegir bocina', 'layer.shuffle': 'Aleatorio', 'layer.like': 'Me gusta', 'layer.dislike': 'No me gusta', 'ratings.note': 'Los me gusta y no me gusta se guardan con un ID aleatorio, no con tu nombre, para mejorar la lista.', 'ratings.copy': 'Copiar mis valoraciones', 'ratings.copied': 'Valoraciones copiadas', 'library.credits': 'Créditos musicales', 'aria.play.music': 'Reproducir lista', 'aria.stop.music': 'Detener lista', 'layer.master': 'Volumen general', 'aria.play.mix': 'Reproducir mezcla', 'aria.stop.mix': 'Detener mezcla',
-      'settings': 'Ajustes', 'close': 'Cerrar', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.ripples': 'Ondas', 'bg.fireflies': 'Luciérnagas', 'bg.constellation': 'Constelación', 'bg.aurora': 'Aurora', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'group.sound': 'Sonido', 'set.crossfade': 'Transición entre pistas', 'cross.0': 'Sin transición', 'cross.2': 'Corta', 'cross.4': 'Media', 'cross.8': 'Larga', 'check.title': 'Prueba de sonido', 'check.note': 'Toca reproducir y escucha unos minutos. Si oyes un corte, dile estos números a Blossom.', 'check.dropouts': 'Cortes', 'check.gaps': 'Saltos del reloj de audio', 'check.state': 'Audio', 'check.na': 'no se mide en este navegador', 'check.none': 'aún no empieza', 'check.interrupted': 'Interrupciones', 'group.look': 'Apariencia', 'group.sizes': 'Tamaños y espacio', 'group.phone': 'Teléfono y Sonos', 'meta': 'Crea tu propio ruido, repite tus pistas y mézclalas con ritmos binaurales, directamente en tu navegador.', 'beat.Alpha': 'Alfa', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'library.title': 'Biblioteca', 'library.sub': 'Música de Ektoplazm con licencias Creative Commons.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Bossa lo-fi', 'library.waltz': 'Vals lo-fi', 'library.triphop': 'Trip-hop', 'library.electronic': 'Downtempo electrónico', 'library.ambient': 'Downtempo ambiental', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', }
+      'tagline': 'Combina sonidos. Crea tu propia mezcla.', 'layer.noise': 'Ruido', 'layer.playlist': 'Lista', 'layer.beats': 'Ritmos', 'layer.configure': 'Configurar', 'playlist.hint': 'Toca Aleatorio para empezar', 'library.count': '{n} pistas', 'speaker.choose': 'Elegir bocina', 'layer.shuffle': 'Aleatorio', 'layer.like': 'Me gusta', 'layer.dislike': 'No me gusta', 'ratings.note': 'Los me gusta y no me gusta se guardan con un ID aleatorio, no con tu nombre, para mejorar la lista.', 'library.credits': 'Créditos musicales', 'aria.play.music': 'Reproducir lista', 'aria.stop.music': 'Detener lista', 'layer.master': 'Volumen general', 'aria.play.mix': 'Reproducir mezcla', 'aria.stop.mix': 'Detener mezcla',
+      'settings': 'Ajustes', 'close': 'Cerrar', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.ripples': 'Ondas', 'bg.fireflies': 'Luciérnagas', 'bg.constellation': 'Constelación', 'bg.aurora': 'Aurora', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'group.sound': 'Sonido', 'set.crossfade': 'Transición entre pistas', 'cross.0': 'Sin transición', 'cross.2': 'Corta', 'cross.4': 'Media', 'cross.8': 'Larga', 'check.title': 'Prueba de sonido', 'check.note': 'Toca reproducir y escucha unos minutos. Si oyes un corte, dile estos números a Blossom.', 'check.dropouts': 'Cortes', 'check.gaps': 'Saltos del reloj de audio', 'check.state': 'Audio', 'check.na': 'no se mide en este navegador', 'check.none': 'aún no empieza', 'check.interrupted': 'Interrupciones', 'group.look': 'Apariencia', 'group.sizes': 'Tamaños y espacio', 'group.phone': 'Teléfono y Sonos', 'meta': 'Combina ruido y música. Crea tu propia mezcla en tu navegador.', 'beat.Alpha': 'Alfa', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'library.title': 'Biblioteca', 'library.sub': 'Música de Ektoplazm con licencias Creative Commons.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', }
   };
   var SETTINGS_STORE = 'alot.settings.v1';
   var BN_TOUCH = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
@@ -2191,9 +2086,6 @@
     return bytes.buffer;
   }
 
-  function encodeWav(left, right, rate) {
-    return new Blob([wavHeader(left.length, rate), pcmBytes(left, right, 0, left.length)], { type: 'audio/wav' });
-  }
 
   // Repeats of one Blob share its memory, so an hour costs little more than one recording.
   function bgBuildFile(body, repeats) {
@@ -2853,7 +2745,7 @@
       name.textContent = key;
       var meta = document.createElement('span');
       meta.className = 'album-meta';
-      meta.textContent = t('library.' + defs[0].style) + ' · ' + defs.length;
+      meta.textContent = t('library.count', { n: defs.length });
       open.appendChild(name);
       open.appendChild(meta);
       open.addEventListener('click', function () {
@@ -3152,7 +3044,9 @@
     musicBtn.setAttribute('aria-pressed', String(musicOn));
     musicBtn.setAttribute('aria-label', t(musicOn ? 'aria.stop.music' : 'aria.play.music'));
     var rec = currentRec();
-    document.getElementById('layerMusicPick').textContent = rec ? rec.name : '—';
+    var pick = document.getElementById('layerMusicPick');
+    pick.textContent = rec ? rec.name : t('playlist.hint');
+    pick.classList.toggle('is-hint', !rec);
     var key = rec && ratingKey(rec);
     var like = document.getElementById('musicLike');
     like.disabled = !key;
@@ -3333,13 +3227,6 @@
       renderTakes();
     });
   });
-  document.getElementById('ratingsCopy').addEventListener('click', function () {
-    var text = JSON.stringify({ app: 'alot', exported: new Date().toISOString(), ratings: ratings }, null, 1);
-    if (!navigator.clipboard) { toast(t('err.play'), 'error'); return; }
-    navigator.clipboard.writeText(text).then(function () {
-      toast(t('ratings.copied'), 'success');
-    }).catch(function () { toast(t('err.play'), 'error'); });
-  });
 
   function musicTab(library) {
     document.getElementById('paneLibrary').hidden = !library;
@@ -3407,6 +3294,14 @@
       document.getElementById('layer' + key + 'Btn').setAttribute('aria-expanded', String(show));
     });
   }
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape' || !settingsEl.hidden) return;
+    Object.keys(LAYER_DRAWERS).forEach(function (key) {
+      if (document.getElementById(LAYER_DRAWERS[key]).hidden) return;
+      layerToggle(key, false);
+      document.getElementById('layer' + key + 'Btn').focus();
+    });
+  });
   document.getElementById('noiseBtn').addEventListener('click', function () { bnSetPlaying(!bnPlaying); });
   document.getElementById('layerNoiseBtn').addEventListener('click', function () { layerToggle('Noise'); });
   document.getElementById('layerMusicBtn').addEventListener('click', function () { layerToggle('Music'); });

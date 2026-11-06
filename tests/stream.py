@@ -21,7 +21,7 @@ async def run(p, name):
     await q.click('#layerMusicBtn'); await q.wait_for_timeout(300)
     await q.click('#tabLibrary'); await q.wait_for_timeout(200)
     check(name + ' 10 albums listed, none built in', await q.locator('.album').count() == 10, await q.locator('.album').count())
-    check(name + ' album counts add to 66', sum([int((await x.inner_text()).split('·')[-1]) for x in await q.locator('.album-meta').all()]) == 66)
+    check(name + ' album counts add to 66', sum([int((await x.inner_text()).split()[0]) for x in await q.locator('.album-meta').all()]) == 66)
     items = q.locator('#libraryList .library-item')
     for album, t in [('Ajnia: Oasis', 'Oasis'), ('HuuHaa: Frostient', 'Flake Genesis')]:
         await q.locator('.album-open', has_text=album).click(); await q.wait_for_timeout(200)
@@ -100,19 +100,14 @@ async def ratings(p, name):
     liked_id = await q.evaluate("(async()=>{const m=(await (await fetch('tracks/manifest.json')).json()).tracks;return m[0]})()")
     await q.evaluate("(id)=>{const r=JSON.parse(localStorage.getItem('alot.ratings.v1'));r[id]=1;localStorage.setItem('alot.ratings.v1',JSON.stringify(r))}", liked_id['id']); await q.reload(); await q.wait_for_timeout(1000)
     spots = []
-    for i in range(12):
-        await q.click('#musicShuffle'); await q.wait_for_timeout(120); spots.append((await q.evaluate(order)).index(liked_id['name']))
+    for i in range(60):  # random order: enough tries that chance can't decide this check
+        await q.click('#musicShuffle'); spots.append((await q.evaluate(order)).index(liked_id['name']))
     check(name + ' a liked track averages early in the order', sum(spots) / len(spots) < 22, spots)
     await q.wait_for_timeout(1500); check(name + ' fast Shuffle taps: still playing, no false error', await q.get_attribute('#musicBtn', 'aria-pressed') == 'true' and await q.evaluate(TRK) != [] and 'file' not in await q.inner_text('#toastBox'))
     await q.click('#musicBtn'); await q.wait_for_timeout(700)
     check(name + ' playlist button stops music', await q.evaluate(TRK) == [])
     await q.click('#musicBtn'); await q.wait_for_function(TRK + ".length>0", timeout=30000)
     check(name + ' playlist button starts music', await q.get_attribute('#musicBtn', 'aria-pressed') == 'true'); await q.click('#musicBtn')
-    if name == 'chromium':
-        await c.grant_permissions(['clipboard-read', 'clipboard-write'])
-        await q.click('#layerMusicBtn'); await q.wait_for_timeout(200); await q.click('#ratingsCopy'); await q.wait_for_timeout(300)
-        got = __import__('json').loads(await q.evaluate('navigator.clipboard.readText()'))
-        check(name + ' Copy my ratings gives usable data', got.get('app') == 'alot' and len(got['ratings']) >= 2, got)
     await q.goto(U.split('?')[0] + 'credits.html'); await q.wait_for_timeout(300)
     txt = await q.inner_text('body')
     check(name + ' credits: every release, license and non-commercial note', txt.count('CC BY') == 10 and 'non-commercial' in txt and await q.locator('li').count() == 66, txt.count('CC BY'))

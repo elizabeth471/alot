@@ -34,7 +34,7 @@ async def run(p, name):
         check(f'{name} on home: {sel}', await q.locator(sel).is_visible())
     check(name + ' labels', await q.inner_text('#layerNoiseBtn') == 'Configure' and await q.inner_text('#layerMusicName') == 'Playlist' and 'Master volume' in await q.inner_text('.mix-hero'))
     check(name + ' Beats not on the main screen', not await q.locator('#mixBeats').is_visible() and 'Beats' not in await q.inner_text('main'))
-    shape = "(id)=>[...document.getElementById(id).children].filter(e=>!e.hidden&&!e.classList.contains('layer-drawer')).map(e=>e.tagName+'.'+e.className+':'+[...e.children].map(c=>c.className).filter(c=>!c.startsWith('bn-chip')).join(','))"
+    shape = "(id)=>[...document.getElementById(id).children].filter(e=>!e.hidden&&!e.classList.contains('layer-drawer')).map(e=>e.tagName+'.'+e.className+':'+[...e.children].map(c=>c.className.replace(' is-hint','')).filter(c=>!c.startsWith('bn-chip')).join(','))"
     check(name + ' Noise and Playlist panels match', await q.evaluate(shape, 'layerNoise') == await q.evaluate(shape, 'layerMusic'), await q.evaluate(shape, 'layerMusic'))
     check(name + ' both panels say Configure', await q.inner_text('#layerNoiseBtn') == await q.inner_text('#layerMusicBtn') == 'Configure')
     # noise button: noise and nothing else, the overnight case
@@ -48,7 +48,10 @@ async def run(p, name):
     check(name + ' noise button stops it', await q.get_attribute('#bnPlay', 'aria-pressed') == 'false')
     await q.click('#layerNoiseBtn'); await q.wait_for_timeout(300)
     check(name + ' Configure opens the generator', await q.locator('#bnSliders').is_visible() and await q.locator('#bnGenerate').is_visible())
-    await q.click('#layerNoiseBtn'); await q.wait_for_timeout(200)
+    await q.keyboard.press('Escape'); await q.wait_for_timeout(200)
+    check(name + ' Esc closes the panel and returns to its button', not await q.locator('#drawerNoise').is_visible() and await q.evaluate("document.activeElement.id") == 'layerNoiseBtn')
+    await q.evaluate('document.activeElement.blur()')
+    check(name + ' empty playlist gives a hint', await q.inner_text('#layerMusicPick') == 'Tap Shuffle to start')
     # one press, both sounds
     await q.click('#bnPlay'); await playing(q)
     check(name + ' play: button shows stop', await q.get_attribute('#bnPlay', 'aria-pressed') == 'true')
@@ -98,6 +101,9 @@ async def run(p, name):
     # language
     await q.click('[data-set="lang:es"]'); await q.wait_for_timeout(300)
     check(name + ' Spanish words', await q.inner_text('.tagline') == 'Combina sonidos. Crea tu propia mezcla.' and await q.inner_text('#layerNoiseName') == 'Ruido' and await q.inner_text('#layerNoiseBtn') == 'Configurar', await q.inner_text('.tagline'))
+    await q.click('#tabLibrary') if False else None
+    fit = await q.evaluate("[...document.querySelectorAll('#layerMusic .layer-types .bn-chip')].every(c=>c.getBoundingClientRect().right<=document.getElementById('layerMusic').getBoundingClientRect().right)")
+    check(name + ' Spanish playlist buttons are not cut off', fit)
     # settings and old links
     await q.click('#gear'); await q.wait_for_timeout(300)
     check(name + ' settings: no layout, no joys', await q.locator('.layout-card').count() == 0 and await q.locator('#setMessages').count() == 0)
