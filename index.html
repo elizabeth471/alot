@@ -629,7 +629,9 @@
     .beats-note { margin: 0 0 16px; }
     .beats-switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; color: var(--text); }
     .beats-switch .mix-toggle { flex: 0 0 auto; width: 64px; }
-    #layerBeats[data-off] > .bn-range { display: none; }
+    .library-credits { display: block; margin: 14px 0 2px; text-align: center; color: var(--accent); font-size: calc(14px * var(--text)); }
+    .bn-chip:disabled { opacity: 0.45; cursor: default; }
+    .bn-chip#musicLike[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
     .layer-toggle { flex: 0 0 auto; width: 44px; height: 44px; border: 1px solid var(--border); border-radius: 50%; background: transparent; color: var(--text); font-size: 14px; cursor: pointer; }
     .layer-toggle[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
     .layer-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
@@ -723,6 +725,27 @@
 
     </details>
     <details class="sheet-group">
+      <summary data-t="layer.beats"></summary>
+          <p class="sheet-note beats-note" data-t="mix.sub"></p>
+          <div class="bn-label" id="mixTypesLabel" data-t="mix.type">Beat type</div>
+      <div class="bn-chips" id="mixTypes" role="group" aria-labelledby="mixTypesLabel"></div>
+      <div class="mix-controls">
+        <div>
+          <label class="bn-slider-name" for="mixRate"><span data-t="mix.rate">Beat rate</span>: <span id="mixRateValue"></span></label>
+          <input class="bn-range" type="range" id="mixRate" min="1" max="30">
+        </div>
+        <div>
+          <label class="bn-slider-name" for="mixPitch"><span data-t="mix.pitch">Pitch</span>: <span id="mixPitchValue"></span></label>
+          <input class="bn-range" type="range" id="mixPitch" min="100" max="400">
+        </div>
+      </div>
+      <input class="bn-range" type="range" id="mixBeats" min="0" max="100" aria-labelledby="beatsLabel">
+          <div class="beats-switch">
+            <span id="beatsLabel" data-t="mix.beats">Neural Beats</span>
+            <button class="take-btn mix-toggle" id="mixBeatsBtn" aria-pressed="false">■</button>
+          </div>
+    </details>
+    <details class="sheet-group">
       <summary data-t="group.phone"></summary>
     <div class="sheet-label" data-t="set.phone">Phone and Sonos</div>
     <label class="switch"><span data-t="set.keep">Keep screen on while playing</span><input type="checkbox" role="switch" id="setKeep"><i aria-hidden="true"></i></label>
@@ -785,11 +808,18 @@
 
     <div class="layer" id="layerMusic">
       <div class="layer-top">
+        <button class="layer-toggle" id="musicBtn" aria-pressed="false" data-t-aria="aria.play.music">▶</button>
         <span class="layer-name" id="layerMusicName" data-t="layer.playlist">Playlist</span>
-        <span class="layer-pick"></span>
-        <button class="layer-action" id="layerMusicBtn" aria-expanded="false" aria-controls="drawerMusic" data-t="layer.add">Add</button>
+        <span class="layer-pick" id="layerMusicPick">—</span>
+        <button class="layer-action" id="layerMusicBtn" aria-expanded="false" aria-controls="drawerMusic" data-t="layer.configure">Configure</button>
       </div>
       <input class="bn-range" type="range" id="mixTracks" min="0" max="100" aria-labelledby="layerMusicName">
+      <div class="bn-chips layer-types" role="group" aria-labelledby="layerMusicName">
+        <button class="bn-chip" id="musicShuffle" data-t="layer.shuffle">Shuffle</button>
+        <button class="bn-chip" id="musicLike" aria-pressed="false" data-t="layer.like">Like</button>
+        <button class="bn-chip" id="musicDislike" data-t="layer.dislike">Dislike</button>
+      </div>
+      <div class="layer-drawer" id="drawerMusic" hidden>
       <div class="layer-list" id="layerList">
       <div class="playlist-bar">
         <label class="switch playlist-switch"><span data-t="tracks.playlist">Loop playlist</span><input type="checkbox" role="switch" id="playlistLoop"><i aria-hidden="true"></i></label>
@@ -798,11 +828,10 @@
       <div id="takesList" role="list" data-t-aria="tracks.list">
         <div class="empty-state" role="listitem">
           <div class="empty-title" data-t="tracks.empty">No tracks yet</div>
-          <div class="empty-msg" data-t="tracks.emptymsg">Tap Add to choose music</div>
+          <div class="empty-msg" data-t="tracks.emptymsg">Tap Shuffle, or choose tracks below</div>
         </div>
       </div>
       </div>
-      <div class="layer-drawer" id="drawerMusic" hidden>
   <!-- TRACK LIBRARY -->
   <article class="card" aria-labelledby="library-title">
     <div class="card-header">
@@ -814,6 +843,8 @@
     <div class="card-body">
       <div id="libraryList" class="library-list" role="list"></div>
       <button class="bn-btn library-all" id="libraryAll" data-t="library.all">Add all</button>
+      <a class="library-credits" href="credits.html" data-t="library.credits">Music credits</a>
+      <button class="bn-btn library-all" id="ratingsCopy" data-t="ratings.copy">Copy my ratings</button>
     </div>
   </article>
 
@@ -836,36 +867,6 @@
     </div>
   </article>
 
-      </div>
-    </div>
-
-    <div class="layer" id="layerBeats">
-      <div class="layer-top">
-        <span class="layer-name" id="layerBeatsName" data-t="layer.beats">Beats</span>
-        <span class="layer-pick" id="layerBeatsPick">—</span>
-        <button class="layer-action" id="layerBeatsBtn" aria-expanded="false" aria-controls="drawerBeats" data-t="layer.on">Turn on</button>
-      </div>
-      <input class="bn-range" type="range" id="mixBeats" min="0" max="100" aria-labelledby="layerBeatsName">
-      <div class="layer-drawer" id="drawerBeats" hidden>
-        <div class="bn-panel">
-          <p class="sheet-note beats-note" data-t="mix.sub"></p>
-          <div class="bn-label" id="mixTypesLabel" data-t="mix.type">Beat type</div>
-      <div class="bn-chips" id="mixTypes" role="group" aria-labelledby="mixTypesLabel"></div>
-      <div class="mix-controls">
-        <div>
-          <label class="bn-slider-name" for="mixRate"><span data-t="mix.rate">Beat rate</span>: <span id="mixRateValue"></span></label>
-          <input class="bn-range" type="range" id="mixRate" min="1" max="30">
-        </div>
-        <div>
-          <label class="bn-slider-name" for="mixPitch"><span data-t="mix.pitch">Pitch</span>: <span id="mixPitchValue"></span></label>
-          <input class="bn-range" type="range" id="mixPitch" min="100" max="400">
-        </div>
-      </div>
-      <div class="beats-switch">
-            <span data-t="mix.beats">Neural Beats</span>
-            <button class="take-btn mix-toggle" id="mixBeatsBtn" aria-pressed="false">■</button>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -908,10 +909,10 @@
       'slider.tone': 'Tone', 'low.tone': 'Deep', 'high.tone': 'Bright', 'slider.rumble': 'Rumble', 'low.rumble': 'Light', 'high.rumble': 'Heavy', 'slider.swell': 'Swell', 'low.swell': 'Steady', 'high.swell': 'Waves', 'slider.pace': 'Pace', 'low.pace': 'Slow', 'high.pace': 'Fast', 'slider.space': 'Space', 'low.space': 'Close', 'high.space': 'Wide', 'slider.drift': 'Drift', 'low.drift': 'Still', 'high.drift': 'Wandering', 'slider.grain': 'Grain', 'low.grain': 'Clean', 'high.grain': 'Crackling',
       'hint.pace': 'Turn up Swell to use Pace',
       'generate': '✦ Generate new version', 'surprise': '✧ Surprise me', 'prev': '↩ Previous', 'save': 'Save', 'save.version': 'Save version', 'cancel': 'Cancel', 'save.name': 'Name this version', 'saved': 'Saved versions', 'saved.empty': 'Versions you save will appear here.', 'toast.saved': 'Version saved', 'toast.deleted': 'Version deleted', 'undo': 'Undo', 'mix.your': 'Your mix', 'mix.n': 'Mix {n}', 'version.n': 'New version {n}', 'aria.play.noise': 'Play noise', 'aria.stop.noise': 'Stop noise', 'aria.delete': 'Delete {n}',
-      'add.title': 'Add Your Tracks', 'add.sub': 'Choose audio files from your device', 'add.main': 'Choose tracks', 'add.hint': 'Tap to choose, or drag and drop', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.title': 'My Tracks', 'tracks.sub': 'Your list plays in order. Play or delete tracks here', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Tap Add to choose music', 'play': '▶ Play', 'stop': '■ Stop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
+      'add.title': 'Add Your Tracks', 'add.sub': 'Choose audio files from your device', 'add.main': 'Choose tracks', 'add.hint': 'Tap to choose, or drag and drop', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.title': 'My Tracks', 'tracks.sub': 'Your list plays in order. Play or delete tracks here', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Tap Shuffle, or choose tracks below', 'play': '▶ Play', 'stop': '■ Stop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
       'mix.sub': 'Binaural beats, mixed with your tracks and noise. Use headphones: each ear gets a slightly different tone.', 'mix.type': 'Beat type', 'mix.rate': 'Beat rate', 'mix.pitch': 'Pitch', 'mix.beats': 'Neural Beats', 'mute': 'Mute', 'muted': 'Muted', 'aria.play.beats': 'Play neural beats', 'aria.stop.beats': 'Stop neural beats',
-      'tagline': 'Layer sounds. Make your own mix.', 'layer.noise': 'Noise', 'layer.playlist': 'Playlist', 'layer.beats': 'Beats', 'layer.configure': 'Configure', 'layer.add': 'Add', 'layer.adjust': 'Adjust', 'layer.on': 'Turn on', 'layer.master': 'Master volume', 'aria.play.mix': 'Play mix', 'aria.stop.mix': 'Stop mix',
-      'settings': 'Settings', 'close': 'Close', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.ripples': 'Ripples', 'bg.fireflies': 'Fireflies', 'bg.constellation': 'Constellation', 'bg.aurora': 'Aurora', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'group.sound': 'Sound', 'set.crossfade': 'Transition between tracks', 'cross.0': 'Off', 'cross.2': 'Short', 'cross.4': 'Medium', 'cross.8': 'Long', 'check.title': 'Sound check', 'check.note': 'Press play and listen for a few minutes. If you hear a skip, tell Blossom these numbers.', 'check.dropouts': 'Dropouts', 'check.gaps': 'Audio clock gaps', 'check.state': 'Audio', 'check.na': 'not measured in this browser', 'check.none': 'not started yet', 'check.interrupted': 'Interruptions', 'group.look': 'Look', 'group.sizes': 'Sizes and spacing', 'group.phone': 'Phone and Sonos', 'meta': 'Shape your own noise, loop your tracks and mix them with binaural beats, right in your browser.', 'beat.Alpha': 'Alpha', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'library.title': 'Library', 'library.sub': 'Original downtempo and lo-fi tracks, made in your browser. Add them to your list to play, loop or mix.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Lo-fi bossa', 'library.waltz': 'Lo-fi waltz', 'library.triphop': 'Trip-hop', 'library.electronic': 'Electronic downtempo', 'library.ambient': 'Ambient downtempo', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', },
+      'tagline': 'Layer sounds. Make your own mix.', 'layer.noise': 'Noise', 'layer.playlist': 'Playlist', 'layer.beats': 'Beats', 'layer.configure': 'Configure', 'layer.shuffle': 'Shuffle', 'layer.like': 'Like', 'layer.dislike': 'Dislike', 'ratings.copy': 'Copy my ratings', 'ratings.copied': 'Ratings copied', 'library.credits': 'Music credits', 'aria.play.music': 'Play playlist', 'aria.stop.music': 'Stop playlist', 'layer.master': 'Master volume', 'aria.play.mix': 'Play mix', 'aria.stop.mix': 'Stop mix',
+      'settings': 'Settings', 'close': 'Close', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.ripples': 'Ripples', 'bg.fireflies': 'Fireflies', 'bg.constellation': 'Constellation', 'bg.aurora': 'Aurora', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'group.sound': 'Sound', 'set.crossfade': 'Transition between tracks', 'cross.0': 'Off', 'cross.2': 'Short', 'cross.4': 'Medium', 'cross.8': 'Long', 'check.title': 'Sound check', 'check.note': 'Press play and listen for a few minutes. If you hear a skip, tell Blossom these numbers.', 'check.dropouts': 'Dropouts', 'check.gaps': 'Audio clock gaps', 'check.state': 'Audio', 'check.na': 'not measured in this browser', 'check.none': 'not started yet', 'check.interrupted': 'Interruptions', 'group.look': 'Look', 'group.sizes': 'Sizes and spacing', 'group.phone': 'Phone and Sonos', 'meta': 'Shape your own noise, loop your tracks and mix them with binaural beats, right in your browser.', 'beat.Alpha': 'Alpha', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'library.title': 'Library', 'library.sub': 'Music from Ektoplazm under Creative Commons licenses.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Lo-fi bossa', 'library.waltz': 'Lo-fi waltz', 'library.triphop': 'Trip-hop', 'library.electronic': 'Electronic downtempo', 'library.ambient': 'Ambient downtempo', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', },
     es: {
       'title': 'alot — Combina sonidos. Crea tu propia mezcla.', 'skip': 'Saltar al contenido principal', 'playing': 'sonando',
       'noise': 'Ruido {c}', 'volume': 'Volumen', 'color.label': 'Color del ruido', 'preset.label': 'Empieza con', 'shape': 'Da forma a tu sonido',
@@ -920,10 +921,10 @@
       'slider.tone': 'Tono', 'low.tone': 'Profundo', 'high.tone': 'Brillante', 'slider.rumble': 'Graves', 'low.rumble': 'Suave', 'high.rumble': 'Intenso', 'slider.swell': 'Oleaje', 'low.swell': 'Constante', 'high.swell': 'Olas', 'slider.pace': 'Ritmo', 'low.pace': 'Lento', 'high.pace': 'Rápido', 'slider.space': 'Espacio', 'low.space': 'Cerca', 'high.space': 'Amplio', 'slider.drift': 'Deriva', 'low.drift': 'Quieta', 'high.drift': 'Errante', 'slider.grain': 'Grano', 'low.grain': 'Limpio', 'high.grain': 'Crepitante',
       'hint.pace': 'Sube el Oleaje para usar el Ritmo',
       'generate': '✦ Generar nueva versión', 'surprise': '✧ Sorpréndeme', 'prev': '↩ Anterior', 'save': 'Guardar', 'save.version': 'Guardar versión', 'cancel': 'Cancelar', 'save.name': 'Ponle nombre a esta versión', 'saved': 'Versiones guardadas', 'saved.empty': 'Las versiones que guardes aparecerán aquí.', 'toast.saved': 'Versión guardada', 'toast.deleted': 'Versión eliminada', 'undo': 'Deshacer', 'mix.your': 'Tu mezcla', 'mix.n': 'Mezcla {n}', 'version.n': 'Nueva versión {n}', 'aria.play.noise': 'Reproducir ruido', 'aria.stop.noise': 'Detener ruido', 'aria.delete': 'Eliminar {n}',
-      'add.title': 'Añade tus pistas', 'add.sub': 'Elige archivos de audio de tu dispositivo', 'add.main': 'Elegir pistas', 'add.hint': 'Toca para elegir, o arrastra y suelta', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.title': 'Mis pistas', 'tracks.sub': 'Tu lista suena en orden. Reproduce o elimina pistas aquí', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Toca Añadir para elegir música', 'play': '▶ Reproducir', 'stop': '■ Detener', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
+      'add.title': 'Añade tus pistas', 'add.sub': 'Elige archivos de audio de tu dispositivo', 'add.main': 'Elegir pistas', 'add.hint': 'Toca para elegir, o arrastra y suelta', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.title': 'Mis pistas', 'tracks.sub': 'Tu lista suena en orden. Reproduce o elimina pistas aquí', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Toca Aleatorio o elige pistas abajo', 'play': '▶ Reproducir', 'stop': '■ Detener', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
       'mix.sub': 'Ritmos binaurales mezclados con tus pistas y el ruido. Usa audífonos: cada oído recibe un tono ligeramente distinto.', 'mix.type': 'Tipo de ritmo', 'mix.rate': 'Frecuencia del ritmo', 'mix.pitch': 'Altura', 'mix.beats': 'Ritmos neuronales', 'mute': 'Silenciar', 'muted': 'Silenciado', 'aria.play.beats': 'Reproducir ritmos neuronales', 'aria.stop.beats': 'Detener ritmos neuronales',
-      'tagline': 'Combina sonidos. Crea tu propia mezcla.', 'layer.noise': 'Ruido', 'layer.playlist': 'Lista', 'layer.beats': 'Ritmos', 'layer.configure': 'Configurar', 'layer.add': 'Añadir', 'layer.adjust': 'Ajustar', 'layer.on': 'Activar', 'layer.master': 'Volumen general', 'aria.play.mix': 'Reproducir mezcla', 'aria.stop.mix': 'Detener mezcla',
-      'settings': 'Ajustes', 'close': 'Cerrar', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.ripples': 'Ondas', 'bg.fireflies': 'Luciérnagas', 'bg.constellation': 'Constelación', 'bg.aurora': 'Aurora', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'group.sound': 'Sonido', 'set.crossfade': 'Transición entre pistas', 'cross.0': 'Sin transición', 'cross.2': 'Corta', 'cross.4': 'Media', 'cross.8': 'Larga', 'check.title': 'Prueba de sonido', 'check.note': 'Toca reproducir y escucha unos minutos. Si oyes un corte, dile estos números a Blossom.', 'check.dropouts': 'Cortes', 'check.gaps': 'Saltos del reloj de audio', 'check.state': 'Audio', 'check.na': 'no se mide en este navegador', 'check.none': 'aún no empieza', 'check.interrupted': 'Interrupciones', 'group.look': 'Apariencia', 'group.sizes': 'Tamaños y espacio', 'group.phone': 'Teléfono y Sonos', 'meta': 'Crea tu propio ruido, repite tus pistas y mézclalas con ritmos binaurales, directamente en tu navegador.', 'beat.Alpha': 'Alfa', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'library.title': 'Biblioteca', 'library.sub': 'Pistas originales de downtempo y lo-fi, creadas en tu navegador. Añádelas a tu lista para reproducirlas, repetirlas o mezclarlas.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Bossa lo-fi', 'library.waltz': 'Vals lo-fi', 'library.triphop': 'Trip-hop', 'library.electronic': 'Downtempo electrónico', 'library.ambient': 'Downtempo ambiental', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', }
+      'tagline': 'Combina sonidos. Crea tu propia mezcla.', 'layer.noise': 'Ruido', 'layer.playlist': 'Lista', 'layer.beats': 'Ritmos', 'layer.configure': 'Configurar', 'layer.shuffle': 'Aleatorio', 'layer.like': 'Me gusta', 'layer.dislike': 'No me gusta', 'ratings.copy': 'Copiar mis valoraciones', 'ratings.copied': 'Valoraciones copiadas', 'library.credits': 'Créditos musicales', 'aria.play.music': 'Reproducir lista', 'aria.stop.music': 'Detener lista', 'layer.master': 'Volumen general', 'aria.play.mix': 'Reproducir mezcla', 'aria.stop.mix': 'Detener mezcla',
+      'settings': 'Ajustes', 'close': 'Cerrar', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.ripples': 'Ondas', 'bg.fireflies': 'Luciérnagas', 'bg.constellation': 'Constelación', 'bg.aurora': 'Aurora', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'group.sound': 'Sonido', 'set.crossfade': 'Transición entre pistas', 'cross.0': 'Sin transición', 'cross.2': 'Corta', 'cross.4': 'Media', 'cross.8': 'Larga', 'check.title': 'Prueba de sonido', 'check.note': 'Toca reproducir y escucha unos minutos. Si oyes un corte, dile estos números a Blossom.', 'check.dropouts': 'Cortes', 'check.gaps': 'Saltos del reloj de audio', 'check.state': 'Audio', 'check.na': 'no se mide en este navegador', 'check.none': 'aún no empieza', 'check.interrupted': 'Interrupciones', 'group.look': 'Apariencia', 'group.sizes': 'Tamaños y espacio', 'group.phone': 'Teléfono y Sonos', 'meta': 'Crea tu propio ruido, repite tus pistas y mézclalas con ritmos binaurales, directamente en tu navegador.', 'beat.Alpha': 'Alfa', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'library.title': 'Biblioteca', 'library.sub': 'Música de Ektoplazm con licencias Creative Commons.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'library.lofihiphop': 'Lo-fi hip-hop', 'library.bossa': 'Bossa lo-fi', 'library.waltz': 'Vals lo-fi', 'library.triphop': 'Trip-hop', 'library.electronic': 'Downtempo electrónico', 'library.ambient': 'Downtempo ambiental', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', }
   };
   var SETTINGS_STORE = 'alot.settings.v1';
   var BN_TOUCH = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
@@ -1025,6 +1026,7 @@
     if (trackPools[key]) return trackPools[key];
     var pool = [0, 1].map(function () {
       var player = { audio: new Audio(), voice: null, rec: null, handedOver: false, timer: null };
+      player.audio.crossOrigin = 'anonymous'; // lets music from our storage reach the mixer instead of playing silent
       if (key === 'routed') player.voice = routeTrack(player.audio);
       player.audio.src = BG_SILENCE;
       player.audio.play().catch(function () {});
@@ -1098,6 +1100,7 @@
     return Number(settings.crossfade) || 0;
   }
 
+  var playJob = 0;
   function play(rec, fadeSeconds) {
     var fade = fadeSeconds || 0.4;
     var pool = trackPlayers();
@@ -1126,8 +1129,9 @@
     }
     player.audio.src = rec.url;
     syncWakeLock();
+    var job = ++playJob;
     player.audio.play().catch(function () {
-      if (trackCurrent !== player) return;
+      if (job !== playJob || trackCurrent !== player) return; // a newer track replaced this one: not a failure
       // A refused handover shouldn't leave silence: the old track carries on.
       if (previous && previous.voice && !previous.audio.ended) {
         clearTimeout(previous.timer);
@@ -2792,330 +2796,10 @@
 
   /* ═══════════════════════════════════════════
      TRACK LIBRARY
-     Original tracks composed by this code, so there is nothing to license.
-     Each is rendered on request, and its tail wraps onto its start so it loops evenly.
+     Tracks come from tracks/manifest.json, each stored as a file.
   ═══════════════════════════════════════════ */
-  var LIBRARY = [
-    {
-      id: 'cafe', name: 'Café de lluvia', style: 'lofihiphop', seed: 11, bpm: 72, beats: 4, key: 57, swing: 0.3, cutoff: 2600, wobble: 14, crackle: 10, rain: 0.012,
-      chords: [[0, 3, 7, 10], [5, 8, 12, 15], [-2, 2, 5, 9], [-4, 0, 3, 7]], comp: { sound: 'felt', hits: [[0, 3.2, 0.13], [10, 1.4, 0.08]] },
-      bass: [[0, 0, 1.6], [10, 0, 1], [14, 7, 0.4]],
-      drums: { kick: [0, 7, 10], snare: [4, 12], hat: [0, 2, 4, 6, 8, 10, 12, 14] }, drop: [7, 15],
-      tune: { sound: 'felt', level: 0.1, from: 4, notes: [[0, 15, 1], [3, 12, 0.5], [6, 10, 1.5], [16, 7, 1], [22, 10, 0.5], [24, 12, 2]] }
-    },
-    {
-      id: 'cocina', name: 'Luz de cocina', style: 'bossa', seed: 23, bpm: 108, beats: 4, key: 60, swing: 0, cutoff: 4200, wobble: 6, crackle: 3,
-      chords: [[0, 4, 7, 11], [-3, 0, 4, 7], [2, 5, 9, 12], [-5, -1, 2, 5]], comp: { sound: 'pluck', hits: [[0, 0.7, 0.13], [3, 0.5, 0.1], [6, 0.7, 0.12], [10, 0.5, 0.1], [13, 0.5, 0.1]] },
-      bass: [[0, 0, 1.3], [6, 7, 0.45], [8, 7, 1.3], [14, 0, 0.45]],
-      drums: { kick: [0, 8], rim: [0, 3, 6, 10, 13], shaker: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] },
-      tune: { sound: 'flute', level: 0.1, from: 2, notes: [[0, 16, 2], [8, 19, 1], [12, 16, 1], [16, 14, 2], [24, 12, 2]] }
-    },
-    {
-      id: 'domingo', name: 'Domingo lento', style: 'waltz', seed: 37, bpm: 92, beats: 3, key: 62, swing: 0, cutoff: 5200, wobble: 9, crackle: 6,
-      chords: [[0, 4, 7], [5, 9, 12], [-3, 0, 4], [-5, -1, 2]], comp: { sound: 'bell', hits: [[4, 0.9, 0.09], [8, 0.9, 0.08]] },
-      bass: [[0, 0, 2.6]],
-      drums: { rim: [8], shaker: [0, 4, 8] },
-      tune: { sound: 'felt', level: 0.12, from: 0, notes: [[0, 19, 1], [4, 16, 1], [8, 12, 1], [12, 14, 2.5], [24, 21, 1], [28, 19, 1], [32, 16, 1], [36, 14, 2.5]] }
-    },
-    {
-      id: 'marea', name: 'Marea baja', style: 'triphop', seed: 41, bpm: 76, beats: 4, key: 50, swing: 0.12, cutoff: 3200, wobble: 4, echo: 0.55, echoSend: 0.45,
-      chords: [[0, 3, 7, 12], [-4, 0, 3, 7], [0, 3, 7, 12], [-7, -4, 0, 5]], comp: { sound: 'pad', hits: [[0, 4, 0.1]] },
-      bass: [[0, 0, 2.4], [10, -2, 1.2]],
-      drums: { kick: [0, 3, 10], snare: [8], ghost: [15], hat16: [1, 5, 9, 13] }, drop: [12, 13],
-      tune: { sound: 'synth', level: 0.09, from: 8, notes: [[6, 24, 0.5], [10, 22, 0.5], [32, 19, 2]] }
-    },
-    {
-      id: 'ruta', name: 'Ruta nocturna', style: 'electronic', seed: 53, bpm: 112, beats: 4, key: 45, swing: 0, cutoff: 1500, sweep: 5600, wobble: 0, echo: 0.3, echoSend: 0.22,
-      chords: [[0, 3, 7, 10], [0, 3, 7, 10], [-4, 0, 3, 7], [-2, 2, 5, 9]], comp: { sound: 'synth', arp: true, level: 0.09 },
-      bass: [[0, 0, 0.4], [2, 12, 0.4], [4, 0, 0.4], [6, 12, 0.4], [8, 0, 0.4], [10, 12, 0.4], [12, 0, 0.4], [14, 12, 0.4]],
-      drums: { kick: [0, 4, 8, 12], clap: [4, 12], open: [2, 6, 10, 14] }, drop: [14, 15]
-    },
-    {
-      id: 'agua', name: 'Bajo el agua', style: 'ambient', seed: 67, bpm: 60, beats: 4, key: 53, swing: 0, cutoff: 2400, wobble: 8, echo: 0.6, echoSend: 0.5, bubbles: 7,
-      chords: [[0, 7, 14, 16], [5, 12, 16, 21], [-3, 4, 12, 16], [2, 9, 12, 17]], comp: { sound: 'pad', hits: [[0, 4.4, 0.12]] },
-      bass: [[0, 0, 4]],
-      drums: {},
-      tune: { sound: 'flute', level: 0.08, from: 4, every: 4, notes: [[8, 24, 3], [24, 28, 3], [44, 26, 4]] }
-    }
-  ];
+  var LIBRARY = [];
   var libraryBusy = {};
-
-  function renderLibraryTrack(def) {
-    var rate = 44100;
-    var beat = 60 / def.bpm;
-    var step = beat / 4;
-    var stepsPerBar = def.beats * 4;
-    var BARS = 16;
-    var barLength = def.beats * beat;
-    var loopSeconds = BARS * barLength;
-    var loopLength = Math.round(loopSeconds * rate);
-    var tail = 4 * rate;
-    var Offline = window.OfflineAudioContext || window.webkitOfflineAudioContext;
-    var off = new Offline(2, loopLength + tail, rate);
-    var random = makeRandom(def.seed);
-
-    var warmth = off.createWaveShaper();
-    var curve = new Float32Array(1024);
-    for (var c = 0; c < 1024; c++) curve[c] = Math.tanh((c / 511.5 - 1) * 1.5);
-    warmth.curve = curve;
-    warmth.connect(off.destination);
-    var tone = off.createBiquadFilter();
-    tone.type = 'lowpass';
-    tone.frequency.setValueAtTime(def.cutoff, 0);
-    if (def.sweep) { // opens and closes once, so the loop ends where it began
-      tone.frequency.linearRampToValueAtTime(def.sweep, loopSeconds / 2);
-      tone.frequency.linearRampToValueAtTime(def.cutoff, loopSeconds);
-    }
-    tone.connect(warmth);
-    var music = off.createGain();
-    music.gain.value = 0.7;
-    music.connect(tone);
-    var kit = off.createGain();
-    kit.gain.value = 0.85;
-    kit.connect(warmth);
-
-    var echo = off.createDelay(3);
-    echo.delayTime.value = beat * 0.75;
-    var echoBack = off.createGain();
-    echoBack.gain.value = def.echo || 0.2;
-    var echoSend = off.createGain();
-    echoSend.gain.value = def.echoSend || 0.14;
-    echoSend.connect(echo);
-    echo.connect(echoBack);
-    echoBack.connect(echo);
-    echo.connect(music);
-
-    var wow = off.createOscillator(); // the slow pitch drift of worn tape
-    wow.frequency.value = 0.37;
-    var wowDepth = off.createGain();
-    wowDepth.gain.value = def.wobble || 0;
-    wow.connect(wowDepth);
-    wow.start();
-
-    function freq(midi) { return 440 * Math.pow(2, (midi - 69) / 12); }
-
-    function pan(node, position) {
-      if (!off.createStereoPanner) return node;
-      var panner = off.createStereoPanner();
-      panner.pan.value = position;
-      node.connect(panner);
-      return panner;
-    }
-
-    function oscillator(type, frequency, detune, time, stop, destination, level) {
-      var osc = off.createOscillator();
-      osc.type = type;
-      osc.frequency.value = frequency;
-      osc.detune.value = detune;
-      wowDepth.connect(osc.detune);
-      var part = off.createGain();
-      part.gain.value = level;
-      osc.connect(part);
-      part.connect(destination);
-      osc.start(time);
-      osc.stop(stop);
-      return osc;
-    }
-
-    var SOUNDS = {
-      felt: { attack: 0.012, sustain: 0.42, parts: [['triangle', 1, -3, 1], ['sine', 1, 4, 0.8], ['sine', 3, 0, 0.1]] }, // soft piano
-      pluck: { attack: 0.003, sustain: 0.06, parts: [['triangle', 1, 0, 1], ['sawtooth', 2, 3, 0.1], ['sine', 3, 0, 0.12]] }, // nylon guitar
-      bell: { attack: 0.002, sustain: 0.18, parts: [['sine', 1, 0, 1], ['sine', 2.76, 0, 0.3], ['sine', 5.4, 0, 0.12]] }, // vibraphone
-      pad: { attack: 0.8, sustain: 0.9, parts: [['sawtooth', 1, -7, 0.16], ['sawtooth', 1, 7, 0.16], ['sine', 0.5, 0, 0.5]] }, // slow string pad
-      flute: { attack: 0.09, sustain: 0.85, parts: [['sine', 1, 0, 1], ['triangle', 2, 0, 0.1]] },
-      synth: { attack: 0.004, sustain: 0.2, parts: [['square', 1, 0, 0.3], ['sawtooth', 1, 6, 0.2]] }
-    };
-
-    function note(sound, time, midi, length, level, position) {
-      var shape = SOUNDS[sound];
-      var stop = time + length + 0.05;
-      var env = off.createGain();
-      env.gain.setValueAtTime(0.0001, time);
-      env.gain.linearRampToValueAtTime(level, time + shape.attack);
-      env.gain.linearRampToValueAtTime(Math.max(0.0002, level * shape.sustain), time + shape.attack + Math.min(0.3, length * 0.5));
-      env.gain.exponentialRampToValueAtTime(0.0006, time + length);
-      shape.parts.forEach(function (part) {
-        var osc = oscillator(part[0], freq(midi) * part[1], part[2], time, stop, env, part[3]);
-        if (sound === 'flute') { // breathing vibrato
-          var vibrato = off.createOscillator();
-          vibrato.frequency.value = 5;
-          var depth = off.createGain();
-          depth.gain.value = 9;
-          vibrato.connect(depth);
-          depth.connect(osc.detune);
-          vibrato.start(time);
-          vibrato.stop(stop);
-        }
-      });
-      var out = pan(env, position);
-      out.connect(music);
-      out.connect(echoSend);
-    }
-
-    function bassNote(time, midi, length) {
-      var env = off.createGain();
-      env.gain.setValueAtTime(0.0001, time);
-      env.gain.linearRampToValueAtTime(0.55, time + 0.02);
-      env.gain.exponentialRampToValueAtTime(0.001, time + length);
-      oscillator('sine', freq(midi), 0, time, time + length + 0.05, env, 1);
-      env.connect(music);
-    }
-
-    function kick(time, level) {
-      var osc = off.createOscillator();
-      osc.frequency.setValueAtTime(120, time);
-      osc.frequency.exponentialRampToValueAtTime(44, time + 0.11);
-      var env = off.createGain();
-      env.gain.setValueAtTime(level, time);
-      env.gain.exponentialRampToValueAtTime(0.001, time + 0.3);
-      osc.connect(env);
-      env.connect(kit);
-      osc.start(time);
-      osc.stop(time + 0.32);
-    }
-
-    var noise = off.createBuffer(1, rate * 2, rate);
-    var noiseData = noise.getChannelData(0);
-    for (var w = 0; w < noiseData.length; w++) noiseData[w] = random() * 2 - 1;
-
-    function burst(time, type, frequency, q, level, length, position) {
-      var source = off.createBufferSource();
-      source.buffer = noise;
-      var filter = off.createBiquadFilter();
-      filter.type = type;
-      filter.frequency.value = frequency;
-      filter.Q.value = q;
-      var env = off.createGain();
-      env.gain.setValueAtTime(level, time);
-      env.gain.exponentialRampToValueAtTime(0.001, time + length);
-      source.connect(filter);
-      filter.connect(env);
-      pan(env, position).connect(kit);
-      source.start(time, random() * 1.5, length + 0.02);
-    }
-
-    function rimClick(time, level) {
-      var osc = off.createOscillator();
-      osc.frequency.value = 1750;
-      var env = off.createGain();
-      env.gain.setValueAtTime(level, time);
-      env.gain.exponentialRampToValueAtTime(0.001, time + 0.035);
-      osc.connect(env);
-      env.connect(kit);
-      osc.start(time);
-      osc.stop(time + 0.05);
-    }
-
-    var DRUMS = {
-      kick: function (t) { kick(t, 0.8); },
-      snare: function (t) { burst(t, 'bandpass', 1800, 0.8, 0.45, 0.18, 0); },
-      ghost: function (t) { burst(t, 'bandpass', 2200, 1, 0.14, 0.08, 0); },
-      clap: function (t) { burst(t, 'bandpass', 1400, 1.2, 0.28, 0.1, 0); burst(t + 0.018, 'bandpass', 1500, 1.2, 0.2, 0.14, 0); },
-      rim: function (t) { rimClick(t, 0.22); },
-      hat: function (t) { burst(t, 'highpass', 7500, 0.5, 0.09, 0.05, 0.15); },
-      hat16: function (t) { burst(t, 'highpass', 9000, 0.5, 0.06, 0.03, -0.25); },
-      open: function (t) { burst(t, 'highpass', 8000, 0.5, 0.1, 0.18, 0.2); },
-      shaker: function (t) { burst(t, 'bandpass', 6000, 0.7, 0.035 + random() * 0.03, 0.05, -0.15); }
-    };
-
-    function hitTime(start, s) { return start + s * step + (s % 2 ? step * def.swing : 0); }
-
-    for (var bar = 0; bar < BARS; bar++) {
-      var start = bar * barLength;
-      var chord = def.chords[bar % def.chords.length];
-      var root = def.key + chord[0];
-
-      if (def.comp.arp) { // a rising and falling sixteenth-note pattern
-        var order = [0, 1, 2, 3, 2, 1, 2, 1];
-        for (var a = 0; a < stepsPerBar; a++) {
-          note(def.comp.sound, start + a * step, def.key + chord[order[a % order.length]] + 12, step * 1.6, def.comp.level, a % 2 ? 0.4 : -0.4);
-        }
-      } else {
-        def.comp.hits.forEach(function (hit) {
-          chord.forEach(function (offset, n) {
-            var strum = def.comp.sound === 'pad' ? 0 : n * 0.012;
-            note(def.comp.sound, hitTime(start, hit[0]) + strum, def.key + offset, hit[1] * beat, hit[2], n % 2 ? 0.3 : -0.3);
-          });
-        });
-      }
-
-      def.bass.forEach(function (hit) {
-        bassNote(hitTime(start, hit[0]), root - 24 + hit[1], hit[2] * beat);
-      });
-
-      if (!def.drop || def.drop.indexOf(bar) < 0) { // breaks keep the loop from feeling static
-        Object.keys(def.drums).forEach(function (name) {
-          def.drums[name].forEach(function (s) { DRUMS[name](hitTime(start, s)); });
-        });
-      }
-    }
-
-    if (def.tune) { // a written melody, repeated every two bars or as set
-      var phrase = def.tune.every || 2;
-      for (var phraseBar = def.tune.from; phraseBar < BARS; phraseBar += phrase) {
-        def.tune.notes.forEach(function (n) {
-          note(def.tune.sound, hitTime(phraseBar * barLength, n[0]), def.key + n[1], n[2] * beat, def.tune.level, 0.1);
-        });
-      }
-    }
-
-    for (var k = 0; k < Math.round(loopSeconds * (def.crackle || 0)); k++) { // record crackle
-      burst(random() * loopSeconds, 'highpass', 2500 + random() * 3000, 1, 0.03 + Math.pow(random(), 4) * 0.2, 0.006, random() - 0.5);
-    }
-
-    for (var b = 0; b < Math.round(loopSeconds * (def.bubbles || 0) / 8); b++) { // rising water bubbles
-      var at = random() * loopSeconds;
-      var bubble = off.createOscillator();
-      bubble.frequency.setValueAtTime(350 + random() * 500, at);
-      bubble.frequency.exponentialRampToValueAtTime(900 + random() * 900, at + 0.09);
-      var bubbleLevel = off.createGain();
-      bubbleLevel.gain.setValueAtTime(0.0001, at);
-      bubbleLevel.gain.linearRampToValueAtTime(0.07, at + 0.015);
-      bubbleLevel.gain.exponentialRampToValueAtTime(0.001, at + 0.12);
-      bubble.connect(bubbleLevel);
-      pan(bubbleLevel, random() - 0.5).connect(echoSend);
-      pan(bubbleLevel, random() - 0.5).connect(music);
-      bubble.start(at);
-      bubble.stop(at + 0.14);
-    }
-
-    if (def.rain) { // a soft bed of rain
-      var rain = off.createBufferSource();
-      rain.buffer = noise;
-      rain.loop = true;
-      var rainFilter = off.createBiquadFilter();
-      rainFilter.type = 'bandpass';
-      rainFilter.frequency.value = 3200;
-      rainFilter.Q.value = 0.5;
-      var rainLevel = off.createGain();
-      rainLevel.gain.value = def.rain;
-      rain.connect(rainFilter);
-      rainFilter.connect(rainLevel);
-      rainLevel.connect(kit);
-      rain.start(0);
-    }
-
-    return off.startRendering().then(function (result) {
-      var peak = 0;
-      var energy = 0;
-      var sides = [0, 1].map(function (side) {
-        var raw = result.getChannelData(side);
-        var out = raw.slice(0, loopLength);
-        for (var i = 0; i < tail; i++) out[i] += raw[loopLength + i]; // the tail wraps round
-        for (var j = 0; j < loopLength; j++) {
-          peak = Math.max(peak, Math.abs(out[j]));
-          energy += out[j] * out[j];
-        }
-        return out;
-      });
-      // Similar loudness from track to track, without clipping.
-      var gain = Math.min(0.16 / Math.sqrt(energy / (loopLength * 2)), 0.89 / peak);
-      sides.forEach(function (out) {
-        for (var j = 0; j < loopLength; j++) out[j] *= gain;
-      });
-      return { blob: encodeWav(sides[0], sides[1], rate), duration: loopSeconds };
-    });
-  }
 
   function renderLibrary() {
     var list = document.getElementById('libraryList');
@@ -3154,14 +2838,10 @@
   function addLibraryTrack(def) {
     if (libraryBusy[def.id] || recordings.some(function (r) { return r.libraryId === def.id; })) return Promise.resolve();
     libraryBusy[def.id] = true;
+    var ratedKey = ratingKey({ libraryId: def.id });
+    if (ratings[ratedKey] < 0) { delete ratings[ratedKey]; saveRatings(); }
     renderLibrary();
-    // Published tracks are already files; the rest are composed here on request.
-    var making = def.file ?
-      Promise.resolve({ url: def.file, size: def.size || 0, duration: def.duration }) :
-      renderLibraryTrack(def).then(function (made) {
-        return { url: URL.createObjectURL(made.blob), size: made.blob.size, duration: made.duration };
-      });
-    return making.then(function (made) {
+    return Promise.resolve({ url: def.file, size: def.size || 0, duration: def.duration }).then(function (made) {
       recordings.push({
         id: nextId++,
         libraryId: def.id,
@@ -3188,7 +2868,7 @@
     }).then(function (data) {
       if (!data || !Array.isArray(data.tracks)) return;
       data.tracks.forEach(function (track) {
-        if (!track || !/^tracks\/[a-z0-9-]+\.m4a$/.test(track.file) || !track.name) return;
+        if (!track || !/^(?:tracks\/|https:\/\/pub-dfe2dc87a34d4016a8782237145e0938\.r2\.dev\/tracks\/)[a-z0-9-]+\.m4a$/.test(track.file) || !track.name) return;
         if (!/^[a-z]+$/.test(track.style) || !(Number(track.bpm) > 0) || !(Number(track.duration) > 0)) return;
         LIBRARY.push({
           id: 'file:' + track.file,
@@ -3197,7 +2877,8 @@
           bpm: Number(track.bpm),
           file: track.file,
           size: Number(track.size) || 0,
-          duration: Number(track.duration)
+          duration: Number(track.duration),
+          weight: Number(track.weight) > 0 ? Number(track.weight) : 1
         });
       });
       renderLibrary();
@@ -3423,29 +3104,64 @@
     noiseBtn.setAttribute('aria-pressed', String(bnPlaying));
     noiseBtn.setAttribute('aria-label', t(bnPlaying ? 'aria.stop.noise' : 'aria.play.noise'));
     document.querySelector('.playlist-bar').hidden = !recordings.length;
-    var type = MIX_TYPES.filter(function (x) { return x.rate === mixState.rate; })[0];
-    document.getElementById('layerBeatsPick').textContent = !beatsWanted ? '—' : (type ? (type.name === 'Alpha' ? t('beat.Alpha') : type.name) + ' · ' : '') + mixState.rate + ' Hz';
-    document.getElementById('layerBeats').toggleAttribute('data-off', !beatsWanted);
-    var action = document.getElementById('layerBeatsBtn');
-    var key = beatsWanted ? 'layer.adjust' : 'layer.on';
-    action.setAttribute('data-t', key);
-    action.textContent = t(key);
+    var musicOn = playingId !== null && playingId !== undefined;
+    var musicBtn = document.getElementById('musicBtn');
+    musicBtn.textContent = musicOn ? '■' : '▶';
+    musicBtn.setAttribute('aria-pressed', String(musicOn));
+    musicBtn.setAttribute('aria-label', t(musicOn ? 'aria.stop.music' : 'aria.play.music'));
+    var rec = currentRec();
+    document.getElementById('layerMusicPick').textContent = rec ? rec.name : '—';
+    var key = rec && ratingKey(rec);
+    var like = document.getElementById('musicLike');
+    like.disabled = !key;
+    like.setAttribute('aria-pressed', String(!!key && ratings[key] > 0));
+    document.getElementById('musicDislike').disabled = !key;
     bnMiniSync();
   }
 
+  // Likes and dislikes live on this device. Copy my ratings is the only way they leave it.
+  var RATING_STORE = 'alot.ratings.v1';
+  var ratings = {};
+  try { ratings = JSON.parse(localStorage.getItem(RATING_STORE)) || {}; } catch (e) { /* starts empty */ }
+  function saveRatings() {
+    try { localStorage.setItem(RATING_STORE, JSON.stringify(ratings)); } catch (e) { /* lasts for this visit */ }
+  }
+  function ratingKey(rec) {
+    var found = /([a-z0-9-]+)\.m4a$/.exec(rec.libraryId || '');
+    return found ? found[1] : null;
+  }
+  function currentRec() {
+    return recordings.filter(function (r) { return r.id === playingId; })[0] || recordings[0] || null;
+  }
+
+  // A fresh random order from the whole library. Disliked tracks stay out and liked ones tend to come up sooner.
+  function shufflePlaylist() {
+    var existing = {};
+    recordings.forEach(function (r) { if (r.libraryId) existing[r.libraryId] = r; });
+    var pool = recordings.filter(function (r) { return !r.libraryId; }).map(function (r) {
+      return { rec: r, order: -Math.log(1 - Math.random()) };
+    });
+    LIBRARY.forEach(function (def) {
+      var key = ratingKey({ libraryId: def.id });
+      if (ratings[key] < 0) return;
+      var weight = (def.weight || 1) * (ratings[key] > 0 ? 3 : 1);
+      pool.push({
+        rec: existing[def.id] || { id: nextId++, libraryId: def.id, name: def.name, size: def.size || 0, url: def.file, duration: def.duration },
+        order: -Math.log(1 - Math.random()) / weight
+      });
+    });
+    pool.sort(function (a, b) { return a.order - b.order; });
+    recordings = pool.map(function (x) { return x.rec; });
+    renderTakes();
+  }
+
   function startMusic() {
+    if (!recordings.length) shufflePlaylist();
     if (recordings.length) {
       play(recordings[0]);
       renderTakes();
-      return Promise.resolve();
     }
-    if (!LIBRARY.length) return Promise.resolve();
-    return addLibraryTrack(LIBRARY[0]).then(function () {
-      if (mixStarting && recordings.length) {
-        play(recordings[0]);
-        renderTakes();
-      }
-    });
+    return Promise.resolve();
   }
 
   function playMix() {
@@ -3477,7 +3193,58 @@
     mixRender();
   }
 
-  var LAYER_DRAWERS = { Noise: 'drawerNoise', Music: 'drawerMusic', Beats: 'drawerBeats' };
+  document.getElementById('musicBtn').addEventListener('click', function () {
+    if (playingId !== null && playingId !== undefined) {
+      stopPlayback();
+      renderTakes();
+      return;
+    }
+    trackPlayers(); // phones only allow later starts if the players are unlocked by this tap
+    startMusic();
+  });
+  document.getElementById('musicShuffle').addEventListener('click', function () {
+    trackPlayers();
+    shufflePlaylist();
+    if (recordings.length) { play(recordings[0]); renderTakes(); }
+  });
+  document.getElementById('musicLike').addEventListener('click', function () {
+    var key = currentRec() && ratingKey(currentRec());
+    if (!key) return;
+    if (ratings[key] > 0) delete ratings[key]; else ratings[key] = 1;
+    saveRatings();
+    layersSync();
+  });
+  document.getElementById('musicDislike').addEventListener('click', function () {
+    var rec = currentRec();
+    var key = rec && ratingKey(rec);
+    if (!key) return;
+    var was = ratings[key];
+    var at = recordings.indexOf(rec);
+    var wasPlaying = rec.id === playingId;
+    ratings[key] = -1;
+    saveRatings();
+    recordings = recordings.filter(function (r) { return r !== rec; });
+    if (wasPlaying) {
+      if (recordings.length) play(recordings[Math.min(at, recordings.length - 1)], crossfadeSeconds() || 0.4);
+      else stopPlayback();
+    }
+    renderTakes();
+    toast(t('layer.dislike'), 'info', t('undo'), function () {
+      if (was === undefined) delete ratings[key]; else ratings[key] = was;
+      saveRatings();
+      recordings.splice(Math.min(at, recordings.length), 0, rec);
+      renderTakes();
+    });
+  });
+  document.getElementById('ratingsCopy').addEventListener('click', function () {
+    var text = JSON.stringify({ app: 'alot', exported: new Date().toISOString(), ratings: ratings }, null, 1);
+    if (!navigator.clipboard) { toast(t('err.play'), 'error'); return; }
+    navigator.clipboard.writeText(text).then(function () {
+      toast(t('ratings.copied'), 'success');
+    }).catch(function () { toast(t('err.play'), 'error'); });
+  });
+
+  var LAYER_DRAWERS = { Noise: 'drawerNoise', Music: 'drawerMusic' };
   function layerToggle(name, open) {
     Object.keys(LAYER_DRAWERS).forEach(function (key) {
       var drawer = document.getElementById(LAYER_DRAWERS[key]);
@@ -3489,10 +3256,6 @@
   document.getElementById('noiseBtn').addEventListener('click', function () { bnSetPlaying(!bnPlaying); });
   document.getElementById('layerNoiseBtn').addEventListener('click', function () { layerToggle('Noise'); });
   document.getElementById('layerMusicBtn').addEventListener('click', function () { layerToggle('Music'); });
-  document.getElementById('layerBeatsBtn').addEventListener('click', function () {
-    if (!beatsWanted) { setBeatsWanted(true); layerToggle('Beats', true); return; }
-    layerToggle('Beats');
-  });
   // Older links to the Studio tab open the music list.
   function layerFromLink() { if (location.hash === '#studio') layerToggle('Music', true); }
   layerFromLink();
