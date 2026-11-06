@@ -2175,12 +2175,19 @@
      audio element playing. This mode records the current noise into a looping
      file for that element, which also gives AirPlay a real file to play.
   ═══════════════════════════════════════════ */
-  var BG_SECONDS = 60;
+  // Not a multiple of the 30 s noise loop: the end of a recording must be different
+  // noise from its start, or the blend at the join sums one sound with itself and phases.
+  var BG_SECONDS = 75;
   var BG_OVERLAP = 4;
+  var BG_REPEATS = 48; // one hour before the file itself restarts
+  var BG_FADE = 2;
   var BG_SILENCE = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
-  var bgPair = [];
-  var bgFront = null;
+  var bgPlayer = null;
   var bgUrl = null;
+  var bgLoaded = null;
+  var bgBody = null;
+  var bgWaiting = false;
+  var bgSwitchTimer = null;
   var bgKey = null;
   var bgJob = 0;
   var bgTimer = null;
@@ -2202,58 +2209,64 @@
   }
   document.addEventListener('visibilitychange', syncWakeLock);
 
-  // Looping one audio element leaves a tiny gap. Two elements overlap instead: each
-  // recording fades in and out, and the next one starts as the current one fades.
-  function bgElements() {
-    if (!bgPair.length) {
-      bgPair = [new Audio(), new Audio()];
-      bgPair.forEach(function (el) {
-        el.preload = 'auto';
-        el.setAttribute('x-webkit-airplay', 'allow');
-        el.addEventListener('timeupdate', function () {
-          if (!bgActive || el !== bgFront || !bgUrl) return;
-          if (bgInTail(el)) bgHandOver(bgUrl);
-        });
-        // A late timeupdate should never leave silence behind.
-        el.addEventListener('ended', function () {
-          if (bgActive && el === bgFront && bgUrl) bgHandOver(bgUrl);
-        });
+  // One player, no handovers: AirPlay can drop a second player starting up. The recording
+  // joins onto itself sample for sample and is repeated inside a single long file, so
+  // nothing has to happen at the join and no code needs to run while the phone is locked.
+  function bgElement() {
+    if (!bgPlayer) {
+      bgPlayer = new Audio();
+      bgPlayer.preload = 'auto';
+      bgPlayer.setAttribute('x-webkit-airplay', 'allow');
+      bgPlayer.addEventListener('ended', function () {
+        if (!bgActive) return;
+        if (bgWaiting) { bgLoad(); return; }
+        bgPlayer.currentTime = 0; // the loop setting should cover this; silence must never stay
+        bgPlayer.play().catch(function () {});
       });
-      bgFront = bgPair[0];
+      // If the phone refuses the long file, a short one still plays, with a small gap at each restart.
+      bgPlayer.addEventListener('error', function () {
+        if (!bgActive || !bgBody || !bgLoaded || bgBody.short) return;
+        bgBody.short = true;
+        var old = bgUrl;
+        bgUrl = URL.createObjectURL(bgBuildFile(bgBody, 2));
+        bgLoad();
+        URL.revokeObjectURL(old);
+      });
     }
-    return bgPair;
+    return bgPlayer;
   }
 
-  function bgIsRecording(el) {
-    return isFinite(el.duration) && el.duration > BG_OVERLAP * 2;
+  function bgLoad() {
+    clearTimeout(bgSwitchTimer);
+    bgWaiting = false;
+    var old = bgLoaded;
+    bgLoaded = bgUrl;
+    bgPlayer.src = bgUrl;
+    bgPlayer.loop = true;
+    bgPlayer.play().catch(function () {});
+    if (old && old !== bgUrl) URL.revokeObjectURL(old);
   }
 
-  function bgInTail(el) {
-    return bgIsRecording(el) && el.currentTime >= el.duration - BG_OVERLAP;
-  }
-
-  function bgHandOver(url) {
-    var next = bgPair[0] === bgFront ? bgPair[1] : bgPair[0];
-    if (next.src !== url) next.src = url;
-    else next.currentTime = 0;
-    bgFront = next;
-    next.play().catch(function () {});
-  }
-
-  function bgSwitchTo(url) {
-    // Jumping to the fade-out lets the old recording leave smoothly, even on
+  function bgSwitchTo() {
+    var el = bgPlayer;
+    var longEnough = isFinite(el.duration) && el.duration > BG_FADE * 2;
+    if (el.paused || !bgLoaded || !longEnough) { bgLoad(); return; }
+    if (bgWaiting) return; // already leaving: the newest recording is picked up on arrival
+    // Jumping to the file's own fade-out lets a changed sound leave smoothly, even on
     // iPhones, where a page can't change an audio element's volume.
-    if (bgIsRecording(bgFront) && !bgInTail(bgFront)) bgFront.currentTime = bgFront.duration - BG_OVERLAP;
-    bgHandOver(url);
+    bgWaiting = true;
+    el.loop = false;
+    el.currentTime = el.duration - BG_FADE;
+    bgSwitchTimer = setTimeout(function () { if (bgWaiting && bgActive) bgLoad(); }, (BG_FADE + 1) * 1000);
   }
 
-  function encodeWav(left, right, rate) {
-    var bytes = new DataView(new ArrayBuffer(44 + left.length * 4));
+  function wavHeader(frames, rate) {
+    var bytes = new DataView(new ArrayBuffer(44));
     function text(at, value) {
       for (var i = 0; i < value.length; i++) bytes.setUint8(at + i, value.charCodeAt(i));
     }
     text(0, 'RIFF');
-    bytes.setUint32(4, 36 + left.length * 4, true);
+    bytes.setUint32(4, 36 + frames * 4, true);
     text(8, 'WAVEfmt ');
     bytes.setUint32(16, 16, true);
     bytes.setUint16(20, 1, true);
@@ -2263,14 +2276,31 @@
     bytes.setUint16(32, 4, true);
     bytes.setUint16(34, 16, true);
     text(36, 'data');
-    bytes.setUint32(40, left.length * 4, true);
-    var at = 44;
-    for (var n = 0; n < left.length; n++) {
-      bytes.setInt16(at, Math.max(-1, Math.min(1, left[n])) * 32767, true);
-      bytes.setInt16(at + 2, Math.max(-1, Math.min(1, right[n])) * 32767, true);
-      at += 4;
+    bytes.setUint32(40, frames * 4, true);
+    return bytes.buffer;
+  }
+
+  function pcmBytes(left, right, from, to, shape) {
+    var bytes = new DataView(new ArrayBuffer((to - from) * 4));
+    for (var n = from; n < to; n++) {
+      var at = (n - from) * 4;
+      var level = shape ? shape(n - from, to - from) : 1;
+      bytes.setInt16(at, Math.max(-1, Math.min(1, left[n] * level)) * 32767, true);
+      bytes.setInt16(at + 2, Math.max(-1, Math.min(1, right[n] * level)) * 32767, true);
     }
-    return new Blob([bytes.buffer], { type: 'audio/wav' });
+    return bytes.buffer;
+  }
+
+  function encodeWav(left, right, rate) {
+    return new Blob([wavHeader(left.length, rate), pcmBytes(left, right, 0, left.length)], { type: 'audio/wav' });
+  }
+
+  // Repeats of one Blob share its memory, so an hour costs little more than one recording.
+  function bgBuildFile(body, repeats) {
+    var parts = [wavHeader(body.frames * repeats, body.rate), body.start, body.middle];
+    for (var i = 0; i < repeats - 2; i++) parts.push(body.whole);
+    parts.push(body.lead, body.end);
+    return new Blob(parts, { type: 'audio/wav' });
   }
 
   function bgRender() {
@@ -2298,48 +2328,71 @@
       grain.start();
     }
     return off.startRendering().then(function (result) {
+      var loopFrames = BG_SECONDS * rate;
+      var fade = BG_FADE * rate;
       var sides = [0, 1].map(function (c) {
         var out = result.getChannelData(c);
+        // The extra seconds at the end blend into the start, so the end meets the start exactly.
         for (var n = 0; n < overlap; n++) {
-          var rise = Math.sqrt(n / overlap);
-          out[n] *= rise;
-          out[out.length - 1 - n] *= rise;
+          var mix = n / overlap;
+          out[n] = out[n] * Math.sqrt(mix) + out[loopFrames + n] * Math.sqrt(1 - mix);
         }
-        return out;
+        return out.subarray(0, loopFrames);
       });
-      return URL.createObjectURL(encodeWav(sides[0], sides[1], rate));
+      // This path has no live limiter, so loud settings are lowered here instead of clipping.
+      var peak = 0;
+      sides.forEach(function (out) {
+        for (var i = 0; i < out.length; i++) peak = Math.max(peak, Math.abs(out[i]));
+      });
+      if (peak > 0.97) {
+        sides.forEach(function (out) {
+          for (var i = 0; i < out.length; i++) out[i] *= 0.97 / peak;
+        });
+      }
+      var left = sides[0];
+      var right = sides[1];
+      var body = {
+        frames: loopFrames,
+        rate: rate,
+        whole: new Blob([pcmBytes(left, right, 0, loopFrames)]),
+        // Only the file's very start and end fade: silence in, silence out, none in between.
+        start: new Blob([pcmBytes(left, right, 0, fade, function (n, size) { return Math.sqrt(n / size); })]),
+        end: new Blob([pcmBytes(left, right, loopFrames - fade, loopFrames, function (n, size) { return Math.sqrt(1 - n / size); })])
+      };
+      body.middle = body.whole.slice(fade * 4);
+      body.lead = body.whole.slice(0, (loopFrames - fade) * 4);
+      return body;
     });
   }
 
   function bgRefresh() {
     var key = JSON.stringify([bn.seed, bn.color, BN_KEYS.map(function (k) { return bn[k]; })]);
     if (key === bgKey && bgUrl) {
-      if (bgFront.src !== bgUrl || bgFront.paused) bgSwitchTo(bgUrl);
+      if (bgLoaded !== bgUrl || bgPlayer.paused || bgPlayer.src !== bgUrl) bgSwitchTo();
       return;
     }
     var job = ++bgJob;
-    bgRender().then(function (url) {
-      if (job !== bgJob || !bgActive) {
-        URL.revokeObjectURL(url);
-        return;
-      }
+    bgRender().then(function (body) {
+      if (job !== bgJob || !bgActive) return;
       var old = bgUrl;
-      bgUrl = url;
+      bgBody = body;
+      bgUrl = URL.createObjectURL(bgBuildFile(body, BG_REPEATS));
       bgKey = key;
-      bgSwitchTo(url);
-      if (old) setTimeout(function () { URL.revokeObjectURL(old); }, (BG_OVERLAP + 2) * 1000);
+      if (old && old !== bgLoaded) URL.revokeObjectURL(old);
+      bgSwitchTo();
     }).catch(function () {
       toast(t('err.play'), 'error');
     });
   }
 
   function bgStart() {
-    // Both start inside the tap, which permits them to play later without one.
-    bgElements().forEach(function (el) {
-      el.volume = bnVolumeLevel();
-      el.src = BG_SILENCE;
-      el.play().catch(function () {});
-    });
+    // Starts inside the tap, which permits it to play the recording later without one.
+    var el = bgElement();
+    el.volume = bnVolumeLevel();
+    el.loop = false;
+    el.src = BG_SILENCE;
+    el.play().catch(function () {});
+    bgLoaded = null;
     bgActive = true;
     bgRefresh();
   }
@@ -2347,8 +2400,10 @@
   function bgStop() {
     bgActive = false;
     bgJob++;
+    bgWaiting = false;
     clearTimeout(bgTimer);
-    bgPair.forEach(function (el) { el.pause(); });
+    clearTimeout(bgSwitchTimer);
+    if (bgPlayer) bgPlayer.pause();
   }
 
   function bgQueue() {
@@ -2611,7 +2666,7 @@
   bnEl.volume.addEventListener('input', function () {
     bnEl.volume.style.setProperty('--v', bnEl.volume.value + '%');
     mixSyncBrown();
-    bgPair.forEach(function (el) { el.volume = bnVolumeLevel(); });
+    if (bgPlayer) bgPlayer.volume = bnVolumeLevel();
     if (bnAudio) bnAudio.master.gain.setTargetAtTime(bnVolumeLevel(), bnAudio.ctx.currentTime, 0.02);
     bnPersist();
   });
