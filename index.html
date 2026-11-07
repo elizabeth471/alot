@@ -3579,8 +3579,7 @@
     ' col=mix(col,c3,clamp(length(w)*.95-.38+.4*e.y,0.,1.));',      // mids open the bright folds
     ' col+=c3*smoothstep(.55,.9,f)*(.08+.32*e.x);',                   // the brightest folds glow with the bass
     ' col+=c2*.14*e.z*smoothstep(.35,.75,f);',                        // highs lift the mid-tones, softly
-    ' float d=length(uv);',
-    ' col+=c3*ringP*smoothstep(.05,0.,abs(d-ring))*smoothstep(1.4,.2,d);', // a ring that blooms and dissolves
+    ' col+=c3*ringP*.5*smoothstep(.3,.85,f);',                       // a beat: the bright folds swell softly, everywhere at once
     ' col*=(.55+.3*e.x+.3*f)*(1.-.5*dot(uv,uv))*dim;',
     ' gl_FragColor=vec4(col,1.);',
     '}'
@@ -3588,6 +3587,7 @@
 
   function projSetup() {
     if (projGl) return true;
+    if (projCanvas.lost) { var fresh = projCanvas.lost; projEl.replaceChild(fresh, projCanvas); projCanvas = fresh; } // reopened during the fade
     var gl = projCanvas.getContext('webgl', { alpha: false, antialias: false, depth: false, powerPreference: 'low-power', preserveDrawingBuffer: false });
     if (!gl) return false;
     function shader(type, src) {
@@ -3689,13 +3689,13 @@
     projDim = ease(projDim, src.dim, 0.45); // opens from black over a few seconds; Sleep dims the same way
     projSpeed = ease(projSpeed, look[3] * (calm ? 0.5 : 1), 0.3);
     projTime += dt * projSpeed * (0.8 + 0.4 * projSlow[1]);
-    // Beat rings: only where the music has a pulse, no more than one each 1.2 s; each blooms in, widens, and fades out.
+    // Beat swells: only where the music has a pulse, no more than one each 1.2 s; each rises softly and fades out.
     projRingGap += dt;
     if (!calm && look[4] && src.v[3] > 0.45 && projRingGap > 1.2) { projRing = 0; projRingGap = 0; projRingPower = 0.08 + 0.16 * src.v[3]; }
     projRing += dt / 2.4;
     var age = Math.min(projRing, 1);
     var ringP = projRingPower * Math.min(1, age / 0.12) * Math.pow(1 - age, 2);
-    var ringR = 1.25 * (1 - Math.pow(1 - age, 3)); // widens quickly, then slows like a ripple
+    var ringR = 0;
     var gl = projGl;
     gl.uniform2f(projU.r, projCanvas.width, projCanvas.height);
     gl.uniform1f(projU.t, projTime);
@@ -3767,6 +3767,16 @@
     projEl.classList.add('closing');
     setTimeout(function () { if (!projOn) { projEl.hidden = true; projEl.classList.remove('closing'); } }, 700);
     if (projLock) { projLock.release(); projLock = null; }
+    // Hand the graphics memory back: nothing of the projector stays alive once it is closed.
+    var lose = projGl && projGl.getExtension('WEBGL_lose_context');
+    if (lose) lose.loseContext();
+    projGl = null; projProg = null; projU = {};
+    // A lost context cannot be revived on the same canvas, so the next opening gets a fresh one.
+    var fresh = document.createElement('canvas');
+    fresh.id = 'projCanvas';
+    fresh.setAttribute('aria-hidden', 'true');
+    projCanvas.lost = fresh;
+    setTimeout(function () { if (!projOn && projCanvas.lost === fresh) { projEl.replaceChild(fresh, projCanvas); projCanvas = fresh; } }, 750);
     var fs = document.fullscreenElement || document.webkitFullscreenElement;
     if (fs === projEl) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
     bnLastActive = performance.now();
