@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" id="metaDescription" content="">
   <meta name="theme-color" content="#0e0b09">
+  <meta property="og:title" content="alot">
+  <meta property="og:description" content="Dormir, concentrarte, correr, centrarte, meditar, o solo ruido.">
+  <meta property="og:image" content="https://alot-indol.vercel.app/share.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://alot-indol.vercel.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
   <title>alot</title>
@@ -3058,7 +3068,7 @@
   var bnPlayInView = true;
   function bnMiniSync() {
     var on = mixIsPlaying();
-    document.getElementById('bnMini').hidden = bnPlayInView || customizeEl.hidden;
+    document.getElementById('bnMini').hidden = bnPlayInView || customizeEl.hidden || !!modeCurrent; // a purpose playing owns the sound; a mixer play icon would mislead
     var button = document.getElementById('bnMiniPlay');
     button.textContent = on ? '■' : '▶';
     button.setAttribute('aria-pressed', String(on));
@@ -3384,6 +3394,7 @@
       row.querySelector('.mode-icon').textContent = on ? '■' : '▶';
     });
     document.getElementById('modeNow').hidden = !modeCurrent;
+    bnMiniSync();
     if (!modeCurrent) { bnUpdateMediaSession(); return; }
     var noiseOnly = !!modeCurrent.files;
     document.getElementById('modeNowActions').hidden = noiseOnly;
@@ -3416,6 +3427,9 @@
       var desc = document.createElement('span');
       desc.className = 'mode-desc';
       desc.textContent = mode.files ? MODE_COLORS.map(function (c) { return t('color.' + c); }).join(' · ') : t('mode.' + mode.id + '.d');
+      desc.id = 'modeDesc-' + mode.id;
+      row.setAttribute('aria-label', t('mode.' + mode.id)); // read as "Sleep, toggle button, pressed"; the description follows as a hint
+      row.setAttribute('aria-describedby', desc.id);
       text.appendChild(name);
       text.appendChild(desc);
       var icon = document.createElement('span');
