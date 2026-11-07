@@ -563,7 +563,8 @@
     .modes { border: 1px solid var(--border); border-radius: 20px; background: rgba(14,11,9,0.5); overflow: hidden; }
     :root[data-panels="solid"] .modes { background: #221b15; }
     :root[data-panels="clear"] .modes { background: rgba(34,27,21,0.28); }
-    .modes[hidden], #customize[hidden], #modeNow[hidden] { display: none; }
+    .modes[hidden], #customize[hidden], #modeNow[hidden], #modeNowActions[hidden], #modeColors[hidden] { display: none; }
+    #modeColors .bn-chip[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
     .mode-row { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 76px; padding: 12px var(--pad); border: 0; border-top: 1px solid var(--border); background: transparent; color: var(--text); font: inherit; text-align: left; cursor: pointer; }
     #modeList > .mode-row:first-child { border-top: 0; }
     .mode-text { flex: 1 1 auto; min-width: 0; }
@@ -721,6 +722,7 @@
         <button class="bn-chip" id="modeDislike" data-t="layer.dislike">Dislike</button>
         <button class="bn-chip" id="modeNext" data-t="mode.next">Next</button>
       </div>
+      <div class="bn-chips layer-types" role="group" id="modeColors" hidden></div>
     </div>
   </section>
 
@@ -3342,13 +3344,23 @@
       if (!(ratings[modeKey(modeCurrent, list[next])] < 0)) { modeAudio.currentTime = list[next].t + 0.5; return; }
     }
   }
+  /* Noise only: the same plain player, one looping file per color, so it also carries over AirPlay. */
+  var MODE_COLORS = ['brown', 'pink', 'white'];
+  var modeColor = 'brown';
+  try { if (MODE_COLORS.indexOf(localStorage.getItem('alot.noiseOnly')) >= 0) modeColor = localStorage.getItem('alot.noiseOnly'); } catch (e) {}
+  function modeFile(mode) { return mode.files ? mode.files[modeColor] : mode.file; }
+  function modePickColor(color) {
+    modeColor = color;
+    try { localStorage.setItem('alot.noiseOnly', color); } catch (e) {}
+    if (modeCurrent && modeCurrent.files) modeStart(modeCurrent); else modeSync();
+  }
   function modeStart(mode) {
     stopMix();
     bnPrepareAudioSession();
     var el = modeElement();
     modeCurrent = mode;
     modeChapter = mode.chapters[0] || null;
-    el.src = mode.file;
+    el.src = modeFile(mode);
     el.loop = !!mode.loop;
     el.volume = mixState.muted ? 0 : mixLevel(mixState.master);
     el.play().catch(function (error) {
@@ -3373,7 +3385,13 @@
     });
     document.getElementById('modeNow').hidden = !modeCurrent;
     if (!modeCurrent) { bnUpdateMediaSession(); return; }
-    document.getElementById('modeNowName').textContent = modeChapter ? modeChapter.name : t('mode.noise');
+    var noiseOnly = !!modeCurrent.files;
+    document.getElementById('modeNowActions').hidden = noiseOnly;
+    document.getElementById('modeColors').hidden = !noiseOnly;
+    Array.prototype.forEach.call(document.getElementById('modeColors').children, function (chip) {
+      chip.setAttribute('aria-pressed', String(chip.getAttribute('data-color') === modeColor));
+    });
+    document.getElementById('modeNowName').textContent = modeChapter ? modeChapter.name : noiseOnly ? t('color.' + modeColor) : t('mode.noise');
     var like = document.getElementById('modeLike');
     like.setAttribute('aria-pressed', String(!!modeChapter && ratings[modeKey(modeCurrent, modeChapter)] > 0));
     like.disabled = !modeChapter;
@@ -3397,7 +3415,7 @@
       name.textContent = t('mode.' + mode.id);
       var desc = document.createElement('span');
       desc.className = 'mode-desc';
-      desc.textContent = t('mode.' + mode.id + '.d');
+      desc.textContent = mode.files ? MODE_COLORS.map(function (c) { return t('color.' + c); }).join(' · ') : t('mode.' + mode.id + '.d');
       text.appendChild(name);
       text.appendChild(desc);
       var icon = document.createElement('span');
@@ -3409,6 +3427,16 @@
         if (modeCurrent === mode) modeStop(); else modeStart(mode);
       });
       list.appendChild(row);
+    });
+    var colors = document.getElementById('modeColors');
+    colors.textContent = '';
+    MODE_COLORS.forEach(function (color) {
+      var chip = document.createElement('button');
+      chip.className = 'bn-chip';
+      chip.setAttribute('data-color', color);
+      chip.textContent = t('color.' + color);
+      chip.addEventListener('click', function () { modePickColor(color); });
+      colors.appendChild(chip);
     });
     modeSync();
   }
@@ -3445,9 +3473,10 @@
       return response.ok ? response.json() : null;
     }).then(function (data) {
       if (!data || !Array.isArray(data.modes)) { customizeShow(true); return; }
+      var R2_FILE = /^https:\/\/pub-dfe2dc87a34d4016a8782237145e0938\.r2\.dev\/[a-z0-9\/-]+\.m4a$/;
       MODES = data.modes.filter(function (m) {
-        return m && /^[a-z]+$/.test(m.id) && t('mode.' + m.id) !== 'mode.' + m.id && Array.isArray(m.chapters) &&
-          /^https:\/\/pub-dfe2dc87a34d4016a8782237145e0938\.r2\.dev\/[a-z0-9\/-]+\.m4a$/.test(m.file);
+        return m && /^[a-z]+$/.test(m.id) && t('mode.' + m.id) !== 'mode.' + m.id && Array.isArray(m.chapters) && R2_FILE.test(m.file) &&
+          (!m.files || MODE_COLORS.every(function (c) { return R2_FILE.test(m.files[c]); }));
       });
       document.getElementById('modes').hidden = !MODES.length;
       if (!MODES.length) customizeShow(true);

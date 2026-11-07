@@ -545,6 +545,18 @@
      "name": "Ajnia – La Gran Ruta Del Sur"
     }
    ]
+  },
+  {
+   "id": "noise",
+   "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/noise-brown.m4a",
+   "files": {
+    "brown": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/noise-brown.m4a",
+    "pink": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/noise-pink.m4a",
+    "white": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/noise-white.m4a"
+   },
+   "loop": true,
+   "duration": 3600,
+   "chapters": []
   }
  ]
 }
