@@ -601,6 +601,34 @@
     #modeList > .mode-row:first-child { border-top: 0; }
     #modeList > .mode-row[data-mode="noise"] { border-top-width: 6px; border-top-color: rgba(14,11,9,0.55); } /* a utility, set slightly apart from the moods */
     .mode-text { flex: 1 1 auto; min-width: 0; }
+    .mode-glyph { flex: 0 0 auto; display: flex; width: 28px; height: 28px; color: var(--accent); opacity: 0.85; }
+    .mode-glyph svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .mode-row { position: relative; }
+    .mode-row > .mode-glyph { order: -1; }
+    :root[data-icons="off"] .mode-glyph { display: none; }
+    /* Layout: Tiles, a two-column grid of cards */
+    :root[data-layout="tiles"] #modeList { display: grid; grid-template-columns: 1fr 1fr; }
+    :root[data-layout="tiles"] .mode-row { flex-direction: column; align-items: flex-start; justify-content: flex-end; gap: 10px; min-height: 132px; border-top: 1px solid var(--border); }
+    :root[data-layout="tiles"] .mode-row:nth-child(2n) { border-left: 1px solid var(--border); }
+    :root[data-layout="tiles"] #modeList > .mode-row:nth-child(2) { border-top: 0; }
+    :root[data-layout="tiles"] .mode-row .mode-icon { position: absolute; top: 12px; right: 12px; width: 38px; height: 38px; }
+    :root[data-layout="tiles"] .mode-row[data-mode="noise"] { grid-column: 1 / -1; min-height: 76px; flex-direction: row; align-items: center; border-left: 0; }
+    :root[data-layout="tiles"] .mode-row[data-mode="noise"] .mode-icon { position: static; }
+    /* Layout: Compact, single slim rows */
+    :root[data-layout="compact"] .mode-row { min-height: 54px; padding-top: 6px; padding-bottom: 6px; }
+    :root[data-layout="compact"] .mode-desc { display: none; }
+    :root[data-layout="compact"] .mode-name { font-size: calc(18px * var(--text)); }
+    :root[data-layout="compact"] .mode-icon { width: 36px; height: 36px; font-size: 12px; }
+    :root[data-layout="compact"] .mode-glyph { width: 22px; height: 22px; }
+    /* Layout: Large, big rows that are easy to hit at night */
+    :root[data-layout="large"] .mode-row { min-height: 104px; gap: 18px; }
+    :root[data-layout="large"] .mode-name { font-size: calc(28px * var(--text)); }
+    :root[data-layout="large"] .mode-desc { font-size: calc(15px * var(--text)); }
+    :root[data-layout="large"] .mode-icon { width: 56px; height: 56px; font-size: 18px; }
+    :root[data-layout="large"] .mode-glyph { width: 38px; height: 38px; }
+    /* Buttons: Round (default), Soft, Square */
+    :root[data-buttons="soft"] .bn-chip, :root[data-buttons="soft"] .layer-action, :root[data-buttons="soft"] .mode-icon, :root[data-buttons="soft"] .bn-play { border-radius: 12px; }
+    :root[data-buttons="square"] .bn-chip, :root[data-buttons="square"] .layer-action, :root[data-buttons="square"] .mode-icon, :root[data-buttons="square"] .bn-play { border-radius: 4px; }
     .mode-name { display: block; font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(21px * var(--text)); }
     .mode-desc { display: block; margin-top: 2px; font-size: calc(13px * var(--text)); color: var(--text-muted); }
     .mode-icon { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--border); border-radius: 50%; font-size: 14px; }
@@ -703,6 +731,15 @@
       <button class="bn-chip bn-color" data-set="accent:lilac"><span class="bn-dot" style="background:#cdb8f2" aria-hidden="true"></span><span data-t="accent.lilac">Lilac</span></button>
     </div>
 
+    </details>
+    <details class="sheet-group">
+      <summary data-t="group.layout"></summary>
+      <div class="sheet-label" data-t="set.layout"></div>
+      <div class="bn-chips"><button class="bn-chip" data-set="layout:list" data-t="layout.list"></button><button class="bn-chip" data-set="layout:tiles" data-t="layout.tiles"></button><button class="bn-chip" data-set="layout:compact" data-t="layout.compact"></button><button class="bn-chip" data-set="layout:large" data-t="layout.large"></button></div>
+      <div class="sheet-label" data-t="set.icons"></div>
+      <div class="bn-chips"><button class="bn-chip" data-set="icons:on" data-t="icons.on"></button><button class="bn-chip" data-set="icons:off" data-t="icons.off"></button></div>
+      <div class="sheet-label" data-t="set.buttons"></div>
+      <div class="bn-chips"><button class="bn-chip" data-set="buttons:round" data-t="buttons.round"></button><button class="bn-chip" data-set="buttons:soft" data-t="buttons.soft"></button><button class="bn-chip" data-set="buttons:square" data-t="buttons.square"></button></div>
     </details>
     <details class="sheet-group">
       <summary data-t="group.sound"></summary>
@@ -915,7 +952,7 @@
       'add.main': 'Choose tracks', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Tap Shuffle, or choose from the Library', 'play': '▶ Play', 'stop': '■ Stop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
       'mix.sub': 'Binaural beats, mixed with your tracks and noise. Use headphones: each ear gets a slightly different tone.', 'mix.type': 'Beat type', 'mix.rate': 'Beat rate', 'mix.pitch': 'Pitch', 'mix.beats': 'Neural Beats', 'mute': 'Mute', 'muted': 'Muted', 'aria.play.beats': 'Play neural beats', 'aria.stop.beats': 'Stop neural beats',
       'tagline': 'What do you need right now?', 'mode.sleep': 'Sleep', 'mode.sleep.d': 'Ambient, fading to noise', 'mode.flow': 'Flow', 'mode.flow.d': 'Steady downtempo', 'mode.run': 'Run', 'mode.run.d': 'High energy', 'mode.ground': 'Ground', 'mode.ground.d': 'Dub and warm noise', 'mode.meditate': 'Meditate', 'mode.meditate.d': 'Slow, spacious ambient', 'mode.love': 'Love', 'mode.love.d': 'Slow, warm, sensual', 'mode.customize': 'Customize', 'mode.next': 'Next', 'mode.noise': 'Noise only', 'layer.noise': 'Noise', 'layer.playlist': 'Playlist', 'layer.beats': 'Beats', 'layer.configure': 'Configure', 'playlist.hint': 'Tap Shuffle to start', 'library.count': '{n} tracks', 'speaker.choose': 'Choose speaker', 'projector': 'Projector', 'projector.exit': 'Exit', 'proj.look': 'Visual', 'proj.silk': 'Silk', 'proj.aurora': 'Aurora', 'proj.bloom': 'Bloom', 'proj.sync': 'Sync', 'proj.tap': 'Tap to the beat', 'proj.flash': 'Flash beats', 'layer.shuffle': 'Shuffle', 'layer.like': 'Like', 'layer.dislike': 'Dislike', 'ratings.note': 'Likes and dislikes are saved with a random ID, not your name, to improve the playlist.', 'library.credits': 'Music credits', 'aria.play.music': 'Play playlist', 'aria.stop.music': 'Stop playlist', 'layer.master': 'Master volume', 'aria.play.mix': 'Play mix', 'aria.stop.mix': 'Stop mix',
-      'settings': 'Settings', 'close': 'Close', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.ripples': 'Ripples', 'bg.fireflies': 'Fireflies', 'bg.constellation': 'Constellation', 'bg.aurora': 'Aurora', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'group.sound': 'Sound', 'set.crossfade': 'Transition between tracks', 'cross.0': 'Off', 'cross.2': 'Short', 'cross.4': 'Medium', 'cross.8': 'Long', 'check.title': 'Sound check', 'check.note': 'Press play and listen for a few minutes. If you hear a skip, tell Blossom these numbers.', 'check.dropouts': 'Dropouts', 'check.gaps': 'Audio clock gaps', 'check.state': 'Audio', 'check.na': 'not measured in this browser', 'check.none': 'not started yet', 'check.interrupted': 'Interruptions', 'group.look': 'Look', 'group.sizes': 'Sizes and spacing', 'group.phone': 'Phone and Sonos', 'meta': 'Layer noise and music. Make your own mix, right in your browser.', 'beat.Alpha': 'Alpha', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'library.title': 'Library', 'library.sub': 'Music from Ektoplazm under Creative Commons licenses.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', },
+      'settings': 'Settings', 'close': 'Close', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.ripples': 'Ripples', 'bg.fireflies': 'Fireflies', 'bg.constellation': 'Constellation', 'bg.aurora': 'Aurora', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'group.sound': 'Sound', 'set.crossfade': 'Transition between tracks', 'cross.0': 'Off', 'cross.2': 'Short', 'cross.4': 'Medium', 'cross.8': 'Long', 'check.title': 'Sound check', 'check.note': 'Press play and listen for a few minutes. If you hear a skip, tell Blossom these numbers.', 'check.dropouts': 'Dropouts', 'check.gaps': 'Audio clock gaps', 'check.state': 'Audio', 'check.na': 'not measured in this browser', 'check.none': 'not started yet', 'check.interrupted': 'Interruptions', 'group.look': 'Look', 'group.sizes': 'Sizes and spacing', 'group.phone': 'Phone and Sonos', 'meta': 'Layer noise and music. Make your own mix, right in your browser.', 'beat.Alpha': 'Alpha', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'library.title': 'Library', 'library.sub': 'Music from Ektoplazm under Creative Commons licenses.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', 'group.layout': 'Layout', 'set.layout': 'Home screen', 'layout.list': 'List', 'layout.tiles': 'Tiles', 'layout.compact': 'Compact', 'layout.large': 'Large', 'set.icons': 'Icons', 'icons.on': 'Show', 'icons.off': 'Hide', 'set.buttons': 'Buttons', 'buttons.round': 'Round', 'buttons.soft': 'Soft', 'buttons.square': 'Square', },
     es: {
       'title': 'alot — Combina sonidos. Crea tu propia mezcla.', 'skip': 'Saltar al contenido principal', 'playing': 'sonando',
       'noise': 'Ruido {c}', 'volume': 'Volumen', 'preset.label': 'Empieza con', 'shape': 'Da forma a tu sonido',
@@ -927,11 +964,11 @@
       'add.main': 'Elegir pistas', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Toca Aleatorio o elige en la Biblioteca', 'play': '▶ Reproducir', 'stop': '■ Detener', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
       'mix.sub': 'Ritmos binaurales mezclados con tus pistas y el ruido. Usa audífonos: cada oído recibe un tono ligeramente distinto.', 'mix.type': 'Tipo de ritmo', 'mix.rate': 'Frecuencia del ritmo', 'mix.pitch': 'Altura', 'mix.beats': 'Ritmos neuronales', 'mute': 'Silenciar', 'muted': 'Silenciado', 'aria.play.beats': 'Reproducir ritmos neuronales', 'aria.stop.beats': 'Detener ritmos neuronales',
       'tagline': '¿Qué necesitas ahora?', 'mode.sleep': 'Dormir', 'mode.sleep.d': 'Ambiente que se funde en ruido', 'mode.flow': 'Fluir', 'mode.flow.d': 'Downtempo constante', 'mode.run': 'Correr', 'mode.run.d': 'Mucha energía', 'mode.ground': 'Centrarse', 'mode.ground.d': 'Dub y ruido cálido', 'mode.meditate': 'Meditar', 'mode.meditate.d': 'Ambiente lento y espacioso', 'mode.love': 'Amor', 'mode.love.d': 'Lento, cálido, sensual', 'mode.customize': 'Personalizar', 'mode.next': 'Siguiente', 'mode.noise': 'Solo ruido', 'layer.noise': 'Ruido', 'layer.playlist': 'Lista', 'layer.beats': 'Ritmos', 'layer.configure': 'Configurar', 'playlist.hint': 'Toca Aleatorio para empezar', 'library.count': '{n} pistas', 'speaker.choose': 'Elegir bocina', 'projector': 'Proyector', 'projector.exit': 'Salir', 'proj.look': 'Visual', 'proj.silk': 'Seda', 'proj.aurora': 'Aurora', 'proj.bloom': 'Flor', 'proj.sync': 'Sincronía', 'proj.tap': 'Toca al ritmo', 'proj.flash': 'Destellos al ritmo', 'layer.shuffle': 'Aleatorio', 'layer.like': 'Me gusta', 'layer.dislike': 'No me gusta', 'ratings.note': 'Los me gusta y no me gusta se guardan con un ID aleatorio, no con tu nombre, para mejorar la lista.', 'library.credits': 'Créditos musicales', 'aria.play.music': 'Reproducir lista', 'aria.stop.music': 'Detener lista', 'layer.master': 'Volumen general', 'aria.play.mix': 'Reproducir mezcla', 'aria.stop.mix': 'Detener mezcla',
-      'settings': 'Ajustes', 'close': 'Cerrar', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.ripples': 'Ondas', 'bg.fireflies': 'Luciérnagas', 'bg.constellation': 'Constelación', 'bg.aurora': 'Aurora', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'group.sound': 'Sonido', 'set.crossfade': 'Transición entre pistas', 'cross.0': 'Sin transición', 'cross.2': 'Corta', 'cross.4': 'Media', 'cross.8': 'Larga', 'check.title': 'Prueba de sonido', 'check.note': 'Toca reproducir y escucha unos minutos. Si oyes un corte, dile estos números a Blossom.', 'check.dropouts': 'Cortes', 'check.gaps': 'Saltos del reloj de audio', 'check.state': 'Audio', 'check.na': 'no se mide en este navegador', 'check.none': 'aún no empieza', 'check.interrupted': 'Interrupciones', 'group.look': 'Apariencia', 'group.sizes': 'Tamaños y espacio', 'group.phone': 'Teléfono y Sonos', 'meta': 'Combina ruido y música. Crea tu propia mezcla en tu navegador.', 'beat.Alpha': 'Alfa', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'library.title': 'Biblioteca', 'library.sub': 'Música de Ektoplazm con licencias Creative Commons.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', }
+      'settings': 'Ajustes', 'close': 'Cerrar', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.ripples': 'Ondas', 'bg.fireflies': 'Luciérnagas', 'bg.constellation': 'Constelación', 'bg.aurora': 'Aurora', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'group.sound': 'Sonido', 'set.crossfade': 'Transición entre pistas', 'cross.0': 'Sin transición', 'cross.2': 'Corta', 'cross.4': 'Media', 'cross.8': 'Larga', 'check.title': 'Prueba de sonido', 'check.note': 'Toca reproducir y escucha unos minutos. Si oyes un corte, dile estos números a Blossom.', 'check.dropouts': 'Cortes', 'check.gaps': 'Saltos del reloj de audio', 'check.state': 'Audio', 'check.na': 'no se mide en este navegador', 'check.none': 'aún no empieza', 'check.interrupted': 'Interrupciones', 'group.look': 'Apariencia', 'group.sizes': 'Tamaños y espacio', 'group.phone': 'Teléfono y Sonos', 'meta': 'Combina ruido y música. Crea tu propia mezcla en tu navegador.', 'beat.Alpha': 'Alfa', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'library.title': 'Biblioteca', 'library.sub': 'Música de Ektoplazm con licencias Creative Commons.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', 'group.layout': 'Diseño', 'set.layout': 'Pantalla de inicio', 'layout.list': 'Lista', 'layout.tiles': 'Mosaico', 'layout.compact': 'Compacto', 'layout.large': 'Grande', 'set.icons': 'Íconos', 'icons.on': 'Mostrar', 'icons.off': 'Ocultar', 'set.buttons': 'Botones', 'buttons.round': 'Redondos', 'buttons.soft': 'Suaves', 'buttons.square': 'Cuadrados', }
   };
   var SETTINGS_STORE = 'alot.settings.v1';
   var BN_TOUCH = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
-  var SETTINGS_DEFAULT = { lang: 'es', layout: 'flow', bg: 'threads', accent: 'amber', keepAwake: BN_TOUCH, background: false, playlistLoop: true, crossfade: '4', textSize: 'm', sliderSize: 'm', controlSize: 'm', spacing: 'normal', panels: 'glass', bgLevel: 100, calm: false };
+  var SETTINGS_DEFAULT = { lang: 'es', layout: 'list', icons: 'on', buttons: 'round', bg: 'threads', accent: 'amber', keepAwake: BN_TOUCH, background: false, playlistLoop: true, crossfade: '4', textSize: 'm', sliderSize: 'm', controlSize: 'm', spacing: 'normal', panels: 'glass', bgLevel: 100, calm: false };
   var settings = Object.assign({}, SETTINGS_DEFAULT);
   try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_STORE)) || {}); } catch (e) { /* defaults */ }
   // Saved settings from before 2026-11 hold the old always-on default; a choice made after this sticks.
@@ -2948,7 +2985,12 @@
     }, 0);
     var root = document.documentElement;
     root.lang = settings.lang;
+    if (['list', 'tiles', 'compact', 'large'].indexOf(settings.layout) < 0) settings.layout = 'list';
+    if (['on', 'off'].indexOf(settings.icons) < 0) settings.icons = 'on';
+    if (['round', 'soft', 'square'].indexOf(settings.buttons) < 0) settings.buttons = 'round';
     root.setAttribute('data-layout', settings.layout);
+    root.setAttribute('data-icons', settings.icons);
+    root.setAttribute('data-buttons', settings.buttons);
     root.setAttribute('data-accent', settings.accent);
     root.setAttribute('data-text', settings.textSize);
     root.setAttribute('data-sliders', settings.sliderSize);
@@ -3455,6 +3497,15 @@
     document.getElementById('modeNext').disabled = !modeChapter;
     bnUpdateMediaSession();
   }
+  var MODE_GLYPHS = {
+    run: 'M5 7l5 5-5 5M12 7l5 5-5 5',
+    flow: 'M3 9c3-3 6 3 9 0s6-3 9 0M3 15c3-3 6 3 9 0s6-3 9 0',
+    ground: 'M3 18h18M5 18l5-8 3 4 2-3 4 7',
+    meditate: 'M18.5 9.5A7 7 0 1 1 13 5.1',
+    love: 'M12 19.5s-7-4.3-7-9.6A3.9 3.9 0 0 1 12 7.6a3.9 3.9 0 0 1 7 2.3c0 5.3-7 9.6-7 9.6z',
+    sleep: 'M19.5 14.5A7.8 7.8 0 1 1 9.5 4.5a6.2 6.2 0 0 0 10 10z',
+    noise: 'M3 12h2l2-5 2 10 2-8 2 6 2-4 2 3h3'
+  };
   function modeRender() {
     var list = document.getElementById('modeList');
     list.textContent = '';
@@ -3477,6 +3528,11 @@
       row.setAttribute('aria-describedby', desc.id);
       text.appendChild(name);
       text.appendChild(desc);
+      var glyph = document.createElement('span');
+      glyph.className = 'mode-glyph';
+      glyph.setAttribute('aria-hidden', 'true');
+      glyph.innerHTML = '<svg viewBox="0 0 24 24"><path d="' + (MODE_GLYPHS[mode.id] || MODE_GLYPHS.noise) + '"/></svg>';
+      row.appendChild(glyph);
       var icon = document.createElement('span');
       icon.className = 'mode-icon';
       icon.setAttribute('aria-hidden', 'true');
