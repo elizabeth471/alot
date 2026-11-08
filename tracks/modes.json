@@ -1,233 +1,6 @@
 {
  "modes": [
   {
-   "id": "sleep",
-   "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/arcs/night-arc-v1.m4a",
-   "loop": false,
-   "duration": 21600,
-   "music_until": 3600,
-   "chapters": [
-    {
-     "t": 0.0,
-     "id": "saluberrimae-time-is-a-flat-circle-ciernobiela",
-     "name": "Saluberrimae – Čiernobiela"
-    },
-    {
-     "t": 339.6,
-     "id": "saluberrimae-time-is-a-flat-circle-frozen",
-     "name": "Saluberrimae – Frozen"
-    },
-    {
-     "t": 652.8,
-     "id": "saluberrimae-time-is-a-flat-circle-gestonkenflapped",
-     "name": "Saluberrimae – Gestonkenflapped"
-    },
-    {
-     "t": 1014.8,
-     "id": "saluberrimae-time-is-a-flat-circle-jennifer-connelly",
-     "name": "Saluberrimae – Jennifer Connelly"
-    },
-    {
-     "t": 1538.4,
-     "id": "huuhaa-frostient-flake-genesis",
-     "name": "HuuHaa – Flake Genesis"
-    },
-    {
-     "t": 1792.4,
-     "id": "huuhaa-frostient-freezings-from-the-fractarctica",
-     "name": "HuuHaa – Freezings From the Fractarctica"
-    },
-    {
-     "t": 2298.4,
-     "id": "huuhaa-frostient-kryos-zero",
-     "name": "HuuHaa – Kryos Zero"
-    },
-    {
-     "t": 2633.4,
-     "id": "ajnia-elements-air",
-     "name": "Ajnia – Air"
-    },
-    {
-     "t": 3180.17,
-     "id": "ajnia-elements-earth",
-     "name": "Ajnia – Earth"
-    }
-   ]
-  },
-  {
-   "id": "flow",
-   "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/flow.m4a",
-   "loop": true,
-   "duration": 15979,
-   "chapters": [
-    {
-     "t": 0.0,
-     "id": "greatowl-lilia-sin-mi-hiu-si",
-     "name": "GreatOwl – Hiu Si"
-    },
-    {
-     "t": 277.78,
-     "id": "sephira-the-master-work-the-dissolution-dichotomy",
-     "name": "Sephira – The Dissolution Dichotomy"
-    },
-    {
-     "t": 829.96,
-     "id": "greatowl-lilia-sin-mi-xinopua",
-     "name": "GreatOwl – Xinopua"
-    },
-    {
-     "t": 1301.59,
-     "id": "greatowl-lilia-sin-mi-einimali",
-     "name": "GreatOwl – Einimali"
-    },
-    {
-     "t": 1932.76,
-     "id": "globular-holobiont-tabula-rasa",
-     "name": "Globular – Tabula Rasa"
-    },
-    {
-     "t": 2657.42,
-     "id": "sephira-the-master-work-dormant-fermentation",
-     "name": "Sephira – Dormant Fermentation"
-    },
-    {
-     "t": 3070.96,
-     "id": "globular-holobiont-and-it-speaks-of-everything",
-     "name": "Globular – ...and It Speaks of Everything"
-    },
-    {
-     "t": 3498.24,
-     "id": "globular-entangled-everything-for-the-time-being",
-     "name": "Globular – For The Time Being"
-    },
-    {
-     "t": 4052.77,
-     "id": "globular-entangled-everything-this-strange-attractor",
-     "name": "Globular – This Strange Attractor"
-    },
-    {
-     "t": 4642.13,
-     "id": "greatowl-lilia-sin-mi-kiu-sei-kai",
-     "name": "GreatOwl – Kiu Sei Kai"
-    },
-    {
-     "t": 5203.49,
-     "id": "sephira-the-master-work-double-distillation",
-     "name": "Sephira – Double Distillation"
-    },
-    {
-     "t": 5659.54,
-     "id": "sephira-the-master-work-cave-of-calcination",
-     "name": "Sephira – Cave Of Calcination"
-    },
-    {
-     "t": 5980.66,
-     "id": "sephira-the-master-work-self-separation",
-     "name": "Sephira – Self Separation"
-    },
-    {
-     "t": 6349.39,
-     "id": "sephira-the-master-work-conjunction-event",
-     "name": "Sephira – Conjunction Event"
-    },
-    {
-     "t": 6782.2,
-     "id": "globular-entangled-everything-dreamland-overflow",
-     "name": "Globular – Dreamland Overflow"
-    },
-    {
-     "t": 7290.4,
-     "id": "globular-entangled-everything-popping-out",
-     "name": "Globular – Popping Out"
-    },
-    {
-     "t": 7356.88,
-     "id": "globular-holobiont-an-upwards-curve-in-the-horizon",
-     "name": "Globular – An Upwards Curve in the Horizon"
-    },
-    {
-     "t": 8048.69,
-     "id": "globular-entangled-everything-total-perspective-vortex",
-     "name": "Globular – Total Perspective Vortex"
-    },
-    {
-     "t": 8698.42,
-     "id": "globular-holobiont-the-might-of-chondria",
-     "name": "Globular – The Might of Chondria"
-    },
-    {
-     "t": 9163.39,
-     "id": "greatowl-lilia-sin-mi-rakate",
-     "name": "GreatOwl – Rakate"
-    },
-    {
-     "t": 9702.62,
-     "id": "globular-holobiont-42",
-     "name": "Globular – [42]"
-    },
-    {
-     "t": 10342.03,
-     "id": "globular-entangled-everything-dasein",
-     "name": "Globular – Dasein"
-    },
-    {
-     "t": 10892.38,
-     "id": "sephira-the-master-work-coagulation-feat-josh-lambert-price",
-     "name": "Sephira – Coagulation (feat. Josh Lambert-Price)"
-    },
-    {
-     "t": 11289.92,
-     "id": "globular-holobiont-overcoming-occhiolism",
-     "name": "Globular – Overcoming Occhiolism"
-    },
-    {
-     "t": 11841.44,
-     "id": "globular-entangled-everything-the-chalice",
-     "name": "Globular – The Chalice"
-    },
-    {
-     "t": 12332.49,
-     "id": "globular-entangled-everything-be-patient-towards-what-is-unsolved-in-your-heart",
-     "name": "Globular – Be Patient Towards What Is Unsolved In Your Heart"
-    },
-    {
-     "t": 12529.92,
-     "id": "globular-holobiont-temple-of-the-pollinator",
-     "name": "Globular – Temple of the Pollinator"
-    },
-    {
-     "t": 13306.19,
-     "id": "globular-holobiont-emergent-resurgence",
-     "name": "Globular – Emergent Resurgence"
-    },
-    {
-     "t": 13762.03,
-     "id": "globular-entangled-everything-kaleidoscope-tribe",
-     "name": "Globular – Kaleidoscope Tribe"
-    },
-    {
-     "t": 14171.57,
-     "id": "greatowl-lilia-sin-mi-strijistela",
-     "name": "GreatOwl – Strijistela"
-    },
-    {
-     "t": 14618.95,
-     "id": "sephira-the-master-work-stranger-at-the-oasis",
-     "name": "Sephira – Stranger At The Oasis"
-    },
-    {
-     "t": 15047.21,
-     "id": "sephira-the-master-work-a-fitting-end",
-     "name": "Sephira – A Fitting End"
-    },
-    {
-     "t": 15511.72,
-     "id": "globular-entangled-everything-one-step-beyond",
-     "name": "Globular – One Step Beyond"
-    }
-   ]
-  },
-  {
    "id": "run",
    "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/run.m4a",
    "loop": true,
@@ -406,143 +179,403 @@
    ]
   },
   {
-   "id": "ground",
-   "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/ground.m4a",
+   "id": "flow",
+   "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/flow-v2.m4a",
    "loop": true,
-   "duration": 8533,
+   "duration": 11426,
    "chapters": [
     {
      "t": 0.0,
-     "id": "globular-holobiont-the-might-of-chondria",
-     "name": "Globular – The Might of Chondria"
+     "id": "globular-entangled-everything-this-strange-attractor",
+     "name": "Globular – This Strange Attractor"
     },
     {
-     "t": 464.97,
-     "id": "globular-holobiont-and-it-speaks-of-everything",
-     "name": "Globular – ...and It Speaks of Everything"
+     "t": 589.36,
+     "id": "globular-entangled-everything-the-chalice",
+     "name": "Globular – The Chalice"
     },
     {
-     "t": 892.25,
-     "id": "zoungla-there-will-be-dub-tune-out-the-world",
-     "name": "Zoungla – Tune Out The World"
+     "t": 1080.41,
+     "id": "saluberrimae-time-is-a-flat-circle-loophole",
+     "name": "Saluberrimae – Loophole"
     },
     {
-     "t": 1263.8,
+     "t": 1493.61,
+     "id": "globular-entangled-everything-for-the-time-being",
+     "name": "Globular – For The Time Being"
+    },
+    {
+     "t": 2048.14,
      "id": "globular-holobiont-an-upwards-curve-in-the-horizon",
      "name": "Globular – An Upwards Curve in the Horizon"
     },
     {
-     "t": 1955.61,
-     "id": "zoungla-there-will-be-dub-young-man-2",
-     "name": "Zoungla – Young Man 2"
+     "t": 2739.95,
+     "id": "globular-entangled-everything-one-step-beyond",
+     "name": "Globular – One Step Beyond"
     },
     {
-     "t": 2344.19,
-     "id": "globular-holobiont-emergent-resurgence",
-     "name": "Globular – Emergent Resurgence"
+     "t": 3201.4,
+     "id": "globular-holobiont-overcoming-occhiolism",
+     "name": "Globular – Overcoming Occhiolism"
     },
     {
-     "t": 2800.03,
-     "id": "zoungla-there-will-be-dub-sunday",
-     "name": "Zoungla – Sunday"
+     "t": 3752.92,
+     "id": "globular-entangled-everything-popping-out",
+     "name": "Globular – Popping Out"
     },
     {
-     "t": 3442.61,
-     "id": "zoungla-there-will-be-dub-deep-sea-dubbin",
-     "name": "Zoungla – Deep Sea Dubbin'"
+     "t": 3819.4,
+     "id": "globular-holobiont-the-might-of-chondria",
+     "name": "Globular – The Might of Chondria"
     },
     {
-     "t": 3989.85,
-     "id": "zoungla-there-will-be-dub-goodmorning-ozora",
-     "name": "Zoungla – Goodmorning Ozora"
+     "t": 4284.37,
+     "id": "globular-entangled-everything-dasein",
+     "name": "Globular – Dasein"
     },
     {
-     "t": 4554.78,
-     "id": "zoungla-there-will-be-dub-flower-sun",
-     "name": "Zoungla – Flower Sun"
+     "t": 4834.72,
+     "id": "globular-holobiont-and-it-speaks-of-everything",
+     "name": "Globular – ...and It Speaks of Everything"
     },
     {
-     "t": 5185.49,
-     "id": "zoungla-there-will-be-dub-homage-to-the-dub-masters",
-     "name": "Zoungla – Homage To The Dub Masters"
+     "t": 5262.0,
+     "id": "saluberrimae-time-is-a-flat-circle-gestonkenflapped",
+     "name": "Saluberrimae – Gestonkenflapped"
     },
     {
-     "t": 5394.76,
-     "id": "globular-holobiont-tabula-rasa",
-     "name": "Globular – Tabula Rasa"
-    },
-    {
-     "t": 6119.42,
+     "t": 5624.0,
      "id": "globular-holobiont-42",
      "name": "Globular – [42]"
     },
     {
-     "t": 6758.83,
-     "id": "zoungla-there-will-be-dub-day-moon",
-     "name": "Zoungla – Day Moon"
+     "t": 6263.41,
+     "id": "globular-entangled-everything-be-patient-towards-what-is-unsolved-in-your-heart",
+     "name": "Globular – Be Patient Towards What Is Unsolved In Your Heart"
     },
     {
-     "t": 7199.27,
+     "t": 6460.84,
+     "id": "sephira-the-master-work-the-dissolution-dichotomy",
+     "name": "Sephira – The Dissolution Dichotomy"
+    },
+    {
+     "t": 7013.02,
+     "id": "sephira-the-master-work-cave-of-calcination",
+     "name": "Sephira – Cave Of Calcination"
+    },
+    {
+     "t": 7334.14,
+     "id": "saluberrimae-time-is-a-flat-circle-ciernobiela",
+     "name": "Saluberrimae – Čiernobiela"
+    },
+    {
+     "t": 7673.74,
+     "id": "globular-entangled-everything-kaleidoscope-tribe",
+     "name": "Globular – Kaleidoscope Tribe"
+    },
+    {
+     "t": 8083.28,
+     "id": "globular-entangled-everything-dreamland-overflow",
+     "name": "Globular – Dreamland Overflow"
+    },
+    {
+     "t": 8591.48,
      "id": "globular-holobiont-temple-of-the-pollinator",
      "name": "Globular – Temple of the Pollinator"
     },
     {
-     "t": 7975.54,
-     "id": "globular-holobiont-overcoming-occhiolism",
-     "name": "Globular – Overcoming Occhiolism"
+     "t": 9367.75,
+     "id": "globular-entangled-everything-total-perspective-vortex",
+     "name": "Globular – Total Perspective Vortex"
+    },
+    {
+     "t": 10017.48,
+     "id": "saluberrimae-time-is-a-flat-circle-trapped-inside",
+     "name": "Saluberrimae – Trapped Inside"
+    },
+    {
+     "t": 10339.48,
+     "id": "saluberrimae-time-is-a-flat-circle-vecerna-ciga-na-balkone",
+     "name": "Saluberrimae – Večerná Ciga Na Balkóne"
+    },
+    {
+     "t": 10499.99,
+     "id": "sephira-the-master-work-a-fitting-end",
+     "name": "Sephira – A Fitting End"
+    },
+    {
+     "t": 10964.5,
+     "id": "globular-holobiont-emergent-resurgence",
+     "name": "Globular – Emergent Resurgence"
+    }
+   ]
+  },
+  {
+   "id": "ground",
+   "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/ground-v2.m4a",
+   "loop": true,
+   "duration": 4998,
+   "chapters": [
+    {
+     "t": 0.0,
+     "id": "saluberrimae-time-is-a-flat-circle-the-abyss",
+     "name": "Saluberrimae – The Abyss"
+    },
+    {
+     "t": 360.4,
+     "id": "zoungla-there-will-be-dub-goodmorning-ozora",
+     "name": "Zoungla – Goodmorning Ozora"
+    },
+    {
+     "t": 925.33,
+     "id": "zoungla-there-will-be-dub-young-man-2",
+     "name": "Zoungla – Young Man 2"
+    },
+    {
+     "t": 1313.91,
+     "id": "zoungla-there-will-be-dub-day-moon",
+     "name": "Zoungla – Day Moon"
+    },
+    {
+     "t": 1754.35,
+     "id": "zoungla-there-will-be-dub-homage-to-the-dub-masters",
+     "name": "Zoungla – Homage To The Dub Masters"
+    },
+    {
+     "t": 1963.62,
+     "id": "saluberrimae-time-is-a-flat-circle-jennifer-connelly",
+     "name": "Saluberrimae – Jennifer Connelly"
+    },
+    {
+     "t": 2487.22,
+     "id": "zoungla-there-will-be-dub-sunday",
+     "name": "Zoungla – Sunday"
+    },
+    {
+     "t": 3129.8,
+     "id": "zoungla-there-will-be-dub-tune-out-the-world",
+     "name": "Zoungla – Tune Out The World"
+    },
+    {
+     "t": 3501.35,
+     "id": "zoungla-there-will-be-dub-flower-sun",
+     "name": "Zoungla – Flower Sun"
+    },
+    {
+     "t": 4132.06,
+     "id": "zoungla-there-will-be-dub-deep-sea-dubbin",
+     "name": "Zoungla – Deep Sea Dubbin'"
+    },
+    {
+     "t": 4679.3,
+     "id": "saluberrimae-time-is-a-flat-circle-frozen",
+     "name": "Saluberrimae – Frozen"
     }
    ]
   },
   {
    "id": "meditate",
-   "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/meditate.m4a",
+   "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/meditate-v2.m4a",
    "loop": true,
-   "duration": 4810,
+   "duration": 6286,
    "chapters": [
     {
      "t": 0.0,
-     "id": "ajnia-elements-water",
-     "name": "Ajnia – Water"
-    },
-    {
-     "t": 523.64,
      "id": "ajnia-oasis-oasis",
      "name": "Ajnia – Oasis"
     },
     {
-     "t": 953.07,
-     "id": "ajnia-oasis-simoon",
-     "name": "Ajnia – Simoon"
+     "t": 429.43,
+     "id": "saluberrimae-time-is-a-flat-circle-time-is-a-flat-circle",
+     "name": "Saluberrimae – Time Is A Flat Circle"
     },
     {
-     "t": 1495.84,
-     "id": "ajnia-elements-air",
-     "name": "Ajnia – Air"
-    },
-    {
-     "t": 2042.61,
+     "t": 861.83,
      "id": "ajnia-oasis-entre-las-dunas",
      "name": "Ajnia – Entre Las Dunas"
     },
     {
-     "t": 2740.13,
-     "id": "ajnia-elements-ether",
-     "name": "Ajnia – Ether"
+     "t": 1559.35,
+     "id": "ajnia-elements-air",
+     "name": "Ajnia – Air"
     },
     {
-     "t": 3159.19,
-     "id": "ajnia-elements-fire",
-     "name": "Ajnia – Fire"
-    },
-    {
-     "t": 3654.78,
+     "t": 2106.12,
      "id": "ajnia-elements-earth",
      "name": "Ajnia – Earth"
     },
     {
-     "t": 4166.5,
+     "t": 2617.84,
+     "id": "ajnia-elements-fire",
+     "name": "Ajnia – Fire"
+    },
+    {
+     "t": 3113.43,
+     "id": "shinjibomb-shinjibomb-firefly-shinjibomb-s-serene-rework",
+     "name": "Atman Construct – Firefly (Shinjibomb's Serene Rework)"
+    },
+    {
+     "t": 3969.65,
      "id": "ajnia-oasis-la-gran-ruta-del-sur",
      "name": "Ajnia – La Gran Ruta Del Sur"
+    },
+    {
+     "t": 4607.21,
+     "id": "ajnia-elements-ether",
+     "name": "Ajnia – Ether"
+    },
+    {
+     "t": 5026.27,
+     "id": "ajnia-elements-water",
+     "name": "Ajnia – Water"
+    },
+    {
+     "t": 5549.91,
+     "id": "shinjibomb-shinjibomb-2019-neo-tokyo-x-los-angeles",
+     "name": "Shinjibomb – 2019 (Neo Tokyo X Los Angeles)"
+    }
+   ]
+  },
+  {
+   "id": "love",
+   "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/modes/love-v2.m4a",
+   "loop": true,
+   "duration": 7806,
+   "chapters": [
+    {
+     "t": 0.0,
+     "id": "ajnia-oasis-simoon",
+     "name": "Ajnia – Simoon"
+    },
+    {
+     "t": 542.77,
+     "id": "sephira-the-master-work-self-separation",
+     "name": "Sephira – Self Separation"
+    },
+    {
+     "t": 911.5,
+     "id": "greatowl-lilia-sin-mi-strijistela",
+     "name": "GreatOwl – Strijistela"
+    },
+    {
+     "t": 1358.88,
+     "id": "sephira-the-master-work-double-distillation",
+     "name": "Sephira – Double Distillation"
+    },
+    {
+     "t": 1814.93,
+     "id": "sephira-the-master-work-conjunction-event",
+     "name": "Sephira – Conjunction Event"
+    },
+    {
+     "t": 2247.74,
+     "id": "shinjibomb-shinjibomb-philae",
+     "name": "Shinjibomb – Philae"
+    },
+    {
+     "t": 2961.74,
+     "id": "greatowl-lilia-sin-mi-einimali",
+     "name": "GreatOwl – Einimali"
+    },
+    {
+     "t": 3592.91,
+     "id": "sephira-the-master-work-stranger-at-the-oasis",
+     "name": "Sephira – Stranger At The Oasis"
+    },
+    {
+     "t": 4021.17,
+     "id": "greatowl-lilia-sin-mi-hiu-si",
+     "name": "GreatOwl – Hiu Si"
+    },
+    {
+     "t": 4298.95,
+     "id": "sephira-the-master-work-coagulation-feat-josh-lambert-price",
+     "name": "Sephira – Coagulation (feat. Josh Lambert-Price)"
+    },
+    {
+     "t": 4696.49,
+     "id": "greatowl-lilia-sin-mi-kiu-sei-kai",
+     "name": "GreatOwl – Kiu Sei Kai"
+    },
+    {
+     "t": 5257.85,
+     "id": "greatowl-lilia-sin-mi-xinopua",
+     "name": "GreatOwl – Xinopua"
+    },
+    {
+     "t": 5729.48,
+     "id": "sephira-the-master-work-dormant-fermentation",
+     "name": "Sephira – Dormant Fermentation"
+    },
+    {
+     "t": 6143.02,
+     "id": "greatowl-lilia-sin-mi-rakate",
+     "name": "GreatOwl – Rakate"
+    },
+    {
+     "t": 6682.25,
+     "id": "saluberrimae-time-is-a-flat-circle-jesenne-prebudzanie-do-letneho-rana",
+     "name": "Saluberrimae – Jesenné Prebúdzanie Do Letného Rána"
+    },
+    {
+     "t": 7076.25,
+     "id": "globular-holobiont-tabula-rasa",
+     "name": "Globular – Tabula Rasa"
+    }
+   ]
+  },
+  {
+   "id": "sleep",
+   "file": "https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev/arcs/night-arc-v1.m4a",
+   "loop": false,
+   "duration": 21600,
+   "music_until": 3600,
+   "chapters": [
+    {
+     "t": 0.0,
+     "id": "saluberrimae-time-is-a-flat-circle-ciernobiela",
+     "name": "Saluberrimae – Čiernobiela"
+    },
+    {
+     "t": 339.6,
+     "id": "saluberrimae-time-is-a-flat-circle-frozen",
+     "name": "Saluberrimae – Frozen"
+    },
+    {
+     "t": 652.8,
+     "id": "saluberrimae-time-is-a-flat-circle-gestonkenflapped",
+     "name": "Saluberrimae – Gestonkenflapped"
+    },
+    {
+     "t": 1014.8,
+     "id": "saluberrimae-time-is-a-flat-circle-jennifer-connelly",
+     "name": "Saluberrimae – Jennifer Connelly"
+    },
+    {
+     "t": 1538.4,
+     "id": "huuhaa-frostient-flake-genesis",
+     "name": "HuuHaa – Flake Genesis"
+    },
+    {
+     "t": 1792.4,
+     "id": "huuhaa-frostient-freezings-from-the-fractarctica",
+     "name": "HuuHaa – Freezings From the Fractarctica"
+    },
+    {
+     "t": 2298.4,
+     "id": "huuhaa-frostient-kryos-zero",
+     "name": "HuuHaa – Kryos Zero"
+    },
+    {
+     "t": 2633.4,
+     "id": "ajnia-elements-air",
+     "name": "Ajnia – Air"
+    },
+    {
+     "t": 3180.17,
+     "id": "ajnia-elements-earth",
+     "name": "Ajnia – Earth"
     }
    ]
   },

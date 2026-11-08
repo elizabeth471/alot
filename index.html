@@ -585,6 +585,10 @@
     .proj-name { font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: 28px; }
     .proj-track { font-size: 14px; color: rgba(243,238,230,0.7); }
     .proj-modes, .proj-actions { flex-wrap: wrap; gap: 6px; }
+    .proj-controls { display: flex; flex-direction: column; gap: 10px; }
+    .proj-sync { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 14px; color: rgba(243,238,230,0.85); }
+    .proj-sync .bn-range { width: 220px; }
+    #projTapBtn[data-count]::after { content: ' · ' attr(data-count); }
     #projector .bn-chip { background: rgba(0,0,0,0.35); color: #f3eee6; border-color: rgba(243,238,230,0.3); }
     #projector .bn-chip[aria-pressed="true"] { border-color: #f2c48d; color: #f2c48d; }
     #speakerBtn[aria-pressed="true"] { text-decoration: underline; text-underline-offset: 4px; }
@@ -595,6 +599,7 @@
     #modeColors .bn-chip[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
     .mode-row { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 76px; padding: 12px var(--pad); border: 0; border-top: 1px solid var(--border); background: transparent; color: var(--text); font: inherit; text-align: left; cursor: pointer; }
     #modeList > .mode-row:first-child { border-top: 0; }
+    #modeList > .mode-row[data-mode="noise"] { border-top-width: 6px; border-top-color: rgba(14,11,9,0.55); } /* a utility, set slightly apart from the moods */
     .mode-text { flex: 1 1 auto; min-width: 0; }
     .mode-name { display: block; font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(21px * var(--text)); }
     .mode-desc { display: block; margin-top: 2px; font-size: calc(13px * var(--text)); color: var(--text-muted); }
@@ -630,7 +635,16 @@
   <canvas id="projCanvas" aria-hidden="true"></canvas>
   <div class="proj-ui" id="projUi">
     <div class="proj-now"><span class="proj-name" id="projName"></span><span class="proj-track" id="projTrack"></span></div>
-    <div class="bn-chips proj-modes" id="projModes" role="group"></div>
+    <div class="proj-controls">
+      <div class="bn-chips proj-modes" id="projModes" role="group"></div>
+      <div class="bn-chips proj-modes" id="projForms" role="group" data-t-aria="proj.look"></div>
+      <div class="proj-sync">
+        <label class="proj-sync-label" for="projSync"><span data-t="proj.sync">Sync</span> <span id="projSyncValue"></span></label>
+        <input class="bn-range" type="range" id="projSync" min="-50" max="400" step="5">
+        <button class="bn-chip" id="projTapBtn" data-t="proj.tap">Tap to the beat</button>
+        <button class="bn-chip" id="projFlashBtn" data-t="proj.flash">Flash beats</button>
+      </div>
+    </div>
     <div class="bn-chips proj-actions">
       <button class="bn-chip" id="projNext" data-t="mode.next">Next</button>
       <button class="bn-chip" id="projExit" data-t="projector.exit">Exit</button>
@@ -900,7 +914,7 @@
       'generate': '✦ Generate new version', 'surprise': '✧ Surprise me', 'prev': '↩ Previous', 'save': 'Save', 'save.version': 'Save version', 'cancel': 'Cancel', 'save.name': 'Name this version', 'saved': 'Saved versions', 'saved.empty': 'Versions you save will appear here.', 'toast.saved': 'Version saved', 'toast.deleted': 'Version deleted', 'undo': 'Undo', 'mix.your': 'Your mix', 'mix.n': 'Mix {n}', 'version.n': 'My mix {n}', 'aria.play.noise': 'Play noise', 'aria.stop.noise': 'Stop noise', 'aria.delete': 'Delete {n}',
       'add.main': 'Choose tracks', 'add.aria': 'Choose audio files: drag and drop or click to browse', 'tracks.list': 'Your tracks', 'tracks.empty': 'No tracks yet', 'tracks.emptymsg': 'Tap Shuffle, or choose from the Library', 'play': '▶ Play', 'stop': '■ Stop', 'delete': '✕ Delete', 'aria.play': 'Play {n}', 'aria.stop': 'Stop {n}', 'err.play': 'This browser can’t play that file', 'err.audio': 'That isn’t an audio file',
       'mix.sub': 'Binaural beats, mixed with your tracks and noise. Use headphones: each ear gets a slightly different tone.', 'mix.type': 'Beat type', 'mix.rate': 'Beat rate', 'mix.pitch': 'Pitch', 'mix.beats': 'Neural Beats', 'mute': 'Mute', 'muted': 'Muted', 'aria.play.beats': 'Play neural beats', 'aria.stop.beats': 'Stop neural beats',
-      'tagline': 'What do you need right now?', 'mode.sleep': 'Sleep', 'mode.sleep.d': 'Ambient, fading to noise', 'mode.flow': 'Flow', 'mode.flow.d': 'Steady downtempo', 'mode.run': 'Run', 'mode.run.d': 'High energy', 'mode.ground': 'Ground', 'mode.ground.d': 'Dub and warm noise', 'mode.meditate': 'Meditate', 'mode.meditate.d': 'Slow, spacious ambient', 'mode.customize': 'Customize', 'mode.next': 'Next', 'mode.noise': 'Noise only', 'layer.noise': 'Noise', 'layer.playlist': 'Playlist', 'layer.beats': 'Beats', 'layer.configure': 'Configure', 'playlist.hint': 'Tap Shuffle to start', 'library.count': '{n} tracks', 'speaker.choose': 'Choose speaker', 'projector': 'Projector', 'projector.exit': 'Exit', 'layer.shuffle': 'Shuffle', 'layer.like': 'Like', 'layer.dislike': 'Dislike', 'ratings.note': 'Likes and dislikes are saved with a random ID, not your name, to improve the playlist.', 'library.credits': 'Music credits', 'aria.play.music': 'Play playlist', 'aria.stop.music': 'Stop playlist', 'layer.master': 'Master volume', 'aria.play.mix': 'Play mix', 'aria.stop.mix': 'Stop mix',
+      'tagline': 'What do you need right now?', 'mode.sleep': 'Sleep', 'mode.sleep.d': 'Ambient, fading to noise', 'mode.flow': 'Flow', 'mode.flow.d': 'Steady downtempo', 'mode.run': 'Run', 'mode.run.d': 'High energy', 'mode.ground': 'Ground', 'mode.ground.d': 'Dub and warm noise', 'mode.meditate': 'Meditate', 'mode.meditate.d': 'Slow, spacious ambient', 'mode.love': 'Love', 'mode.love.d': 'Slow, warm, sensual', 'mode.customize': 'Customize', 'mode.next': 'Next', 'mode.noise': 'Noise only', 'layer.noise': 'Noise', 'layer.playlist': 'Playlist', 'layer.beats': 'Beats', 'layer.configure': 'Configure', 'playlist.hint': 'Tap Shuffle to start', 'library.count': '{n} tracks', 'speaker.choose': 'Choose speaker', 'projector': 'Projector', 'projector.exit': 'Exit', 'proj.look': 'Visual', 'proj.silk': 'Silk', 'proj.aurora': 'Aurora', 'proj.bloom': 'Bloom', 'proj.sync': 'Sync', 'proj.tap': 'Tap to the beat', 'proj.flash': 'Flash beats', 'layer.shuffle': 'Shuffle', 'layer.like': 'Like', 'layer.dislike': 'Dislike', 'ratings.note': 'Likes and dislikes are saved with a random ID, not your name, to improve the playlist.', 'library.credits': 'Music credits', 'aria.play.music': 'Play playlist', 'aria.stop.music': 'Stop playlist', 'layer.master': 'Master volume', 'aria.play.mix': 'Play mix', 'aria.stop.mix': 'Stop mix',
       'settings': 'Settings', 'close': 'Close', 'set.bg': 'Background', 'bg.threads': 'Threads', 'bg.stars': 'Stars', 'bg.mist': 'Mist', 'bg.ripples': 'Ripples', 'bg.fireflies': 'Fireflies', 'bg.constellation': 'Constellation', 'bg.aurora': 'Aurora', 'bg.still': 'Still', 'set.accent': 'Color', 'accent.amber': 'Amber', 'accent.rose': 'Rose', 'accent.sage': 'Sage', 'accent.sky': 'Sky', 'accent.lilac': 'Lilac', 'group.sound': 'Sound', 'set.crossfade': 'Transition between tracks', 'cross.0': 'Off', 'cross.2': 'Short', 'cross.4': 'Medium', 'cross.8': 'Long', 'check.title': 'Sound check', 'check.note': 'Press play and listen for a few minutes. If you hear a skip, tell Blossom these numbers.', 'check.dropouts': 'Dropouts', 'check.gaps': 'Audio clock gaps', 'check.state': 'Audio', 'check.na': 'not measured in this browser', 'check.none': 'not started yet', 'check.interrupted': 'Interruptions', 'group.look': 'Look', 'group.sizes': 'Sizes and spacing', 'group.phone': 'Phone and Sonos', 'meta': 'Layer noise and music. Make your own mix, right in your browser.', 'beat.Alpha': 'Alpha', 'set.reset': 'Reset settings', 'lang.aria': 'Language', 'set.phone': 'Phone and Sonos', 'set.keep': 'Keep screen on while playing', 'set.bgplay': 'Keep playing when the screen locks', 'set.bgnote': 'Plays a recording of the noise. Changes take a few seconds, volume uses the phone’s buttons, and neural beats stop when locked.', 'set.sonos': 'For Sonos: open Control Center, tap AirPlay and choose your Sonos speaker.', 'mini.aria': 'Quick playback controls', 'tracks.playlist': 'Loop playlist', 'tracks.next': '⏭ Next', 'library.title': 'Library', 'library.sub': 'Music from Ektoplazm under Creative Commons licenses.', 'library.all': 'Add all', 'library.add': '＋ Add', 'library.added': '✓ Added', 'library.making': 'Preparing…', 'set.text': 'Text size', 'set.sliders': 'Slider size', 'set.controls': 'Button size', 'size.s': 'Small', 'size.m': 'Medium', 'size.l': 'Large', 'size.xl': 'Extra large', 'set.spacing': 'Spacing', 'spacing.tight': 'Tight', 'spacing.normal': 'Normal', 'spacing.airy': 'Airy', 'set.panels': 'Panels', 'panels.clear': 'Clear', 'panels.glass': 'Glass', 'panels.solid': 'Solid', 'set.bglevel': 'Background brightness', 'set.calm': 'Less motion', },
     es: {
       'title': 'alot — Combina sonidos. Crea tu propia mezcla.', 'skip': 'Saltar al contenido principal', 'playing': 'sonando',
@@ -912,7 +926,7 @@
       'generate': '✦ Generar nueva versión', 'surprise': '✧ Sorpréndeme', 'prev': '↩ Anterior', 'save': 'Guardar', 'save.version': 'Guardar versión', 'cancel': 'Cancelar', 'save.name': 'Ponle nombre a esta versión', 'saved': 'Versiones guardadas', 'saved.empty': 'Las versiones que guardes aparecerán aquí.', 'toast.saved': 'Versión guardada', 'toast.deleted': 'Versión eliminada', 'undo': 'Deshacer', 'mix.your': 'Tu mezcla', 'mix.n': 'Mezcla {n}', 'version.n': 'Mi mezcla {n}', 'aria.play.noise': 'Reproducir ruido', 'aria.stop.noise': 'Detener ruido', 'aria.delete': 'Eliminar {n}',
       'add.main': 'Elegir pistas', 'add.aria': 'Elige archivos de audio: arrastra y suelta, o haz clic para buscar', 'tracks.list': 'Tus pistas', 'tracks.empty': 'Aún no hay pistas', 'tracks.emptymsg': 'Toca Aleatorio o elige en la Biblioteca', 'play': '▶ Reproducir', 'stop': '■ Detener', 'delete': '✕ Eliminar', 'aria.play': 'Reproducir {n}', 'aria.stop': 'Detener {n}', 'err.play': 'Este navegador no puede reproducir ese archivo', 'err.audio': 'Ese no es un archivo de audio',
       'mix.sub': 'Ritmos binaurales mezclados con tus pistas y el ruido. Usa audífonos: cada oído recibe un tono ligeramente distinto.', 'mix.type': 'Tipo de ritmo', 'mix.rate': 'Frecuencia del ritmo', 'mix.pitch': 'Altura', 'mix.beats': 'Ritmos neuronales', 'mute': 'Silenciar', 'muted': 'Silenciado', 'aria.play.beats': 'Reproducir ritmos neuronales', 'aria.stop.beats': 'Detener ritmos neuronales',
-      'tagline': '¿Qué necesitas ahora?', 'mode.sleep': 'Dormir', 'mode.sleep.d': 'Ambiente que se funde en ruido', 'mode.flow': 'Fluir', 'mode.flow.d': 'Downtempo constante', 'mode.run': 'Correr', 'mode.run.d': 'Mucha energía', 'mode.ground': 'Centrarse', 'mode.ground.d': 'Dub y ruido cálido', 'mode.meditate': 'Meditar', 'mode.meditate.d': 'Ambiente lento y espacioso', 'mode.customize': 'Personalizar', 'mode.next': 'Siguiente', 'mode.noise': 'Solo ruido', 'layer.noise': 'Ruido', 'layer.playlist': 'Lista', 'layer.beats': 'Ritmos', 'layer.configure': 'Configurar', 'playlist.hint': 'Toca Aleatorio para empezar', 'library.count': '{n} pistas', 'speaker.choose': 'Elegir bocina', 'projector': 'Proyector', 'projector.exit': 'Salir', 'layer.shuffle': 'Aleatorio', 'layer.like': 'Me gusta', 'layer.dislike': 'No me gusta', 'ratings.note': 'Los me gusta y no me gusta se guardan con un ID aleatorio, no con tu nombre, para mejorar la lista.', 'library.credits': 'Créditos musicales', 'aria.play.music': 'Reproducir lista', 'aria.stop.music': 'Detener lista', 'layer.master': 'Volumen general', 'aria.play.mix': 'Reproducir mezcla', 'aria.stop.mix': 'Detener mezcla',
+      'tagline': '¿Qué necesitas ahora?', 'mode.sleep': 'Dormir', 'mode.sleep.d': 'Ambiente que se funde en ruido', 'mode.flow': 'Fluir', 'mode.flow.d': 'Downtempo constante', 'mode.run': 'Correr', 'mode.run.d': 'Mucha energía', 'mode.ground': 'Centrarse', 'mode.ground.d': 'Dub y ruido cálido', 'mode.meditate': 'Meditar', 'mode.meditate.d': 'Ambiente lento y espacioso', 'mode.love': 'Amor', 'mode.love.d': 'Lento, cálido, sensual', 'mode.customize': 'Personalizar', 'mode.next': 'Siguiente', 'mode.noise': 'Solo ruido', 'layer.noise': 'Ruido', 'layer.playlist': 'Lista', 'layer.beats': 'Ritmos', 'layer.configure': 'Configurar', 'playlist.hint': 'Toca Aleatorio para empezar', 'library.count': '{n} pistas', 'speaker.choose': 'Elegir bocina', 'projector': 'Proyector', 'projector.exit': 'Salir', 'proj.look': 'Visual', 'proj.silk': 'Seda', 'proj.aurora': 'Aurora', 'proj.bloom': 'Flor', 'proj.sync': 'Sincronía', 'proj.tap': 'Toca al ritmo', 'proj.flash': 'Destellos al ritmo', 'layer.shuffle': 'Aleatorio', 'layer.like': 'Me gusta', 'layer.dislike': 'No me gusta', 'ratings.note': 'Los me gusta y no me gusta se guardan con un ID aleatorio, no con tu nombre, para mejorar la lista.', 'library.credits': 'Créditos musicales', 'aria.play.music': 'Reproducir lista', 'aria.stop.music': 'Detener lista', 'layer.master': 'Volumen general', 'aria.play.mix': 'Reproducir mezcla', 'aria.stop.mix': 'Detener mezcla',
       'settings': 'Ajustes', 'close': 'Cerrar', 'set.bg': 'Fondo', 'bg.threads': 'Hilos', 'bg.stars': 'Estrellas', 'bg.mist': 'Bruma', 'bg.ripples': 'Ondas', 'bg.fireflies': 'Luciérnagas', 'bg.constellation': 'Constelación', 'bg.aurora': 'Aurora', 'bg.still': 'Quieto', 'set.accent': 'Color', 'accent.amber': 'Ámbar', 'accent.rose': 'Rosa', 'accent.sage': 'Salvia', 'accent.sky': 'Cielo', 'accent.lilac': 'Lila', 'group.sound': 'Sonido', 'set.crossfade': 'Transición entre pistas', 'cross.0': 'Sin transición', 'cross.2': 'Corta', 'cross.4': 'Media', 'cross.8': 'Larga', 'check.title': 'Prueba de sonido', 'check.note': 'Toca reproducir y escucha unos minutos. Si oyes un corte, dile estos números a Blossom.', 'check.dropouts': 'Cortes', 'check.gaps': 'Saltos del reloj de audio', 'check.state': 'Audio', 'check.na': 'no se mide en este navegador', 'check.none': 'aún no empieza', 'check.interrupted': 'Interrupciones', 'group.look': 'Apariencia', 'group.sizes': 'Tamaños y espacio', 'group.phone': 'Teléfono y Sonos', 'meta': 'Combina ruido y música. Crea tu propia mezcla en tu navegador.', 'beat.Alpha': 'Alfa', 'set.reset': 'Restablecer ajustes', 'lang.aria': 'Idioma', 'set.phone': 'Teléfono y Sonos', 'set.keep': 'Mantener la pantalla encendida mientras suena', 'set.bgplay': 'Seguir sonando con la pantalla bloqueada', 'set.bgnote': 'Reproduce una grabación del ruido. Los cambios tardan unos segundos, el volumen se ajusta con los botones del teléfono y los ritmos neuronales se detienen al bloquear.', 'set.sonos': 'Para usar Sonos: abre el Centro de control, toca AirPlay y elige tu bocina Sonos.', 'mini.aria': 'Controles rápidos de reproducción', 'tracks.playlist': 'Repetir la lista', 'tracks.next': '⏭ Siguiente', 'library.title': 'Biblioteca', 'library.sub': 'Música de Ektoplazm con licencias Creative Commons.', 'library.all': 'Añadir todas', 'library.add': '＋ Añadir', 'library.added': '✓ Añadida', 'library.making': 'Preparando…', 'set.text': 'Tamaño del texto', 'set.sliders': 'Tamaño de los controles deslizantes', 'set.controls': 'Tamaño de los botones', 'size.s': 'Pequeño', 'size.m': 'Mediano', 'size.l': 'Grande', 'size.xl': 'Muy grande', 'set.spacing': 'Espaciado', 'spacing.tight': 'Compacto', 'spacing.normal': 'Normal', 'spacing.airy': 'Amplio', 'set.panels': 'Paneles', 'panels.clear': 'Transparentes', 'panels.glass': 'Cristal', 'panels.solid': 'Sólidos', 'set.bglevel': 'Brillo del fondo', 'set.calm': 'Menos movimiento', }
   };
   var SETTINGS_STORE = 'alot.settings.v1';
@@ -3532,55 +3546,105 @@
   }
 
   /* ═══════════════════════════════════════════
-     PROJECTOR: full-screen light that follows the sound.
-     Purposes: a small file worked out in advance (bass, mids, highs, beat, ten per second) is read at the
-     playing position, so the device analyses nothing and the sound path to AirPlay is untouched.
-     The mixer: its own analyser, already in the sound graph. Nothing playing: a slow drift.
-     Cost is held down: one shader pass at about half size, 30 frames a second, and it stops when the
-     projector closes or the tab is hidden. The page background pauses while the projector is up.
+     PROJECTOR: full-screen light that follows the music.
+     Purposes: analysis worked out in advance and read at the playing position, so the device analyses nothing
+     and the sound path to AirPlay is untouched: levels 40 times a second (bass, mids, highs, hit), every beat
+     with its strength, the tempo, and the musical moments (drops, calms).
+       · Light rises within one frame of a hit and fades slowly.
+       · Swells land on the real beats; the whole picture breathes once a bar (twice for Run) at the song's tempo.
+       · Colors lift on a drop, deepen on a calm, and turn a little at each new track: never on a timer.
+       · AirPlay/Sonos plays about 2 s late, so the picture waits for it; Sync nudges this, Tap sets it from taps.
+     The mixer: its own analyser, already in the sound graph. Nothing playing: slow breathing at rest pace.
+     Three visuals (Silk, Aurora, Bloom), each in the purpose's mood colors with the chosen accent as the light.
+     Cost: one shader pass at about half size, 30 frames a second, stopped when closed or the tab is hidden.
   ═══════════════════════════════════════════ */
   var projOn = false;
   var projEl = document.getElementById('projector');
   var projCanvas = document.getElementById('projCanvas');
   var projGl = null, projProg = null, projU = {};
   var projRaf = null, projLast = 0, projTime = 0, projIdleTimer = null;
-  var projEnv = {};              // url -> Uint8Array, or 'loading'
-  var projLevels = [0, 0, 0]; // bass, mids, highs, eased so light swells and settles rather than flickers
-  var projSlow = [0, 0];      // bass and mids eased over seconds: they steer zoom and pace, which must never jump
-  var projRing = 9, projRingPower = 0, projRingGap = 9, projDim = 0, projSpeed = 0;
-  var projColors = null, projFreq = null, projPrevBass = 0, projModeShown = null;
+  var projData = {};          // analysis base url -> { lv, beats, strength, moments } or 'loading' or null
+  var projLevels = [0, 0, 0]; // bass, mids, highs: fast to rise, slow to fade
+  var projSlow = [0, 0];      // bass and mids over seconds: they steer zoom and pace, which must never jump
+  var projSwell = 0, projBreath = 0, projLift = 0, projDeep = 0, projTurn = 0, projDim = 0, projSpeed = 0, projFlash = 0;
+  var projColors = null, projFreq = null, projPrevBass = 0, projModeShown = null, projLiveBeat = 0;
   var PROJ_LOOKS = {
-    // dark base, body, light; pace; beat rings (only where the music has a pulse worth showing)
-    sleep:      [[0.02, 0.03, 0.08], [0.13, 0.11, 0.32], [0.86, 0.56, 0.26], 0.45, 0],
-    flow:       [[0.01, 0.05, 0.06], [0.04, 0.34, 0.38], [0.92, 0.82, 0.52], 0.9, 1],
-    run:        [[0.09, 0.00, 0.05], [0.78, 0.08, 0.42], [1.00, 0.62, 0.16], 1.3, 1],
-    ground:     [[0.04, 0.03, 0.02], [0.22, 0.28, 0.12], [0.78, 0.46, 0.25], 0.7, 1],
-    meditate:   [[0.03, 0.02, 0.07], [0.30, 0.18, 0.50], [0.96, 0.76, 0.86], 0.5, 0],
-    brown:      [[0.05, 0.03, 0.015], [0.36, 0.20, 0.10], [0.92, 0.62, 0.36], 0.4, 0],
-    pink:       [[0.06, 0.02, 0.04], [0.46, 0.18, 0.30], [0.98, 0.76, 0.80], 0.4, 0],
-    white:      [[0.03, 0.035, 0.045], [0.30, 0.33, 0.38], [0.90, 0.92, 0.95], 0.4, 0],
-    mix:        [[0.05, 0.03, 0.02], [0.40, 0.22, 0.12], [0.95, 0.77, 0.55], 0.8, 1]
+    // dark base, body, the purpose's own light (blended under the chosen accent), pace, beats per breath
+    sleep:    [[0.015, 0.02, 0.06], [0.10, 0.10, 0.28], [0.80, 0.55, 0.32], 0.35, 4],
+    flow:     [[0.01, 0.04, 0.05], [0.04, 0.30, 0.34], [0.90, 0.82, 0.55], 0.8, 4],
+    run:      [[0.08, 0.00, 0.05], [0.72, 0.08, 0.40], [1.00, 0.60, 0.18], 1.2, 2],
+    ground:   [[0.035, 0.03, 0.015], [0.22, 0.27, 0.12], [0.80, 0.50, 0.28], 0.6, 4],
+    meditate: [[0.03, 0.02, 0.07], [0.28, 0.18, 0.48], [0.96, 0.78, 0.86], 0.4, 4],
+    love:     [[0.06, 0.01, 0.025], [0.46, 0.06, 0.15], [0.98, 0.64, 0.54], 0.45, 4],
+    brown:    [[0.05, 0.03, 0.015], [0.34, 0.19, 0.10], [0.92, 0.62, 0.36], 0.35, 4],
+    pink:     [[0.06, 0.02, 0.04], [0.44, 0.17, 0.29], [0.98, 0.76, 0.80], 0.35, 4],
+    white:    [[0.03, 0.035, 0.045], [0.28, 0.31, 0.36], [0.90, 0.92, 0.95], 0.35, 4],
+    mix:      [[0.05, 0.03, 0.02], [0.38, 0.21, 0.12], [0.95, 0.77, 0.55], 0.7, 4]
   };
+  var PROJ_ACCENTS = { amber: [0.95, 0.77, 0.55], rose: [0.96, 0.70, 0.75], sage: [0.73, 0.85, 0.71], sky: [0.68, 0.82, 0.95], lilac: [0.80, 0.72, 0.95] };
+  var PROJ_FORMS = ['silk', 'aurora', 'bloom'];
+  var PROJ_FORM_FOR_BG = { threads: 'silk', mist: 'silk', still: 'silk', aurora: 'aurora', ripples: 'bloom', stars: 'bloom', constellation: 'bloom', fireflies: 'bloom' };
+  var projStore = {};
+  try { projStore = JSON.parse(localStorage.getItem('alot.projector') || '{}') || {}; } catch (e) {}
+  function projSave() { try { localStorage.setItem('alot.projector', JSON.stringify(projStore)); } catch (e) {} }
+  function projForm() { return PROJ_FORMS.indexOf(projStore.form) >= 0 ? projStore.form : (PROJ_FORM_FOR_BG[settings.bg] || 'silk'); }
+  function projWireless() { return !!(modeAudio && modeAudio.webkitCurrentPlaybackTargetIsWireless); }
+  function projOffset() {
+    var key = projWireless() ? 'air' : 'here';
+    return typeof projStore[key] === 'number' ? projStore[key] : (key === 'air' ? 2 : 0);
+  }
+
   var PROJ_VERT = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
   var PROJ_FRAG = [
     'precision mediump float;',
-    'uniform vec2 r;uniform float t;uniform vec3 e;uniform vec2 sl;uniform vec3 c1,c2,c3;uniform float ring,ringP,dim;',
+    'uniform vec2 r;uniform float t,form,swell,breath,dim,flash;uniform vec3 e;uniform vec2 sl;uniform vec3 c1,c2,c3;',
     'float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
     'float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);',
     ' return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+1.),f.x),f.y);}',
     'float fbm(vec2 p){float s=0.,a=.5;for(int i=0;i<4;i++){s+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return s;}',
-    'void main(){',
-    ' vec2 uv=(gl_FragCoord.xy-.5*r)/r.y;',
-    ' vec2 p=uv*(1.7-.16*sl.x);',                                  // the light breathes closer with the bass, over seconds
+    // Silk: veils of light folding through each other
+    'vec3 silk(vec2 uv){',
+    ' vec2 p=uv*(1.7-.16*sl.x);',
     ' vec2 q=vec2(fbm(p+t*.05),fbm(p+vec2(5.2,1.3)-t*.04));',
     ' vec2 w=vec2(fbm(p+3.*q+vec2(1.7,9.2)+t*.07),fbm(p+3.*q+vec2(8.3,2.8)-t*.06));',
     ' float f=fbm(p+2.5*w);',
     ' vec3 col=mix(c1,c2,clamp(f*f*2.2,0.,1.));',
-    ' col=mix(col,c3,clamp(length(w)*.95-.38+.4*e.y,0.,1.));',      // mids open the bright folds
-    ' col+=c3*smoothstep(.55,.9,f)*(.08+.32*e.x);',                   // the brightest folds glow with the bass
-    ' col+=c2*.14*e.z*smoothstep(.35,.75,f);',                        // highs lift the mid-tones, softly
-    ' col+=c3*ringP*.5*smoothstep(.3,.85,f);',                       // a beat: the bright folds swell softly, everywhere at once
-    ' col*=(.55+.3*e.x+.3*f)*(1.-.5*dot(uv,uv))*dim;',
+    ' col=mix(col,c3,clamp(length(w)*.95-.4+.4*e.y,0.,1.)*.85);',
+    ' col+=c3*smoothstep(.55,.9,f)*(.06+.3*e.x+.45*swell);',
+    ' col+=c2*.14*e.z*smoothstep(.35,.75,f);',
+    ' return col*(.55+.25*e.x+.3*f);}',
+    // Aurora: curtains of light hanging from above, rippling sideways, rising with the bass
+    'vec3 aurora(vec2 uv){',
+    ' vec3 col=mix(c1*.6,c1*1.6+c2*.08,smoothstep(-.6,.6,uv.y));',
+    ' float glow=0.;',
+    ' for(int i=0;i<3;i++){float k=float(i);',
+    '  float x=uv.x*(1.1+k*.35)+k*2.7+t*.02*(1.+k*.3);',
+    '  float edge=-.32+.16*sin(x*1.3+t*.09+k*1.7)+.22*(fbm(vec2(x*1.2,t*.05+k))-.5)-.1*sl.x;',
+    '  float rays=.6+.4*sin(x*(17.+6.*k)+fbm(vec2(x*1.8,t*.1+k))*9.);',
+    '  float body=smoothstep(edge-.22,edge+.04,uv.y)*exp(-max(uv.y-edge,0.)*(2.2-.8*e.y))*(.35+.65*smoothstep(edge-.1,edge+.03,uv.y));',
+    '  glow+=body*(.45+.55*rays*rays)*(.75-k*.18);}',
+    ' col+=c2*glow*.9+c3*glow*glow*(.18+.32*e.x+.55*swell);',
+    ' col+=c2*.18*exp(-abs(uv.y+.45)*3.)*(.5+.5*e.x);',
+    ' col+=c3*.05*e.z*glow;',
+    ' return col;}',
+    // Bloom: a slow flower of light, six-fold, opening on the beat
+    'vec3 bloom(vec2 uv){',
+    ' float rr=length(uv);float a=atan(uv.y,uv.x)+t*.025;',
+    ' float s=1.0471976;a=mod(a,s);a=abs(a-s*.5);',
+    ' vec2 k=vec2(cos(a),sin(a))*rr*(2.6-.35*sl.x-.25*swell);',
+    ' float f=fbm(k+vec2(-t*.06,t*.02));',
+    ' float g=fbm(k*1.7+f*1.5+vec2(t*.03,0.));',
+    ' float petals=smoothstep(.25,.75,g)*smoothstep(1.25,.15,rr);',
+    ' vec3 col=mix(c1,c2,petals);',
+    ' col+=c3*smoothstep(.55,.85,g)*smoothstep(1.1,.1,rr)*(.1+.3*e.x+.5*swell);',
+    ' col+=c3*exp(-rr*5.)*(.12+.25*e.y+.35*swell);',
+    ' col+=c2*.1*e.z*petals;',
+    ' return col;}',
+    'void main(){',
+    ' vec2 uv=(gl_FragCoord.xy-.5*r)/r.y*(1.-.035*breath);',     // the picture breathes at the song's tempo
+    ' vec3 col=form<.5?silk(uv):form<1.5?aurora(uv):bloom(uv);',
+    ' col+=c3*flash*.6;',                                          // sync test: a clear flash on each beat
+    ' col*=(1.-.45*dot(uv,uv))*dim;',
     ' gl_FragColor=vec4(col,1.);',
     '}'
   ].join('\n');
@@ -3608,7 +3672,7 @@
     var loc = gl.getAttribLocation(prog, 'a');
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    ['r', 't', 'e', 'sl', 'c1', 'c2', 'c3', 'ring', 'ringP', 'dim'].forEach(function (k) { projU[k] = gl.getUniformLocation(prog, k); });
+    ['r', 't', 'form', 'swell', 'breath', 'dim', 'flash', 'e', 'sl', 'c1', 'c2', 'c3'].forEach(function (k) { projU[k] = gl.getUniformLocation(prog, k); });
     projGl = gl;
     projProg = prog;
     return true;
@@ -3621,35 +3685,49 @@
     projCanvas.height = Math.max(2, Math.round(h));
     if (projGl) projGl.viewport(0, 0, projCanvas.width, projCanvas.height);
   }
-  function projEnvUrl(file) {
-    return file.replace(/\/(modes|arcs)\/([a-z0-9-]+)\.m4a$/, '/modes/env/$2.bin');
-  }
-  function projEnvFor(file) {
-    var url = projEnvUrl(file);
-    var data = projEnv[url];
-    if (data === undefined) {
-      projEnv[url] = 'loading';
-      fetch(url).then(function (response) { return response.ok ? response.arrayBuffer() : null; })
-        .then(function (buffer) { projEnv[url] = buffer ? new Uint8Array(buffer) : null; })
-        .catch(function () { projEnv[url] = null; });
+  function projDataFor(file) {
+    var base = file.replace(/\/(modes|arcs)\/([a-z0-9-]+)\.m4a$/, '/modes/env/$2.v2');
+    var d = projData[base];
+    if (d === undefined) {
+      projData[base] = 'loading';
+      Promise.all([
+        fetch(base + '.bin').then(function (r) { return r.ok ? r.arrayBuffer() : null; }),
+        fetch(base + '.json').then(function (r) { return r.ok ? r.json() : null; })
+      ]).then(function (got) {
+        if (!got[0] || !got[1] || !Array.isArray(got[1].beats)) { projData[base] = null; return; }
+        var beats = new Float32Array(got[1].beats.length), strength = new Float32Array(got[1].beats.length);
+        got[1].beats.forEach(function (b, i) { beats[i] = b[0]; strength[i] = b[1] / 9; });
+        projData[base] = { lv: new Uint8Array(got[0]), beats: beats, strength: strength, moments: Array.isArray(got[1].moments) ? got[1].moments : [] };
+      }).catch(function () { projData[base] = null; });
       return null;
     }
-    return data && data !== 'loading' ? data : null;
+    return d && d !== 'loading' ? d : null;
   }
-  // What is playing, and how it moves right now: [bass, mids, highs, beat] from 0 to 1, plus which look to use.
+  function projLastIndex(list, time) { // the last beat at or before this time
+    var lo = 0, hi = list.length - 1, at = -1;
+    while (lo <= hi) { var mid = (lo + hi) >> 1; if (list[mid] <= time) { at = mid; lo = mid + 1; } else hi = mid - 1; }
+    return at;
+  }
+  // What is playing and how it moves right now.
   function projSource() {
+    var none = { look: modeCurrent && modeCurrent.files ? modeColor : (modeCurrent ? modeCurrent.id : 'mix'), v: [0.22, 0.22, 0.08], beat: null, dim: 0.8 };
     if (modeCurrent && modeAudio && !modeAudio.paused) {
       var look = modeCurrent.files ? modeColor : modeCurrent.id;
-      var env = projEnvFor(modeFile(modeCurrent));
-      var dim = modeCurrent.music_until && modeAudio.currentTime > modeCurrent.music_until ? 0.55 : 1;
-      if (!env) return { look: look, v: [0.4, 0.4, 0.3, 0], dim: dim };
-      var pos = modeAudio.currentTime * 10;
-      var i = Math.min(Math.floor(pos), env.length / 4 - 2);
-      var k = pos - i;
-      var v = [0, 0, 0, 0];
-      for (var c = 0; c < 3; c++) v[c] = (env[i * 4 + c] * (1 - k) + env[i * 4 + 4 + c] * k) / 255;
-      v[3] = Math.max(env[i * 4 + 3], env[i * 4 + 7] * k) / 255;
-      return { look: look, v: v, dim: dim };
+      var d = projDataFor(modeFile(modeCurrent));
+      var at = modeAudio.currentTime - projOffset(); // what the listener is hearing now
+      var dim = modeCurrent.music_until && at > modeCurrent.music_until ? 0.55 : 1;
+      if (!d || at < 0) return { look: look, v: [0.3, 0.3, 0.15], beat: null, dim: dim };
+      var pos = at * 40, frames = d.lv.length / 4;
+      var i = Math.max(0, Math.min(Math.floor(pos), frames - 2)), k = pos - i;
+      var v = [0, 0, 0];
+      for (var c = 0; c < 3; c++) v[c] = (d.lv[i * 4 + c] * (1 - k) + d.lv[i * 4 + 4 + c] * k) / 255;
+      var bi = projLastIndex(d.beats, at), beat = null;
+      if (bi >= 0 && bi + 1 < d.beats.length && d.beats[bi + 1] - d.beats[bi] < 1.6) {
+        beat = { since: at - d.beats[bi], count: bi + (at - d.beats[bi]) / (d.beats[bi + 1] - d.beats[bi]), strength: d.strength[bi] };
+      }
+      var moment = null;
+      for (var m = d.moments.length - 1; m >= 0; m--) if (d.moments[m][0] <= at) { moment = { kind: d.moments[m][1], since: at - d.moments[m][0] }; break; }
+      return { look: look, v: v, beat: beat, moment: moment, dim: dim, chapter: modeChapter ? modeCurrent.chapters.indexOf(modeChapter) : 0 };
     }
     if (mixGraph && mixIsPlaying()) {
       var an = mixGraph.analyser;
@@ -3662,75 +3740,157 @@
         return s / Math.max(1, b - a) / 255;
       }
       var bass = Math.min(1, band(20, 160) * 1.3);
-      var beat = Math.max(0, (bass - projPrevBass) * 6);
+      var now = performance.now() / 1000;
+      if (bass - projPrevBass > 0.08 && now - projLiveBeat > 0.3) projLiveBeat = now; // a live hit, heard as it happens
       projPrevBass = bass;
-      return { look: 'mix', v: [bass, Math.min(1, band(160, 2000) * 1.5), Math.min(1, band(2000, 6000) * 2), Math.min(1, beat)], dim: 1 };
+      return { look: 'mix', v: [bass, Math.min(1, band(160, 2000) * 1.5), Math.min(1, band(2000, 6000) * 2)],
+        beat: now - projLiveBeat < 1.5 ? { since: now - projLiveBeat, count: null, strength: 0.6 } : null, dim: 1 };
     }
-    return { look: modeCurrent && modeCurrent.files ? modeColor : (modeCurrent ? modeCurrent.id : 'mix'), v: [0.25, 0.25, 0.1, 0], dim: 0.8 };
+    return none;
   }
   function projFrame(now) {
     projRaf = null;
     if (!projOn || document.hidden) return;
     projRaf = requestAnimationFrame(projFrame);
-    if (now - projLast < 32) return; // about 30 a second: smooth for slow light, half the work of 60
+    if (now - projLast < 32) return; // about 30 a second: half the work of 60, still within a few hundredths of a hit
     var dt = Math.min(0.1, (now - (projLast || now)) / 1000);
     projLast = now;
     var src = projSource();
     var look = PROJ_LOOKS[src.look] || PROJ_LOOKS.mix;
     var calm = bnCalm();
-    if (!projColors) projColors = [look[0].slice(), look[1].slice(), look[2].slice()];
     function ease(from, to, rate) { return from + (to - from) * (1 - Math.exp(-dt * rate)); } // the same glide at any frame rate
-    // Colors cross over in about six seconds when the purpose or noise color changes.
-    for (var c = 0; c < 3; c++) for (var j = 0; j < 3; j++) projColors[c][j] = ease(projColors[c][j], look[c][j], 0.5);
-    // Light swells with the music and settles slowly: never quicker than about a quarter second, so nothing flickers.
-    for (var b = 0; b < 3; b++) projLevels[b] = ease(projLevels[b], src.v[b], src.v[b] > projLevels[b] ? 4 : 1.2);
+    // Levels: rise within a frame of a hit, fade over about a second.
+    for (var b = 0; b < 3; b++) projLevels[b] = ease(projLevels[b], src.v[b], src.v[b] > projLevels[b] ? (calm ? 8 : 40) : 1.4);
     projSlow[0] = ease(projSlow[0], src.v[0], 0.5);
     projSlow[1] = ease(projSlow[1], src.v[1], 0.4);
+    // Beat swell: worked out from the beat's exact time, so it peaks on the beat and fades over about 0.7 s.
+    var swell = 0, breathTarget;
+    if (src.beat) {
+      var s = src.beat.since;
+      swell = (0.35 + 0.65 * src.beat.strength) * Math.min(1, s / 0.03) * Math.exp(-s * 2.2);
+      if (calm) swell *= 0.4;
+    }
+    projSwell = swell > projSwell ? swell : ease(projSwell, swell, 6);
+    // Breathing: once a bar (twice for Run) at the song's own tempo; without a pulse, a calm six-second breath.
+    if (src.beat && src.beat.count !== null) breathTarget = 0.5 - 0.5 * Math.cos(2 * Math.PI * src.beat.count / look[4]);
+    else breathTarget = 0.5 - 0.5 * Math.cos(2 * Math.PI * now / 6000);
+    projBreath = ease(projBreath, breathTarget, 6);
+    // Musical moments: a drop lifts the colors toward the light for about half a minute; a calm deepens them.
+    var lift = src.moment && src.moment.kind === 'drop' && src.moment.since < 30 ? 1 : 0;
+    var deep = src.moment && src.moment.kind === 'calm' && src.moment.since < 25 ? 1 : 0;
+    projLift = ease(projLift, lift, 0.35);
+    projDeep = ease(projDeep, deep, 0.25);
+    projTurn = ease(projTurn, ((src.chapter || 0) % 3) - 1, 0.15); // each new track turns the colors a little
+    var accent = PROJ_ACCENTS[settings.accent] || PROJ_ACCENTS.amber;
+    var target = [look[0].slice(), look[1].slice(), [0, 0, 0]];
+    for (var j = 0; j < 3; j++) {
+      target[2][j] = look[2][j] * 0.25 + accent[j] * 0.75;             // the chosen accent is the light
+      target[1][j] = target[1][j] * (1 - 0.35 * projDeep) + target[2][j] * 0.22 * projLift;
+      target[0][j] = target[0][j] * (1 - 0.3 * projDeep);
+    }
+    // a gentle turn of the body color between neighbouring hues, track by track
+    var tb = target[1], turn = projTurn * 0.12;
+    target[1] = [tb[0] * (1 - Math.abs(turn)) + tb[turn > 0 ? 2 : 1] * Math.abs(turn), tb[1], tb[2] * (1 - Math.abs(turn)) + tb[turn > 0 ? 0 : 1] * Math.abs(turn)];
+    if (!projColors) projColors = [target[0].slice(), target[1].slice(), target[2].slice()];
+    for (var c = 0; c < 3; c++) for (var q = 0; q < 3; q++) projColors[c][q] = ease(projColors[c][q], target[c][q], 0.5);
     projDim = ease(projDim, src.dim, 0.45); // opens from black over a few seconds; Sleep dims the same way
     projSpeed = ease(projSpeed, look[3] * (calm ? 0.5 : 1), 0.3);
     projTime += dt * projSpeed * (0.8 + 0.4 * projSlow[1]);
-    // Beat swells: only where the music has a pulse, no more than one each 1.2 s; each rises softly and fades out.
-    projRingGap += dt;
-    if (!calm && look[4] && src.v[3] > 0.45 && projRingGap > 1.2) { projRing = 0; projRingGap = 0; projRingPower = 0.08 + 0.16 * src.v[3]; }
-    projRing += dt / 2.4;
-    var age = Math.min(projRing, 1);
-    var ringP = projRingPower * Math.min(1, age / 0.12) * Math.pow(1 - age, 2);
-    var ringR = 0;
+    var flash = 0;
+    if (projFlashUntil > now && src.beat) flash = Math.exp(-src.beat.since * 14);
+    projFlash = flash;
     var gl = projGl;
     gl.uniform2f(projU.r, projCanvas.width, projCanvas.height);
     gl.uniform1f(projU.t, projTime);
+    gl.uniform1f(projU.form, PROJ_FORMS.indexOf(projForm()));
+    gl.uniform1f(projU.swell, projSwell);
+    gl.uniform1f(projU.breath, calm ? projBreath * 0.4 : projBreath);
+    gl.uniform1f(projU.dim, projDim);
+    gl.uniform1f(projU.flash, projFlash);
     gl.uniform3f(projU.e, projLevels[0], projLevels[1], projLevels[2]);
     gl.uniform2f(projU.sl, projSlow[0], projSlow[1]);
     gl.uniform3fv(projU.c1, projColors[0]);
     gl.uniform3fv(projU.c2, projColors[1]);
     gl.uniform3fv(projU.c3, projColors[2]);
-    gl.uniform1f(projU.ring, ringR);
-    gl.uniform1f(projU.ringP, calm || projRing >= 1 ? 0 : ringP);
-    gl.uniform1f(projU.dim, projDim);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
-    var shown = (modeCurrent ? modeCurrent.id : '') + '|' + (modeChapter ? modeChapter.id : '') + '|' + modeColor;
+    var shown = (modeCurrent ? modeCurrent.id : '') + '|' + (modeChapter ? modeChapter.id : '') + '|' + modeColor + '|' + projWireless();
     if (shown !== projModeShown) { projModeShown = shown; projLabels(); }
+  }
+  function projChips(rowId, items, label, pressed, onPick) {
+    var row = document.getElementById(rowId);
+    if (row.children.length !== items.length) {
+      row.textContent = '';
+      items.forEach(function (item) {
+        var chip = document.createElement('button');
+        chip.className = 'bn-chip';
+        chip.setAttribute('data-id', item);
+        chip.addEventListener('click', function () { onPick(item); projWake(); });
+        row.appendChild(chip);
+      });
+    }
+    Array.prototype.forEach.call(row.children, function (chip) {
+      var id = chip.getAttribute('data-id');
+      chip.textContent = label(id);
+      chip.setAttribute('aria-pressed', String(pressed(id)));
+    });
   }
   function projLabels() {
     document.getElementById('projName').textContent = modeCurrent ? t('mode.' + modeCurrent.id) : mixIsPlaying() ? t('mode.customize') : '';
     document.getElementById('projTrack').textContent = modeChapter ? modeChapter.name : modeCurrent && modeCurrent.files ? t('color.' + modeColor) : '';
     document.getElementById('projNext').hidden = !(modeCurrent && modeChapter);
-    var row = document.getElementById('projModes');
-    if (row.children.length !== MODES.length) {
-      row.textContent = '';
-      MODES.forEach(function (mode) {
-        var chip = document.createElement('button');
-        chip.className = 'bn-chip';
-        chip.setAttribute('data-mode', mode.id);
-        chip.addEventListener('click', function () { if (modeCurrent === mode) modeStop(); else modeStart(mode); projWake(); });
-        row.appendChild(chip);
-      });
-    }
-    Array.prototype.forEach.call(row.children, function (chip) {
-      chip.textContent = t('mode.' + chip.getAttribute('data-mode'));
-      chip.setAttribute('aria-pressed', String(!!modeCurrent && modeCurrent.id === chip.getAttribute('data-mode')));
-    });
+    projChips('projModes', MODES.map(function (m) { return m.id; }), function (id) { return t('mode.' + id); },
+      function (id) { return !!modeCurrent && modeCurrent.id === id; },
+      function (id) { var mode = MODES.filter(function (m) { return m.id === id; })[0]; if (modeCurrent === mode) modeStop(); else modeStart(mode); });
+    projChips('projForms', PROJ_FORMS, function (id) { return t('proj.' + id); }, function (id) { return projForm() === id; },
+      function (id) { projStore.form = id; projSave(); projLabels(); });
+    var sync = document.getElementById('projSync');
+    sync.value = Math.round(projOffset() * 100);
+    if (typeof rangeText === 'function') rangeText();
+    projSyncText();
   }
+  function projSyncText() {
+    var v = projOffset();
+    document.getElementById('projSyncValue').textContent = (v >= 0 ? '+' : '') + v.toFixed(2) + ' s';
+  }
+  document.getElementById('projSync').addEventListener('input', function (e) {
+    projStore[projWireless() ? 'air' : 'here'] = Number(e.target.value) / 100;
+    projSave();
+    projSyncText();
+  });
+  // Flash beats: a clear flash on each beat for 20 s, so the eye can judge it against the ear.
+  var projFlashUntil = 0;
+  document.getElementById('projFlashBtn').addEventListener('click', function () {
+    projFlashUntil = projFlashUntil > performance.now() ? 0 : performance.now() + 20000;
+    projWake();
+  });
+  // Tap to the beat: each tap is matched to the beat it most likely heard; after four taps the delay is set.
+  var projTaps = [];
+  function projTap() {
+    if (!modeCurrent || !modeAudio || modeAudio.paused) return;
+    var d = projDataFor(modeFile(modeCurrent));
+    if (!d || !d.beats.length) return;
+    var heard = modeAudio.currentTime, guess = projOffset(), best = null;
+    var from = projLastIndex(d.beats, heard - 5);
+    for (var i = Math.max(0, from); i < d.beats.length && d.beats[i] <= heard + 0.6; i++) {
+      var off = heard - d.beats[i];
+      if (off >= -0.6 && off <= 5 && (best === null || Math.abs(off - guess) < Math.abs(best - guess))) best = off;
+    }
+    if (best === null) return;
+    var now = performance.now();
+    projTaps = projTaps.filter(function (x) { return now - x.at < 8000; });
+    projTaps.push({ at: now, off: best });
+    var btn = document.getElementById('projTapBtn');
+    btn.setAttribute('data-count', String(projTaps.length));
+    if (projTaps.length >= 4) {
+      var offs = projTaps.map(function (x) { return x.off; }).sort(function (a, b) { return a - b; });
+      projStore[projWireless() ? 'air' : 'here'] = Math.round(offs[offs.length >> 1] * 100) / 100;
+      projSave();
+      projLabels();
+    }
+  }
+  document.getElementById('projTapBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); projTap(); projWake(); });
+  document.getElementById('projTapBtn').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); projTap(); } });
+
   function projWake() {
     projEl.classList.remove('idle');
     clearTimeout(projIdleTimer);
@@ -3803,7 +3963,8 @@
     projWake();
     if (e.key === 'Escape') { projClose(); e.preventDefault(); }
     else if (e.key === 'ArrowRight' && modeCurrent && modeChapter) { modeSkip(modeChapter); e.preventDefault(); }
-    else if (e.key === ' ' && e.target === document.body || e.key === ' ' && e.target === projEl) {
+    else if ((e.key === 't' || e.key === 'T') && e.target.tagName !== 'INPUT') { projTap(); e.preventDefault(); }
+    else if (e.key === ' ' && (e.target === document.body || e.target === projEl)) {
       if (modeCurrent) { projLastMode = modeCurrent; modeStop(); } else if (projLastMode || MODES[0]) modeStart(projLastMode || MODES[0]);
       e.preventDefault();
     }
