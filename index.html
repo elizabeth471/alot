@@ -492,6 +492,26 @@
     .sheet-group summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
     .sheet-group .sheet-label { margin: 16px 0 10px; font-size: calc(15px * var(--text)); color: var(--text-mid); }
     .sheet-group .sheet-label:first-of-type { margin-top: 8px; }
+    /* Settings: one label style everywhere (group headings stay serif), and option buttons in an even grid so
+       columns line up whatever is selected or opened. */
+    #settings .sheet-label, #settings .bn-label, #settings .bn-slider-name, #settings .sheet-range > span, #settings .switch > span, #settings .beats-switch > span {
+      font-family: inherit; font-size: calc(14px * var(--text)); font-weight: 600; letter-spacing: 0.01em; color: var(--text-mid); }
+    #settings .sheet-label, #settings .bn-label { margin: 20px 0 10px; }
+    #settings .sheet-group > .sheet-label:first-of-type, #settings .sheet-group > .bn-label:first-of-type { margin-top: 6px; }
+    #settings .sheet-group .bn-chips { display: grid; grid-template-columns: repeat(auto-fill, minmax(calc(118px * var(--text)), 1fr)); gap: 8px; flex-wrap: nowrap; }
+    #settings .sheet-group .bn-chips .bn-chip { width: 100%; min-width: 0; justify-content: center; padding-left: 8px; padding-right: 8px; white-space: nowrap; }
+    /* no lonely last button: groups of three sit three across; five (the colors) three and two */
+    #settings .sheet-group .bn-chips:has(> :nth-child(3):last-child), #settings .sheet-group .bn-chips:has(> :nth-child(5):last-child) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    #settings .sheet-range { margin-top: 20px; }
+    #settings .sheet-range > span { display: block; margin-bottom: 10px; }
+    #settings .switch { min-height: 52px; }
+    #settings .beats-switch { margin-top: 22px; }
+    #settings .beats-volume { display: block; margin-top: 12px; }
+    #settings .sheet-note { margin: 10px 0 0; }
+    #settings .sheet-group[open] > :not(summary) { animation: sheetIn 0.28s ease both; }
+    @keyframes sheetIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+    :root[data-calm="true"] #settings .sheet-group[open] > :not(summary) { animation: none; }
+    @media (prefers-reduced-motion: reduce) { #settings .sheet-group[open] > :not(summary) { animation: none; } }
     .bn-btn { font-family: ui-serif, Georgia, 'Iowan Old Style', serif; font-size: calc(15px * var(--text)); font-weight: 400; }
     .bn-hint { display: block; margin: 0; }
     #toastBox { bottom: calc(160px + env(safe-area-inset-bottom)); }
@@ -603,7 +623,7 @@
     #modeColors .bn-chip[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
     .mode-row { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 76px; padding: 12px var(--pad); border: 0; border-top: 1px solid var(--border); background: transparent; color: var(--text); font: inherit; text-align: left; cursor: pointer; }
     #modeList > .mode-row:first-child { border-top: 0; }
-    #modeList > .mode-row[data-mode="noise"] { border-top-width: 6px; border-top-color: rgba(14,11,9,0.55); } /* a utility, set slightly apart from the moods */
+    #modeList > .mode-row[data-mode="noise"] { box-shadow: inset 0 5px 0 rgba(14,11,9,0.45); } /* a utility, set slightly apart from the moods, without changing the row's height */
     .mode-text { flex: 1 1 auto; min-width: 0; }
     .mode-glyph { flex: 0 0 auto; display: flex; width: 28px; height: 28px; color: var(--accent); opacity: 0.85; }
     .mode-glyph svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
@@ -654,7 +674,9 @@
     #layerMusic .layer-types { flex-wrap: wrap; gap: 6px; overflow: visible; }
     #layerMusic .layer-types .bn-chip { padding: 0 11px; font-size: calc(14px * var(--text)); }
     /* The hint may take two lines; track names stay on one */
-    .layer-pick.is-hint { white-space: normal; line-height: 1.25; }
+    .layer-pick.is-hint { white-space: nowrap; }
+    /* on a phone the hint gets its own line, lined up under the layer's name, instead of wrapping beside it */
+    @media (max-width: 480px) { .layer-top:has(.is-hint) { flex-wrap: wrap; } .layer-pick.is-hint { order: 9; flex-basis: 100%; padding-left: calc(var(--layer-toggle, 44px) + 12px); margin-top: -6px; } }
     /* The small play button keeps clear of the list's play and remove buttons */
     #bnMini { left: calc(16px + env(safe-area-inset-left)); right: auto; }
 </style>
@@ -782,15 +804,14 @@
           <input class="bn-range" type="range" id="mixPitch" min="100" max="400">
         </div>
       </div>
-      <input class="bn-range" type="range" id="mixBeats" min="0" max="100" aria-labelledby="beatsLabel">
-          <div class="beats-switch">
-            <span id="beatsLabel" data-t="mix.beats">Neural Beats</span>
-            <button class="take-btn mix-toggle" id="mixBeatsBtn" aria-pressed="false">■</button>
-          </div>
+      <div class="beats-switch">
+        <span id="beatsLabel" data-t="mix.beats">Neural Beats</span>
+        <button class="take-btn mix-toggle" id="mixBeatsBtn" aria-pressed="false">■</button>
+      </div>
+      <input class="bn-range beats-volume" type="range" id="mixBeats" min="0" max="100" aria-labelledby="beatsLabel">
     </details>
     <details class="sheet-group">
       <summary data-t="group.phone"></summary>
-    <div class="sheet-label" data-t="set.phone">Phone and Sonos</div>
     <label class="switch"><span data-t="set.keep">Keep screen on while playing</span><input type="checkbox" role="switch" id="setKeep"><i aria-hidden="true"></i></label>
     <label class="switch"><span data-t="set.bgplay">Keep playing when the screen locks</span><input type="checkbox" role="switch" id="setBackground"><i aria-hidden="true"></i></label>
     <p class="sheet-note" data-t="set.bgnote"></p>
