@@ -1,42 +1,46 @@
 # alot
 
-Layer noise and music in the browser. Live: https://alot-indol.vercel.app (Spanish by default, EN/ES toggle at the top).
+Sound for what you need right now: purposes with curated music and noise, a mixer, and a projector mode. Live: https://alot-indol.vercel.app (Spanish by default, EN/ES at the top).
 
 ## Use it
-Open the link in a phone or computer browser. There is nothing to install and no sign-in.
+Open the link in a phone or computer browser. Nothing to install, no sign-in.
 
-- **Purposes:** Sleep, Flow, Ground and Meditate on the main screen. Tap one to play its pre-mixed stream. Like, Dislike and Next act on the track playing. Votes count per purpose.
-- **Choose speaker** (top of the page) opens the AirPlay list where the browser offers it. Sonos through AirPlay works with these streams on an iPhone, per Ely on 2026-11-06.
-- **Customize** opens the mixer: noise, playlist with Shuffle, and one Play for both. Noise colors are in the Library tab under Configure. AirPlay carries one stream, so through a speaker the mixer's noise and music do not play together.
-- **Settings (gear):** beats, crossfade, screen and phone options.
+- **Purposes**, from most energy to least: **Run, Flow, Ground, Meditate, Love, Sleep**, then **Noise only**. Tap one to play its pre-mixed stream; tap again to stop. Like, Dislike and Next act on the track playing.
+  - **Noise only** plays brown, pink or white noise on its own, one seamless hour-long loop per color.
+  - **Sleep** is the Night Arc: music fading out over the first hour, then noise to six hours.
+- **Choose speaker** (top) opens the AirPlay list where the browser offers it. Every purpose is one stream, so it carries to Sonos through AirPlay.
+- **Projector** (top, on computers and large screens): full-screen light that follows the music. Three visuals (Silk, Aurora, Bloom), the purpose's mood colors with your accent color as the light. Esc exits, Space plays or stops, → skips a track.
+  - **Sync:** AirPlay and Sonos play about 2 s late, so the picture waits for them. Nudge with the Sync slider, press **Tap to the beat** (or **T**) four times on the kick, or use **Flash beats** to compare by eye. Off with Less motion.
+- **Customize** opens the mixer: generated noise, a playlist with Shuffle, one Play for both. AirPlay carries one stream, so through a speaker the mixer's noise and music do not play together.
+- **Settings (gear):** background, accent color, **Layout** (home screen List, Tiles, Compact or Large; icons; button shape), sizes, sound and phone options.
 
 ## Code
-- Work is on branch **`revive-noise-studio`**. `main` is older and is not what is live.
-- `index.html` is the whole app. `tracks/manifest.json` lists the music. `credits.html` is generated.
+- Work is on branch **`revive-noise-studio`**; `main` is updated from it when GitHub Pages is off (see below).
+- `index.html` is the whole app, plain HTML, CSS and JavaScript with no build step. `tracks/manifest.json` lists the library; `tracks/modes.json` lists the purpose streams and their chapters. `credits.html` is generated.
 - Publish from this folder only: `vercel deploy --prod --yes` (Vercel project `teamblossom/alot`). Run the tests first; a push alone does not publish.
 
 ## Music
-- 100 tracks from 15 Ektoplazm releases, Creative Commons, loudness adjusted. Treat all of them as **non-commercial**. Credits and licenses: `credits.html`.
-- Files are streamed from Cloudflare R2, bucket `alot-music`, account teamblossom.ops@gmail.com. Public address: https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev (rate-limited by Cloudflare; needs a real domain before alot is promoted).
-- Allowed web addresses for streaming are set in the bucket's CORS policy: the live site and `127.0.0.1:8765`/`localhost:8765`.
-- `tools/` holds the download, encode, upload and publish scripts. Audio files are not in git. The scripts expect `~/music-pipeline/ektoplazm` and were written for one Mac, so paths may need changing.
+- 100 tracks from 15 Ektoplazm releases, Creative Commons, evened out in loudness. Treat all of them as **non-commercial**. Credits and licenses: `credits.html`.
+- Streamed from Cloudflare R2, bucket `alot-music`, account teamblossom.ops@gmail.com: https://pub-dfe2dc87a34d4016a8782237145e0938.r2.dev (rate-limited by Cloudflare; needs a real domain before alot is promoted). Allowed sites are set in the bucket's CORS policy.
+- `tools/` holds the download, encode, analysis, mix, upload and publish scripts. Audio files are not in git. The scripts expect `~/music-pipeline/ektoplazm` and were written for one Mac.
 
-## Purpose mixes
-`tools/mode_mix.py` renders one file per purpose and writes `tracks/modes.json`, whose chapters tell the app which track is playing. Sleep is the Night Arc from `tools/night_arc.py`: music to 45 minutes, fading out by 60, then noise to 6 hours. The track lists are a first draft from tempo and album, and need a person's ears. Run waits for faster music.
+## How the purposes are made
+- `tools/track_features.py` measures every track: beat clarity, share of drums, brightness, bass, loudness, punch.
+- `tools/mode_mix.py` picks each purpose's tracks from those measurements (each track belongs to one purpose; Sleep keeps the Night Arc), crossfades them into one file per purpose, and writes `modes.json`. Re-rendered mixes get a new file name (`-v2`), because files are cached for a year.
+  - Meditate: no drums, hardly any beat. Love: slow, warm, deep bass, few drums, quietest at both ends. Flow: a steady, clear beat. Ground: dub and bass. Run: psytrance climbing to drum and bass.
+- `tools/mode_envelope.py` analyses each mix for the projector: levels 40 times a second, every beat with its strength, the tempo, and drops and calms. Files: `modes/env/<mix>.v2.bin` and `.v2.json` on R2.
 
 ## Ratings
-- **Like:** marks the track; it comes up about 3x sooner in shuffles on that device. Tap again to take it back.
-- **Dislike:** skips to the next track, removes it from the list, and keeps it out of shuffles on that device. Undo reverses it; adding it again from the Library clears it.
-- Votes in a purpose are stored as `purpose--track` and only affect that purpose's mix. Votes go to a Cloudflare Worker and D1 database (`worker/`, `alot-ratings`, account teamblossom.ops@gmail.com) with a random device ID, the track and the vote. No names, emails or IP addresses are stored. The address is write-only. Votes send only on a tap, on load if some are waiting, or on reconnecting.
-- Shared changes need a person's review. `tools/alot_ratings.py` shows them; `--apply` saves them; then run `tools/ektoplazm_publish.py`, test, and publish. Rules: remove at 2 or more dislikes with more dislikes than likes; favor when likes outnumber dislikes; otherwise no change.
+- **Like** marks the track for that purpose; **Dislike** skips it and keeps it skipped there on that device. Votes are stored as `purpose--track`.
+- Votes go to a Cloudflare Worker and D1 database (`worker/`, `alot-ratings`) with a random device ID, the track and the vote. No names, emails or IP addresses. The address is write-only.
+- Changing the shared mixes needs a person's review: `tools/alot_ratings.py` shows the votes; `--apply` saves the changes. Rules: remove at 2 or more dislikes with more dislikes than likes; favor when likes outnumber dislikes; otherwise no change.
 
 ## Battery
-alot runs all night. No endless animation, polling or idle timers. `tests/overnight.py` fails if idle playback uses over 10% of a processor core.
+alot runs all night: nothing animates, polls or wakes on a timer while idle. The projector draws only while open (about 18% of a core) and frees its graphics memory when closed. Tests fail if idle playback uses over 10% of a core.
 
 ## Tests
-Browser tests using Playwright, in `tests/`. Some paths are written for the original Mac. Example: `python tests/modes.py https://alot-indol.vercel.app/?lang=en`. Before publishing: `gate.py` (takes the Chrome path), then `audit.py`, `modes.py`, `layers.py`, `stream.py`, `overnight.py`, `speaker.py`, `locked_screen.py`, `single_player.py`.
+Browser tests with Playwright in `tests/`; some paths are written for the original Mac. Before publishing: `gate.py` (takes the Chrome path), `audit.py` (Chrome path and URL, `#mix`), `modes.py` and `projector.py` (URL with `?lang=en`), `layers.py`, `speaker.py`, `stream.py` (URL with `?lang=en#mix`), plus `overnight.py`, `locked_screen.py`, `single_player.py`.
 
-## Not verified
-- Real overnight battery life, the music and noise balance by ear, and the draft purpose lists.
-- iPhone, AirPlay and Sonos: Ely reported them working on 2026-11-06, on her devices only. Flow, Ground and Meditate are new since that report.
+## Not yet verified
+- By ear: the curated purpose lists and the music and noise balance. Real overnight battery on a phone. The projector on a real projector with Sonos.
 - Spanish needs a native read. The name "alot" has not been cleared. Music rights need an attorney's look before any commercial use.

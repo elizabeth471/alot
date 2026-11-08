@@ -572,6 +572,10 @@
     /* Projector: a bigger-screen feature, so the button only shows where there is room for it. */
     #projectorBtn { display: none; }
     @media (min-width: 700px) and (hover: hover) { #projectorBtn { display: inline-flex; } }
+    #projectorBtn { align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border: 1px solid var(--border); border-radius: 999px; background: rgba(14,11,9,0.5); }
+    #projectorBtn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; }
+    #projectorBtn:hover { border-color: var(--accent); }
+    :root[data-buttons="soft"] #projectorBtn { border-radius: 12px; } :root[data-buttons="square"] #projectorBtn { border-radius: 4px; }
     #projector { position: fixed; inset: 0; z-index: 100; background: #000; color: #f3eee6; }
     #projector[hidden] { display: none; }
     #projector { transition: opacity 0.7s ease; }
@@ -685,7 +689,7 @@
 <a href="#main" class="skip-link" data-t="skip">Skip to main content</a>
 
 <div class="top-tools">
-  <button class="layer-action" id="projectorBtn" data-t="projector">Projector</button>
+  <button class="layer-action" id="projectorBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h13v8H3zM16 11l5-3v8l-5-3"/></svg><span data-t="projector">Projector</span></button>
   <button class="layer-action" id="speakerBtn" aria-pressed="false" data-t="speaker.choose" hidden>Choose speaker</button>
   <div class="lang-toggle" role="group" data-t-aria="lang.aria">
     <button data-set="lang:es" aria-pressed="true">ES</button>
@@ -968,7 +972,7 @@
   };
   var SETTINGS_STORE = 'alot.settings.v1';
   var BN_TOUCH = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
-  var SETTINGS_DEFAULT = { lang: 'es', layout: 'list', icons: 'on', buttons: 'round', bg: 'threads', accent: 'amber', keepAwake: BN_TOUCH, background: false, playlistLoop: true, crossfade: '4', textSize: 'm', sliderSize: 'm', controlSize: 'm', spacing: 'normal', panels: 'glass', bgLevel: 100, calm: false };
+  var SETTINGS_DEFAULT = { lang: 'es', layout: 'compact', icons: 'on', buttons: 'round', bg: 'threads', accent: 'amber', keepAwake: BN_TOUCH, background: false, playlistLoop: true, crossfade: '4', textSize: 'm', sliderSize: 'm', controlSize: 'm', spacing: 'normal', panels: 'glass', bgLevel: 100, calm: false };
   var settings = Object.assign({}, SETTINGS_DEFAULT);
   try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_STORE)) || {}); } catch (e) { /* defaults */ }
   // Saved settings from before 2026-11 hold the old always-on default; a choice made after this sticks.
@@ -2985,7 +2989,7 @@
     }, 0);
     var root = document.documentElement;
     root.lang = settings.lang;
-    if (['list', 'tiles', 'compact', 'large'].indexOf(settings.layout) < 0) settings.layout = 'list';
+    if (['list', 'tiles', 'compact', 'large'].indexOf(settings.layout) < 0) settings.layout = 'compact';
     if (['on', 'off'].indexOf(settings.icons) < 0) settings.icons = 'on';
     if (['round', 'soft', 'square'].indexOf(settings.buttons) < 0) settings.buttons = 'round';
     root.setAttribute('data-layout', settings.layout);
@@ -3617,13 +3621,20 @@
   var projOn = false;
   var projEl = document.getElementById('projector');
   var projCanvas = document.getElementById('projCanvas');
-  var projGl = null, projProg = null, projU = {};
+  var projGl = null, projU = {};
   var projRaf = null, projLast = 0, projTime = 0, projIdleTimer = null;
   var projData = {};          // analysis base url -> { lv, beats, strength, moments } or 'loading' or null
   var projLevels = [0, 0, 0]; // bass, mids, highs: fast to rise, slow to fade
   var projSlow = [0, 0];      // bass and mids over seconds: they steer zoom and pace, which must never jump
   var projSwell = 0, projBreath = 0, projLift = 0, projDeep = 0, projTurn = 0, projDim = 0, projSpeed = 0, projFlash = 0;
-  var projColors = null, projFreq = null, projPrevBass = 0, projModeShown = null, projLiveBeat = 0;
+  var projColors = null, projFreq = null, projPrevBass = 0, projModeShown = null, projLiveBeat = 0, projMood = 0;
+  function projHue(c, deg, light) { // turn a color around the colour wheel, keeping its brightness
+    var a = deg * Math.PI / 180, co = Math.cos(a), si = Math.sin(a);
+    var r = c[0] * (0.213 + 0.787 * co - 0.213 * si) + c[1] * (0.715 - 0.715 * co - 0.715 * si) + c[2] * (0.072 - 0.072 * co + 0.928 * si);
+    var g = c[0] * (0.213 - 0.213 * co + 0.143 * si) + c[1] * (0.715 + 0.285 * co + 0.140 * si) + c[2] * (0.072 - 0.072 * co - 0.283 * si);
+    var b = c[0] * (0.213 - 0.213 * co - 0.787 * si) + c[1] * (0.715 - 0.715 * co + 0.715 * si) + c[2] * (0.072 + 0.928 * co + 0.072 * si);
+    return [r, g, b].map(function (x) { return Math.max(0, Math.min(1, x * light)); });
+  }
   var PROJ_LOOKS = {
     // dark base, body, the purpose's own light (blended under the chosen accent), pace, beats per breath
     sleep:    [[0.015, 0.02, 0.06], [0.10, 0.10, 0.28], [0.80, 0.55, 0.32], 0.35, 4],
@@ -3647,7 +3658,7 @@
   function projWireless() { return !!(modeAudio && modeAudio.webkitCurrentPlaybackTargetIsWireless); }
   function projOffset() {
     var key = projWireless() ? 'air' : 'here';
-    return typeof projStore[key] === 'number' ? projStore[key] : (key === 'air' ? 2 : 0);
+    return typeof projStore[key] === 'number' ? projStore[key] : (key === 'air' ? 2 : 0.04);
   }
 
   var PROJ_VERT = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
@@ -3665,7 +3676,7 @@
     ' vec2 w=vec2(fbm(p+3.*q+vec2(1.7,9.2)+t*.07),fbm(p+3.*q+vec2(8.3,2.8)-t*.06));',
     ' float f=fbm(p+2.5*w);',
     ' vec3 col=mix(c1,c2,clamp(f*f*2.2,0.,1.));',
-    ' col=mix(col,c3,clamp(length(w)*.95-.4+.4*e.y,0.,1.)*.85);',
+    ' col=mix(col,c3,clamp(length(w)*.95-.45+.25*e.y+.25*sl.y,0.,1.)*.85);',
     ' col+=c3*smoothstep(.55,.9,f)*(.06+.3*e.x+.45*swell);',
     ' col+=c2*.14*e.z*smoothstep(.35,.75,f);',
     ' return col*(.55+.25*e.x+.3*f);}',
@@ -3675,9 +3686,9 @@
     ' float glow=0.;',
     ' for(int i=0;i<3;i++){float k=float(i);',
     '  float x=uv.x*(1.1+k*.35)+k*2.7+t*.02*(1.+k*.3);',
-    '  float edge=-.32+.16*sin(x*1.3+t*.09+k*1.7)+.22*(fbm(vec2(x*1.2,t*.05+k))-.5)-.1*sl.x;',
+    '  float edge=-.32+.16*sin(x*1.3+t*.09+k*1.7)+.22*(fbm(vec2(x*1.2,t*.05+k))-.5)-.12*sl.x;',
     '  float rays=.6+.4*sin(x*(17.+6.*k)+fbm(vec2(x*1.8,t*.1+k))*9.);',
-    '  float body=smoothstep(edge-.22,edge+.04,uv.y)*exp(-max(uv.y-edge,0.)*(2.2-.8*e.y))*(.35+.65*smoothstep(edge-.1,edge+.03,uv.y));',
+    '  float body=smoothstep(edge-.22,edge+.04,uv.y)*exp(-max(uv.y-edge,0.)*(2.5-1.2*sl.y))*(.35+.65*smoothstep(edge-.1,edge+.03,uv.y));',
     '  glow+=body*(.45+.55*rays*rays)*(.75-k*.18);}',
     ' col+=c2*glow*.9+c3*glow*glow*(.18+.32*e.x+.55*swell);',
     ' col+=c2*.18*exp(-abs(uv.y+.45)*3.)*(.5+.5*e.x);',
@@ -3690,16 +3701,16 @@
     ' vec2 k=vec2(cos(a),sin(a))*rr*(2.6-.35*sl.x-.25*swell);',
     ' float f=fbm(k+vec2(-t*.06,t*.02));',
     ' float g=fbm(k*1.7+f*1.5+vec2(t*.03,0.));',
-    ' float petals=smoothstep(.25,.75,g)*smoothstep(1.25,.15,rr);',
+    ' float petals=smoothstep(.32-.14*sl.y,.78,g)*smoothstep(1.15+.15*sl.x,.15,rr);',
     ' vec3 col=mix(c1,c2,petals);',
     ' col+=c3*smoothstep(.55,.85,g)*smoothstep(1.1,.1,rr)*(.1+.3*e.x+.5*swell);',
     ' col+=c3*exp(-rr*5.)*(.12+.25*e.y+.35*swell);',
     ' col+=c2*.1*e.z*petals;',
     ' return col;}',
     'void main(){',
-    ' vec2 uv=(gl_FragCoord.xy-.5*r)/r.y*(1.-.035*breath);',     // the picture breathes at the song's tempo
+    ' vec2 uv=(gl_FragCoord.xy-.5*r)/r.y*(1.-.035*breath);',     // the picture breathes once a bar
     ' vec3 col=form<.5?silk(uv):form<1.5?aurora(uv):bloom(uv);',
-    ' col+=c3*flash*.6;',                                          // sync test: a clear flash on each beat
+    ' col+=c3*flash*.32;',                                          // sync test: a clear flash on each beat
     ' col*=(1.-.45*dot(uv,uv))*dim;',
     ' gl_FragColor=vec4(col,1.);',
     '}'
@@ -3730,7 +3741,6 @@
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     ['r', 't', 'form', 'swell', 'breath', 'dim', 'flash', 'e', 'sl', 'c1', 'c2', 'c3'].forEach(function (k) { projU[k] = gl.getUniformLocation(prog, k); });
     projGl = gl;
-    projProg = prog;
     return true;
   }
   function projSize() {
@@ -3742,7 +3752,7 @@
     if (projGl) projGl.viewport(0, 0, projCanvas.width, projCanvas.height);
   }
   function projDataFor(file) {
-    var base = file.replace(/\/(modes|arcs)\/([a-z0-9-]+)\.m4a$/, '/modes/env/$2.v2');
+    var base = file.replace(/\/(modes|arcs)\/([a-z0-9-]+)\.m4a$/, '/modes/env/$2.v3');
     var d = projData[base];
     if (d === undefined) {
       projData[base] = 'loading';
@@ -3751,13 +3761,30 @@
         fetch(base + '.json').then(function (r) { return r.ok ? r.json() : null; })
       ]).then(function (got) {
         if (!got[0] || !got[1] || !Array.isArray(got[1].beats)) { projData[base] = null; return; }
-        var beats = new Float32Array(got[1].beats.length), strength = new Float32Array(got[1].beats.length);
-        got[1].beats.forEach(function (b, i) { beats[i] = b[0]; strength[i] = b[1] / 9; });
-        projData[base] = { lv: new Uint8Array(got[0]), beats: beats, strength: strength, moments: Array.isArray(got[1].moments) ? got[1].moments : [] };
+        var n = got[1].beats.length, beats = new Float32Array(n), strength = new Float32Array(n), down = new Uint8Array(n);
+        got[1].beats.forEach(function (b, i) { beats[i] = b[0]; strength[i] = b[1] / 9; down[i] = b[2] ? 1 : 0; });
+        projData[base] = { lv: new Uint8Array(got[0]), beats: beats, strength: strength, down: down,
+          moments: Array.isArray(got[1].moments) ? got[1].moments : [], sections: Array.isArray(got[1].sections) ? got[1].sections : [] };
       }).catch(function () { projData[base] = null; });
       return null;
     }
     return d && d !== 'loading' ? d : null;
+  }
+  // A steady clock for the picture: browsers report the playing position in uneven steps, so between reports it runs on
+  // from the last one at playing speed, eases toward each new report, never steps backwards, and holds while buffering.
+  var projClockAt = { raw: -1, est: 0, when: 0 };
+  function projClock() {
+    var raw = modeAudio.currentTime, now = performance.now(), c = projClockAt;
+    var running = !modeAudio.paused && modeAudio.readyState >= 3;
+    var run = c.est + (running ? (now - c.when) / 1000 * (modeAudio.playbackRate || 1) : 0);
+    if (raw !== c.raw) {
+      var gap = raw - run;
+      c.est = Math.abs(gap) > 0.25 ? raw : Math.max(c.est, run + gap * 0.3); // a seek or a new stream: jump; otherwise glide, pausing rather than rewinding
+      c.raw = raw;
+    } else c.est = run;
+    if (c.est < c.raw - 0.25) c.est = c.raw;
+    c.when = now;
+    return c.est;
   }
   function projLastIndex(list, time) { // the last beat at or before this time
     var lo = 0, hi = list.length - 1, at = -1;
@@ -3766,24 +3793,31 @@
   }
   // What is playing and how it moves right now.
   function projSource() {
-    var none = { look: modeCurrent && modeCurrent.files ? modeColor : (modeCurrent ? modeCurrent.id : 'mix'), v: [0.22, 0.22, 0.08], beat: null, dim: 0.8 };
+    var none = { look: modeCurrent && modeCurrent.files ? modeColor : (modeCurrent ? modeCurrent.id : 'mix'), v: [0.22, 0.22, 0.08, 0.4, 0.3], beat: null, dim: 0.8 };
     if (modeCurrent && modeAudio && !modeAudio.paused) {
       var look = modeCurrent.files ? modeColor : modeCurrent.id;
       var d = projDataFor(modeFile(modeCurrent));
-      var at = modeAudio.currentTime - projOffset(); // what the listener is hearing now
+      var at = projClock() - projOffset(); // what the listener is hearing now
       var dim = modeCurrent.music_until && at > modeCurrent.music_until ? 0.55 : 1;
-      if (!d || at < 0) return { look: look, v: [0.3, 0.3, 0.15], beat: null, dim: dim };
-      var pos = at * 40, frames = d.lv.length / 4;
+      if (!d || at < 0) return { look: look, v: [0.3, 0.3, 0.15, 0.4, 0.4], beat: null, dim: dim };
+      var pos = at * 40, frames = d.lv.length / 6;
       var i = Math.max(0, Math.min(Math.floor(pos), frames - 2)), k = pos - i;
-      var v = [0, 0, 0];
-      for (var c = 0; c < 3; c++) v[c] = (d.lv[i * 4 + c] * (1 - k) + d.lv[i * 4 + 4 + c] * k) / 255;
+      var v = [0, 0, 0, 0, 0], ch = [0, 1, 2, 4, 5]; // bass, mids, highs, brightness, loudness
+      for (var c = 0; c < 5; c++) v[c] = (d.lv[i * 6 + ch[c]] * (1 - k) + d.lv[i * 6 + 6 + ch[c]] * k) / 255;
       var bi = projLastIndex(d.beats, at), beat = null;
       if (bi >= 0 && bi + 1 < d.beats.length && d.beats[bi + 1] - d.beats[bi] < 1.6) {
-        beat = { since: at - d.beats[bi], count: bi + (at - d.beats[bi]) / (d.beats[bi + 1] - d.beats[bi]), strength: d.strength[bi] };
+        // where we are in the bar: from the last bar start to the next one
+        var b0 = bi, b1 = bi + 1;
+        while (b0 > 0 && !d.down[b0] && bi - b0 < 8) b0--;
+        while (b1 < d.beats.length - 1 && !d.down[b1] && b1 - bi < 8) b1++;
+        var bar = d.down[b0] && d.down[b1] && d.beats[b1] > d.beats[b0] ? (at - d.beats[b0]) / (d.beats[b1] - d.beats[b0]) : null;
+        beat = { since: at - d.beats[bi], strength: d.strength[bi], down: !!d.down[bi], bar: bar, bpm: 60 / (d.beats[bi + 1] - d.beats[bi]) };
       }
-      var moment = null;
-      for (var m = d.moments.length - 1; m >= 0; m--) if (d.moments[m][0] <= at) { moment = { kind: d.moments[m][1], since: at - d.moments[m][0] }; break; }
-      return { look: look, v: v, beat: beat, moment: moment, dim: dim, chapter: modeChapter ? modeCurrent.chapters.indexOf(modeChapter) : 0 };
+      var moment = null, section = null, m;
+      for (m = d.moments.length - 1; m >= 0; m--) if (d.moments[m][0] <= at) { moment = { kind: d.moments[m][1], since: at - d.moments[m][0] }; break; }
+      var music = !modeCurrent.files && !(modeCurrent.music_until && at > modeCurrent.music_until); // keys only mean something in music, not noise
+      if (music) for (m = d.sections.length - 1; m >= 0; m--) if (d.sections[m][0] <= at) { section = { key: d.sections[m][1], major: !!d.sections[m][2] }; break; }
+      return { look: look, v: v, beat: beat, moment: moment, section: section, dim: dim };
     }
     if (mixGraph && mixIsPlaying()) {
       var an = mixGraph.analyser;
@@ -3799,8 +3833,9 @@
       var now = performance.now() / 1000;
       if (bass - projPrevBass > 0.08 && now - projLiveBeat > 0.3) projLiveBeat = now; // a live hit, heard as it happens
       projPrevBass = bass;
-      return { look: 'mix', v: [bass, Math.min(1, band(160, 2000) * 1.5), Math.min(1, band(2000, 6000) * 2)],
-        beat: now - projLiveBeat < 1.5 ? { since: now - projLiveBeat, count: null, strength: 0.6 } : null, dim: 1 };
+      var mids = Math.min(1, band(160, 2000) * 1.5), highs = Math.min(1, band(2000, 6000) * 2);
+      return { look: 'mix', v: [bass, mids, highs, Math.min(1, highs / Math.max(0.05, bass + mids) * 1.2), Math.min(1, (bass + mids + highs) / 2)],
+        beat: now - projLiveBeat < 1.5 ? { since: now - projLiveBeat, strength: 0.6, down: true, bar: null, bpm: 0 } : null, dim: 1 };
     }
     return none;
   }
@@ -3815,28 +3850,32 @@
     var look = PROJ_LOOKS[src.look] || PROJ_LOOKS.mix;
     var calm = bnCalm();
     function ease(from, to, rate) { return from + (to - from) * (1 - Math.exp(-dt * rate)); } // the same glide at any frame rate
-    // Levels: rise within a frame of a hit, fade over about a second.
+    // Hits: rise within a frame, fade over about a second. They only add accents (shimmer, glints).
     for (var b = 0; b < 3; b++) projLevels[b] = ease(projLevels[b], src.v[b], src.v[b] > projLevels[b] ? (calm ? 8 : 40) : 1.4);
-    projSlow[0] = ease(projSlow[0], src.v[0], 0.5);
-    projSlow[1] = ease(projSlow[1], src.v[1], 0.4);
-    // Beat swell: worked out from the beat's exact time, so it peaks on the beat and fades over about 0.7 s.
+    // Phrases: loudness sets how large and bright the light is, the sound's brightness how light and fine; both over a second or two.
+    projSlow[0] = ease(projSlow[0], src.v[4], src.v[4] > projSlow[0] ? 1.2 : 0.6);
+    projSlow[1] = ease(projSlow[1], src.v[3], 0.9);
+    // Bars: the main swell on the first beat of a bar, a third as much on the others; each fades slowly.
     var swell = 0, breathTarget;
     if (src.beat) {
       var s = src.beat.since;
-      swell = (0.35 + 0.65 * src.beat.strength) * Math.min(1, s / 0.03) * Math.exp(-s * 2.2);
+      swell = (0.35 + 0.65 * src.beat.strength) * (src.beat.down ? 1 : 0.33) * Math.min(1, s / 0.03) * Math.exp(-s * 1.8);
       if (calm) swell *= 0.4;
     }
-    projSwell = swell > projSwell ? swell : ease(projSwell, swell, 6);
-    // Breathing: once a bar (twice for Run) at the song's own tempo; without a pulse, a calm six-second breath.
-    if (src.beat && src.beat.count !== null) breathTarget = 0.5 - 0.5 * Math.cos(2 * Math.PI * src.beat.count / look[4]);
+    projSwell = swell > projSwell ? swell : ease(projSwell, swell, 5);
+    // Breathing: one breath a bar (two for Run) from the bar's exact position; without a pulse, a calm six-second breath.
+    if (src.beat && src.beat.bar !== null) breathTarget = 0.5 - 0.5 * Math.cos(2 * Math.PI * src.beat.bar * (4 / look[4]));
     else breathTarget = 0.5 - 0.5 * Math.cos(2 * Math.PI * now / 6000);
     projBreath = ease(projBreath, breathTarget, 6);
-    // Musical moments: a drop lifts the colors toward the light for about half a minute; a calm deepens them.
+    // Sections: drops lift the colors toward the light, calms deepen them; the key turns the hue (neighbouring keys,
+    // neighbouring hues), major lightens and minor deepens. All over several seconds.
     var lift = src.moment && src.moment.kind === 'drop' && src.moment.since < 30 ? 1 : 0;
     var deep = src.moment && src.moment.kind === 'calm' && src.moment.since < 25 ? 1 : 0;
     projLift = ease(projLift, lift, 0.35);
     projDeep = ease(projDeep, deep, 0.25);
-    projTurn = ease(projTurn, ((src.chapter || 0) % 3) - 1, 0.15); // each new track turns the colors a little
+    var key = src.section && src.section.key >= 0 ? src.section.key : -1;
+    projTurn = ease(projTurn, key >= 0 ? 22 * Math.sin((key * 7 % 12) / 12 * 2 * Math.PI) : 0, 0.18);
+    projMood = ease(projMood, !src.section ? 0 : src.section.major ? 0.06 : -0.08, 0.18);
     var accent = PROJ_ACCENTS[settings.accent] || PROJ_ACCENTS.amber;
     var target = [look[0].slice(), look[1].slice(), [0, 0, 0]];
     for (var j = 0; j < 3; j++) {
@@ -3844,16 +3883,18 @@
       target[1][j] = target[1][j] * (1 - 0.35 * projDeep) + target[2][j] * 0.22 * projLift;
       target[0][j] = target[0][j] * (1 - 0.3 * projDeep);
     }
-    // a gentle turn of the body color between neighbouring hues, track by track
-    var tb = target[1], turn = projTurn * 0.12;
-    target[1] = [tb[0] * (1 - Math.abs(turn)) + tb[turn > 0 ? 2 : 1] * Math.abs(turn), tb[1], tb[2] * (1 - Math.abs(turn)) + tb[turn > 0 ? 0 : 1] * Math.abs(turn)];
+    target[1] = projHue(target[1], projTurn, 1 + projMood * 1.5);
+    target[2] = projHue(target[2], projTurn * 0.5, 1 + projMood);
     if (!projColors) projColors = [target[0].slice(), target[1].slice(), target[2].slice()];
     for (var c = 0; c < 3; c++) for (var q = 0; q < 3; q++) projColors[c][q] = ease(projColors[c][q], target[c][q], 0.5);
     projDim = ease(projDim, src.dim, 0.45); // opens from black over a few seconds; Sleep dims the same way
-    projSpeed = ease(projSpeed, look[3] * (calm ? 0.5 : 1), 0.3);
-    projTime += dt * projSpeed * (0.8 + 0.4 * projSlow[1]);
+    // Pace follows the song's tempo, changing over about eight seconds; never jumps with the music's loudness.
+    var tempo = src.beat && src.beat.bpm ? Math.max(0.75, Math.min(1.3, Math.sqrt(src.beat.bpm / 110))) : 1;
+    projSpeed = ease(projSpeed, look[3] * tempo * (calm ? 0.5 : 1), 0.12);
+    projTime += dt * projSpeed;
     var flash = 0;
-    if (projFlashUntil > now && src.beat) flash = Math.exp(-src.beat.since * 14);
+    // Gentle, and never with reduced motion: beats sit below the 3-a-second rate that troubles light-sensitive people, and the flash is soft.
+    if (projFlashUntil > now && src.beat && !calm) flash = Math.exp(-src.beat.since * 9);
     projFlash = flash;
     var gl = projGl;
     gl.uniform2f(projU.r, projCanvas.width, projCanvas.height);
@@ -3986,7 +4027,7 @@
     // Hand the graphics memory back: nothing of the projector stays alive once it is closed.
     var lose = projGl && projGl.getExtension('WEBGL_lose_context');
     if (lose) lose.loseContext();
-    projGl = null; projProg = null; projU = {};
+    projGl = null; projU = {};
     // A lost context cannot be revived on the same canvas, so the next opening gets a fresh one.
     var fresh = document.createElement('canvas');
     fresh.id = 'projCanvas';
