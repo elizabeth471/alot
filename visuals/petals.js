@@ -339,67 +339,81 @@
     var ws = F.wsecs || F.secs, k = pt.slot, r1 = pt.r1, r2 = pt.r2, r3 = pt.r3;
     o.own = 1; o.vis = 0.9; o.open = mods;
     if (k < 0) { o.x = 0; o.y = 0; o.a = 0; o.len = 0.1; o.wid = 0.05; o.rise = 0.3; o.curl = 0.2; o.vis = 0; return o; }
+    /* several slow rhythms that never line up, so nothing visibly repeats */
+    function drift(f, p) { return Math.sin(ws * f + p) + 0.5 * Math.sin(ws * f * 2.31 + p * 1.7) + 0.25 * Math.sin(ws * f * 0.43 + p * 2.9); }
     if (id === 1) {
-      /* a fish, swimming slowly: overlapping scales down its body, a fanned tail that sways, two fins above, two below */
-      var swim = Math.sin(ws * 1.4), fx = 0.18 * Math.sin(ws * 0.05), fy = 0.05 * Math.sin(ws * 0.31);
+      /* a fish: a wave runs from the head down the body, growing toward the tail, as a fish swims */
+      var om = 1.2 + 0.15 * Math.sin(ws * 0.071);
+      var wave = function (x) {                 // sideways offset at body position x (0.9 head .. -1.2 tail tip)
+        var fromHead = 0.95 - x, amp = 0.015 + 0.075 * fromHead * fromHead;
+        return amp * Math.sin(ws * om - fromHead * 2.6) + 0.3 * amp * Math.sin(ws * om * 0.57 - fromHead * 1.9 + 1.3);
+      };
+      var slope = function (x) { return (wave(x - 0.04) - wave(x + 0.04)) / 0.08; };
+      var bx, by, ba, bl, bw, br = 0.35, bc = 0.25;
       if (k < 24) {
-        var col = k % 6, row = Math.floor(k / 6), bx = 0.62 - col * 0.23;
+        var col = k % 6, row = Math.floor(k / 6); bx = 0.62 - col * 0.23;
         var hb = 0.40 * Math.sqrt(Math.max(0.05, 1 - Math.pow((bx - 0.06) / 0.72, 2)));
-        o.x = bx; o.y = ((row - 1.5) / 1.5) * hb * 0.78;
-        o.a = Math.PI + (r1 - 0.5) * 0.25 + 0.12 * swim * (0.62 - bx);
-        o.len = 0.30 + 0.05 * r2; o.wid = 0.19 + 0.05 * r3; o.rise = 0.35; o.curl = 0.25;
+        by = ((row - 1.5) / 1.5) * hb * 0.78; ba = Math.PI + (r1 - 0.5) * 0.25;
+        bl = 0.30 + 0.05 * r2; bw = 0.19 + 0.05 * r3;
       } else if (k < 32) {
-        /* a forked tail: two lobes, each of four long petals fanning out, swaying together */
         var lobe = k < 28 ? -1 : 1, li = (k % 4) / 3;
-        o.x = -0.56 - 0.05 * li; o.y = lobe * 0.05;
-        o.a = Math.PI + lobe * (0.45 + 0.60 * li) + 0.28 * swim; o.len = 0.66 + 0.12 * r1 - 0.10 * li; o.wid = 0.10 + 0.03 * r2;
-        o.rise = 0.2; o.curl = 0.45; o.vis = 0.55;
+        bx = -0.56 - 0.05 * li; by = lobe * 0.05; ba = Math.PI + lobe * (0.45 + 0.60 * li);
+        bl = 0.66 + 0.12 * r1 - 0.10 * li; bw = 0.10 + 0.03 * r2; br = 0.2; bc = 0.45;
       } else if (k < 36) {
         var up = k < 34, fi = k % 2;
-        o.x = up ? 0.20 - fi * 0.22 : 0.30 - fi * 0.35; o.y = up ? -0.30 : 0.26;
-        o.a = up ? -Math.PI * 0.62 - fi * 0.25 : Math.PI * 0.68 + fi * 0.2 + 0.15 * swim;
-        o.len = 0.34 + 0.06 * r1; o.wid = 0.15; o.rise = 0.35; o.curl = 0.5;
+        bx = up ? 0.20 - fi * 0.22 : 0.30 - fi * 0.35; by = up ? -0.30 : 0.26;
+        ba = up ? -Math.PI * 0.62 - fi * 0.25 : Math.PI * 0.68 + fi * 0.2 + 0.12 * Math.sin(ws * 0.9 + fi * 1.4);
+        bl = 0.34 + 0.06 * r1; bw = 0.15; bc = 0.5;
       } else {
-        /* the head: a rounded nose of four petals laid back from the front */
         var hi = (k - 36) / 3 - 0.5;
-        o.x = 0.86 - 0.08 * Math.abs(hi); o.y = hi * 0.22;
-        o.a = Math.PI + hi * 0.9; o.len = 0.34; o.wid = 0.20; o.rise = 0.4; o.curl = 0.3;
+        bx = 0.86 - 0.08 * Math.abs(hi); by = hi * 0.22; ba = Math.PI + hi * 0.9; bl = 0.34; bw = 0.20; br = 0.4; bc = 0.3;
       }
-      var und = 0.05 * Math.sin(o.x * 3.2 - ws * 1.8);
-      o.x += fx; o.y += fy + und;
+      /* the body bends with the wave; each petal turns with the bend where it sits (the tail most) */
+      var tipX = bx + Math.cos(ba) * bl * 0.6;
+      o.x = bx; o.y = by + wave(bx); o.a = ba + Math.atan(slope(tipX)) * (k >= 24 && k < 32 ? 1.6 : 0.8);
+      o.len = bl; o.wid = bw; o.rise = br; o.curl = bc;
+      /* and the fish wanders the water slowly, never on a loop you can see */
+      o.x += 0.20 * drift(0.041, 0.3); o.y += 0.07 * drift(0.067, 2.1);
     } else if (id === 2) {
-      /* a jellyfish: a cupped bell of petals that slowly pulses, and four strands trailing, waving */
-      var pulse = 1 + 0.07 * Math.sin(ws * 0.9);
+      /* a jellyfish: the bell squeezes quickly and lets go slowly, rising a little each time; the strands answer late */
+      var cyc = ws * 0.5 + 0.4 * Math.sin(ws * 0.09), ph0 = cyc / TAU - Math.floor(cyc / TAU);
+      var sq = function (p) { p = p - Math.floor(p); return p < 0.28 ? gentle(p / 0.28) : 1 - gentle((p - 0.28) / 0.72); };
+      var squeeze = sq(ph0), lift = -0.05 * squeeze + 0.04 * drift(0.05, 1.1);
       if (k < 18) {
-        var ph = -Math.PI * (0.08 + 0.84 * ((k % 9) + 0.5) / 9) + (r1 - 0.5) * 0.08, rb = (k < 9 ? 0.34 : 0.50) * pulse;
-        o.x = Math.cos(ph) * rb * 1.2; o.y = -0.25 + Math.sin(ph) * rb * 0.9;
-        o.a = ph; o.len = (0.34 + 0.10 * r2) * pulse; o.wid = 0.22 + 0.06 * r3; o.rise = 1.0; o.curl = 0.6;
+        var ph = -Math.PI * (0.08 + 0.84 * ((k % 9) + 0.5) / 9) + (r1 - 0.5) * 0.08, rb = (k < 9 ? 0.34 : 0.50);
+        var sqHere = sq(ph0 - (k < 9 ? 0 : 0.04));                 // the rim follows the crown a moment later
+        var sc = 1 - 0.13 * sqHere;
+        o.x = Math.cos(ph) * rb * 1.2 * sc; o.y = -0.25 + Math.sin(ph) * rb * 0.9 * (1 - 0.05 * sqHere) + lift;
+        o.a = ph + 0.25 * sqHere * Math.sign(Math.cos(ph)); o.len = (0.34 + 0.10 * r2) * (1 - 0.06 * sqHere); o.wid = 0.22 + 0.06 * r3;
+        o.rise = 1.0 + 0.4 * sqHere; o.curl = 0.6;
       } else {
         var m = k - 18, j = m % 4, t = (Math.floor(m / 4) + 0.5) / 6;
-        var wv = Math.sin(t * 4.2 - ws * 0.7 + j * 1.4);
-        o.x = (-0.36 + 0.24 * j + (r1 - 0.5) * 0.04) * (1 - 0.3 * t) * pulse + 0.14 * t * wv;
-        o.y = -0.18 + t * 1.15;
-        o.a = Math.PI / 2 + 0.45 * t * Math.cos(t * 4.2 - ws * 0.7 + j * 1.4);
+        var late = sq(ph0 - 0.10 - t * 0.25);                        // further down the strand, later
+        var wv = Math.sin(t * 3.6 - ws * 0.55 + j * 1.4) + 0.4 * Math.sin(t * 6.1 - ws * 0.83 + j * 2.3);
+        o.x = (-0.36 + 0.24 * j + (r1 - 0.5) * 0.04) * (1 - 0.3 * t) * (1 - 0.10 * late) + 0.12 * t * wv;
+        o.y = -0.18 + t * 1.15 * (1 - 0.04 * late) + lift * (1 - 0.6 * t);
+        o.a = Math.PI / 2 + 0.35 * t * (Math.cos(t * 3.6 - ws * 0.55 + j * 1.4) + 0.4 * Math.cos(t * 6.1 - ws * 0.83 + j * 2.3));
         o.len = 0.30 + 0.05 * r2; o.wid = 0.045 + 0.02 * r3; o.rise = 0.25; o.curl = 0.1; o.vis = 0.9 - 0.4 * t;
       }
+      o.x += 0.10 * drift(0.037, 0.7);
     } else {
-      /* a ray, seen from above as it glides: two wide wings that slowly lift and fall, a narrow body, a long tail */
-      var flap = Math.sin(ws * 0.8);
+      /* a ray gliding: each wing ripples from the body out to its tip, the two sides not quite together */
       if (k < 32) {
         var side = k < 16 ? -1 : 1, q = k % 16, rowR = Math.floor(q / 4), cR = (q % 4 + 0.5) / 4;
         var span = 0.18 + 1.30 * cR * (1 - 0.15 * rowR);
-        o.x = side * span; o.y = -0.22 + rowR * 0.13 + 0.34 * cR * cR;
-        o.a = (side > 0 ? 0 : Math.PI) + side * (0.35 + 0.25 * rowR) * 0.6;
+        var rip = Math.sin(ws * 0.75 - cR * 2.4 - rowR * 0.3 + (side > 0 ? 0.25 : 0)) + 0.3 * Math.sin(ws * 0.43 - cR * 1.7 + 1.1);
+        o.x = side * span * (1 - 0.04 * rip * cR); o.y = -0.22 + rowR * 0.13 + 0.34 * cR * cR - 0.06 * rip * cR;
+        o.a = (side > 0 ? 0 : Math.PI) + side * (0.35 + 0.25 * rowR) * 0.6 - side * 0.12 * rip * cR;
         o.len = (0.36 - 0.14 * cR) + 0.05 * r1; o.wid = 0.17 + 0.04 * r2;
-        o.rise = 0.22 + 0.40 * flap * cR; o.curl = 0.35;
+        o.rise = 0.22 + 0.42 * rip * cR; o.curl = 0.35;
       } else if (k < 36) {
         o.x = 0; o.y = -0.30 + (k - 32) * 0.13; o.a = Math.PI / 2; o.len = 0.26; o.wid = 0.20; o.rise = 0.6; o.curl = 0.3;
       } else {
-        var tt = (k - 36) / 4;
-        o.x = 0.04 * Math.sin(ws * 0.9 + tt * 3); o.y = 0.25 + tt * 0.34; o.a = Math.PI / 2 + 0.1 * Math.sin(ws * 0.9 + tt * 3);
+        var tt = (k - 36) / 4, tw2 = Math.sin(ws * 0.7 - tt * 2.2) + 0.4 * Math.sin(ws * 0.41 - tt * 3.1);
+        o.x = 0.06 * tt * tw2; o.y = 0.25 + tt * 0.34; o.a = Math.PI / 2 + 0.18 * tw2 * tt;
         o.len = 0.36; o.wid = 0.05; o.rise = 0.2; o.curl = 0.05;
       }
-      o.y += 0.04 * Math.sin(ws * 0.27); o.x += 0.15 * Math.sin(ws * 0.045);
+      o.y += 0.05 * drift(0.031, 0.4); o.x += 0.16 * drift(0.027, 1.9);
     }
     /* AS LIKE THE FLOWER AS IT CAN BE (Ely: "as similar to the style of the flower please"). Each petal keeps its own
        character from the flower: how upright it stands and how its tip curls back (so its rim catches the light the
@@ -488,7 +502,27 @@
           pz = blendPose(PQ, poseIn(PA, pt, F.trFrom, F, false, ownMain, mods), poseIn(PB, pt, F.trTo, F, false, ownMain, mods), m2,
                          0.25 * (pt.r3 - 0.5));
         }
-        if (pz.vis < 0.005) continue;
+        if (pz.vis < 0.005) { pt.fx = null; continue; }
+        /* WEIGHT (Ely: "robotic rather than flowy"). A petal is never placed: it follows where its shape wants it, a little
+           late, like something floating, easing off, drifting a touch past and settling back. Heavier petals (the flower's
+           inner ones) are slower to start and to stop; light ones answer sooner. Its size and how it stands follow too. */
+        if (pt.fx == null || s.reduceMotion) {
+          pt.fx = pz.x; pt.fy = pz.y; pt.fa = pz.a; pt.fl = pz.len; pt.fw = pz.wid; pt.fr = pz.rise; pt.fc = pz.curl;
+          pt.vx = 0; pt.vy = 0; pt.va = 0; pt.vl = 0; pt.vw = 0; pt.vr = 0;
+        } else {
+          var kF = 0.0032 * (0.75 + 0.5 * pt.late) * (pt.ring ? 1.3 : 1), dF = 2 * 0.62 * Math.sqrt(kF);
+          var daF = pz.a - pt.fa; daF = ((daF + Math.PI) % TAU + TAU) % TAU - Math.PI;
+          for (var fs = 0; fs < windSteps; fs++) {
+            pt.vx += (pz.x - pt.fx) * kF - pt.vx * dF; pt.fx += pt.vx;
+            pt.vy += (pz.y - pt.fy) * kF - pt.vy * dF; pt.fy += pt.vy;
+            pt.va += daF * kF - pt.va * dF; pt.fa += pt.va; daF -= pt.va;
+            pt.vl += (pz.len - pt.fl) * kF - pt.vl * dF; pt.fl += pt.vl;
+            pt.vw += (pz.wid - pt.fw) * kF - pt.vw * dF; pt.fw += pt.vw;
+            pt.vr += (pz.rise - pt.fr) * kF - pt.vr * dF; pt.fr += pt.vr;
+          }
+          pt.fc += (pz.curl - pt.fc) * 0.05;
+        }
+        pz.x = pt.fx; pz.y = pt.fy; pz.a = pt.fa; pz.len = pt.fl; pz.wid = pt.fw; pz.rise = pt.fr; pz.curl = pt.fc;
         var own = pz.own, open = pz.open, ox = pz.x, oy = pz.y;
         spine(pz, Math.min(1.12, open + 0.08 * (F.stretch || 0)), 0.30 * (F.stretch || 0) * outerF);
         var sway = s.reduceMotion ? 0
@@ -520,6 +554,8 @@
           }
         }
         var cross = Math.sin(wDir - a) * (pt.b || 0), downW = Math.cos(wDir - a) * (pt.b || 0);
+        var drag2 = s.reduceMotion ? 0 : clamp(-(-sa * pt.vx + ca * pt.vy) * 28, -0.25, 0.25);   // moving, its tip trails
+        cross += drag2;
         var bx = -sa * cross, by = ca * cross;                             // across the petal, so its length holds
         var W = pz.wid * (0.5 + 0.5 * own)
               * (1 + (s.reduceMotion ? 0 : 0.04 * Math.sin(ws * CALM * T.hullBreath * 1.3 + pt.ruf1)));
