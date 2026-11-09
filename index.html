@@ -3819,7 +3819,7 @@
   }
   projEl.addEventListener('pointermove', function (e) { petalsPtr.x = e.clientX; petalsPtr.y = e.clientY; petalsPtr.seen = performance.now(); });
   projEl.addEventListener('pointerdown', function (e) { petalsTap.x = e.clientX; petalsTap.y = e.clientY; petalsTap.at = performance.now(); });
-  function petalsFrame(nowMs) {
+  function petalsFrame(nowMs, calm) {
     if (!window.ALOT_PETALS) {
       if (!petalsLoading) {
         petalsLoading = true;
@@ -3849,7 +3849,11 @@
     window.ALOT_PETALS.backdrop(ctx, {
       size: size, dpr: dpr, t: Date.now(), nowMs: nowMs, frameMs: 33, exposure: projDim, reduceMotion: still,
       vw: gm.w, vh: gm.h, cx: gm.cx, cy: gm.cy, rad: gm.rad, tempo: PETALS_TEMPO,
-      myOffset: petalsOffset, localHour: petalsHour, dragOff: 0, hover: false, inhale: 0,
+      myOffset: petalsOffset, localHour: petalsHour, dragOff: 0, hover: false,
+      // the music as wind: loudness over seconds is how hard it blows, a beat is a gust, high notes a flutter
+      wind: { gust: Math.max(0, Math.min(1, (projSlow[0] - 0.12) / 0.6)) * (calm ? 0.5 : 1), flutter: projLevels[2] * (calm ? 0.4 : 1), kick: projSwell },
+      // and it breathes: a little open and brighter once a bar, more on each beat
+      inhale: still ? 0 : Math.min(1, 0.22 * projBreath + 0.55 * projSwell) * (calm ? 0.5 : 1),
       pointer: { x: petalsPtr.x - ox, y: petalsPtr.y - oy, seen: petalsPtr.seen },
       tap: { x: petalsTap.x - ox, y: petalsTap.y - oy, at: petalsTap.at }
     });
@@ -4011,7 +4015,7 @@
     projFlash = flash;
     var shown = (modeCurrent ? modeCurrent.id : '') + '|' + (modeChapter ? modeChapter.id : '') + '|' + modeColor + '|' + projWireless();
     if (shown !== projModeShown) { projModeShown = shown; projLabels(); }
-    if (projForm() === 'flower' && petalsFrame(now)) return; // the 2D flower drew this frame; the shader rests
+    if (projForm() === 'flower' && petalsFrame(now, calm)) return; // the 2D flower drew this frame; the shader rests
     petalsHide();
     var gl = projGl;
     gl.uniform2f(projU.r, projCanvas.width, projCanvas.height);

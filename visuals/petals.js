@@ -38,7 +38,7 @@
     return v * (x - e / 2);
   }
   function easeOut(x) { x = clamp(x, 0, 1); return 1 - Math.pow(1 - x, 3); }
-  var petals = [], grownFor = null;
+  var petals = [], rings = [], grownFor = null, REACH = 3;
   function grow(dayIdx) {
     var rnd = seeded(dayIdx * 7919 + 17);
     var counts = COUNTS.slice();
@@ -69,6 +69,27 @@
       }
     }
     petals.sort(function (p, q) { return q.w - p.w; });
+    /* FILLING THE SCREEN WITH PETALS, NOT A ZOOM (Ely, 2026-11-09). Beyond the four whorls, rings of more and more
+       petals wait closed; as the flower spreads they open one ring after another, from the flower outward, until
+       they reach past every edge, then fold closed again from the outside in. Counts are primes past the flower's
+       own (no 5, 6, 8, 12 or 16), never evenly spaced, the same jitter as the whorls. Radii are fractions of the
+       reach, which the screen sets each frame. */
+    rings = [];
+    var RC = [17, 19, 23, 29, 31, 37];
+    for (var rk = 0; rk < RC.length; rk++) {
+      var rn = RC[rk], f = (rk + 1) / RC.length, ph0r = rnd() * TAU;
+      for (var rq = 0; rq < rn; rq++) {
+        rings.push({
+          w: WHORLS - 1, ring: f, n: rn,
+          a: ph0r + ((rq + (rnd() - 0.5) * 0.76) / rn) * TAU,
+          lenJ: 0.88 + rnd() * 0.22, widJ: 0.80 + rnd() * 0.42, rootJ: rnd(),
+          rise: 0.22 + (rnd() - 0.5) * 0.14, curl: (0.35 + 0.3 * rnd()),
+          ruf1: rnd() * TAU, ruf2: rnd() * TAU, rufA: 0.035 + rnd() * 0.05,
+          ph: rnd() * TAU, vein: 0.6 + rnd() * 0.4, late: rnd()
+        });
+      }
+    }
+    rings.sort(function (p, q) { return q.ring - p.ring; });
   }
   var cL = 1, sL = 0, cY = 1, sY = 0;
   function setView(lean, yaw) {
@@ -145,6 +166,10 @@
     else ctx.lineTo(EX[b - 1], EY[b - 1]);
   }
   var againAt = 0, fullNext = false;
+  /* WIND, IF THE WIND WERE MUSIC. The host passes s.wind = { gust, flutter, kick }: how loud the music is over seconds,
+     its high notes, and the beat's swell. Loudness is how hard it blows, a beat is a gust that reaches the heart first and
+     the outer whorls a moment later, high notes make the edges flutter. The wind's direction wanders slowly. */
+  var windG = 0, windF = 0, wsecs = 0, windLast = 0, windDir = 0, kickHist = new Float32Array(16), kickPrev = 0;
   var F = { at: -1 }, skippedAt = 0, inhale = 0, stretchS = 0, quick = false;
   var LITE = false, lastNow = 0, frameEMA = 16, slowFor = 0, OFF = null, OFFX = null;
   function prep(s) {
@@ -184,11 +209,24 @@
       lastDrag = drag;
       omega += (dv - omega) * T.ease;
       var stir = clamp(Math.abs(omega) * 14, 0, 1);
+      var wd = s.wind || null, wdt = windLast ? Math.min(0.1, (s.nowMs - windLast) / 1000) : 0;
+      windLast = s.nowMs;
+      windG += ((wd ? wd.gust : 0) - windG) * (1 - Math.exp(-wdt * 0.8));
+      windF += ((wd ? wd.flutter : 0) - windF) * (1 - Math.exp(-wdt * 3));
+      wsecs += wdt * (1 + 1.6 * windG + 0.6 * windF);
+      windDir = 0.9 * Math.sin(wsecs * 0.013) + 0.4 * Math.sin(wsecs * 0.031 + 1.7);
+      var kick = wd ? wd.kick : 0, gustIn = Math.max(0, kick - kickPrev); kickPrev = kick;
+      for (var kh = kickHist.length - 1; kh > 0; kh--) kickHist[kh] = kickHist[kh - 1];
+      kickHist[0] = gustIn;
       var K = T.ease * 0.25, D = 1 - T.settle;
+      var steps = Math.max(1, Math.round((s.frameMs || 16) / 16.7));
       for (var w = 0; w < WHORLS; w++) {
         var hang = 0.25 + 0.95 * (w / (WHORLS - 1));
-        tvel[w] += -K * trail[w] - D * tvel[w] - dv * hang * 0.55;
-        trail[w] += tvel[w];
+        var gst = kickHist[Math.min(kickHist.length - 1, w * 3)] * 0.010 * hang * (windDir >= 0 ? 1 : -1);
+        for (var st = 0; st < steps; st++) {
+          tvel[w] += -K * trail[w] - D * tvel[w] - (st ? 0 : dv * hang * 0.55) + (st ? 0 : gst);
+          trail[w] += tvel[w];
+        }
         if (s.reduceMotion) { trail[w] = 0; tvel[w] = 0; }
       }
       if (!s.reduceMotion) stirPh += Math.abs(omega) * 6;
@@ -197,7 +235,7 @@
         py = clamp((s.pointer.y - size / 2) / size * 0.5, -0.15, 0.15);
         px = clamp((s.pointer.x - size / 2) / size * 0.5, -0.15, 0.15);
       }
-      var swingY = s.reduceMotion ? 0 : 0.05 * Math.sin(secs * T.hullBreath * 0.6);
+      var swingY = s.reduceMotion ? 0 : 0.05 * Math.sin(secs * T.hullBreath * 0.6) + 0.03 * windG * Math.sin(windDir);
       var swingL = s.reduceMotion ? 0 : 0.025 * Math.sin(secs * T.hullBreath * 0.45 + 1.3);
       var lean = LEAN + py + swingL + clamp(omega * 1.6, -0.06, 0.06);
       var yaw = -px * 0.9 + swingY + clamp(trail[WHORLS - 1] * 0.35, -0.08, 0.08);
@@ -206,13 +244,12 @@
       var spin = (s.localHour(s.myOffset) / 24) * TAU + turnS
                + (s.reduceMotion ? 0 : secs * T.dayTurn);
     var tz = since - BUD_MS * 0.6;
-    var zoom = REST, rest = 1;
+    var zoom = REST, rest = 1, spread = 0;
     if (!s.reduceMotion) {
-      var big = quick ? REST : (BIG || REST);
       var up = gentle(tz / BLOOM_UP), down = gentle((tz - BLOOM_UP - BLOOM_HOLD) / BLOOM_DOWN);
-      zoom = 1 + (big - 1) * up;
-      zoom = zoom + (REST - zoom) * down;
+      zoom = 1 + (REST - 1) * gentle(tz / 2600);
       if (tz < 0) zoom = 1;
+      if (!quick && tz > 0) spread = up * (1 - down);
       rest = quick ? gentle((tz - 2600) / 900)
                    : gentle((tz - BLOOM_UP - BLOOM_HOLD - BLOOM_DOWN * 0.6) / 900);
       /* again: from its resting size out past every edge, a held breath, and slowly home */
@@ -220,9 +257,8 @@
         var ta = s.nowMs - againAt;
         if (ta > BLOOM_UP + BLOOM_HOLD + BLOOM_DOWN) againAt = 0;
         else {
-          var zA = REST + ((BIG || REST) - REST) * gentle(ta / BLOOM_UP);
-          zA = zA + (REST - zA) * gentle((ta - BLOOM_UP - BLOOM_HOLD) / BLOOM_DOWN);
-          if (zA > zoom) zoom = zA;
+          var sA = gentle(ta / BLOOM_UP) * (1 - gentle((ta - BLOOM_UP - BLOOM_HOLD) / BLOOM_DOWN));
+          if (sA > spread) spread = sA;
         }
       }
     }
@@ -243,17 +279,18 @@
     }
     lastNow = s.nowMs;
     F.lite = LITE || !!window.__petalsLite;
-    F.at = s.nowMs; F.e = e; F.secs = secs; F.T = T;
+    F.at = s.nowMs; F.e = e; F.secs = secs; F.T = T; F.wsecs = wsecs; F.windG = windG; F.windF = windF; F.windDir = windDir;
     F.seen = seen; F.arrive = arrive; F.stir = stir; F.lean = lean; F.yaw = yaw;
     var sWant = s.reduceMotion ? 0 : clamp(Math.abs(drag) * 0.55, 0, 0.32);
     stretchS += (sWant - stretchS) * (sWant > stretchS ? 0.10 : 0.04);
     zoom *= 1 + stretchS;
     F.stretch = stretchS;
-    F.breath = breath; F.spin = spin; F.zoom = zoom; F.rest = rest;
+    F.breath = breath; F.spin = spin; F.zoom = zoom; F.rest = rest; F.spread = spread;
     return F;
   }
   function flowerOn(ctx, s, F, LW) {
     var e = F.e, secs = F.secs, T = F.T, seen = F.seen, arrive = F.arrive;
+    var ws = F.wsecs || secs, wG = s.reduceMotion ? 0 : (F.windG || 0), wF = s.reduceMotion ? 0 : (F.windF || 0), wDir = F.windDir || 0;
     var stir = F.stir, lean = F.lean, yaw = F.yaw, breath = F.breath, spin = F.spin;
     var C = CX;
       if (!COLLECT) {
@@ -264,11 +301,23 @@
       ctx.fillStyle = hg;
       ctx.beginPath(); ctx.arc(CX, CY, R * 0.55, 0, TAU); ctx.fill();
       }
-      var crowded = petals.length;
+      var sp = s.reduceMotion ? 0 : (F.spread || 0);
+      var list = sp > 0.002 ? rings.concat(petals) : petals;
+      var crowded = list.length;
       for (var pi = 0; pi < crowded; pi++) {
-        var pt = petals[pi];
+        var pt = list[pi];
         var outerF = pt.w / (WHORLS - 1);
-        var own = s.reduceMotion ? 1
+        var own;
+        if (pt.ring) {
+          /* each ring opens once the one inside it is under way, and closes before it; each petal a little on its own */
+          own = gentle((sp - pt.ring * 0.62 - pt.late * 0.08 + 0.10) / 0.36);
+          if (own < 0.01) continue;
+          var rc = 0.85 + (REACH - 0.85) * pt.ring;           // the ring's middle, in flower radii
+          var gap = (REACH - 0.85) / 6;
+          pt.len = gap * 2.3 * pt.lenJ;
+          pt.root = Math.max(0.3, rc - pt.len * 0.5 - gap * 0.4 * pt.rootJ);
+          pt.wid = (TAU * rc / pt.n) * 0.62 * pt.widJ;
+        } else own = s.reduceMotion ? 1
                 : easeOut((arrive - (1 - outerF) * 0.25) / 0.75);
         var near2 = 0, wave = 0;
         if (!COLLECT) {
@@ -295,17 +344,20 @@
                  * (1 + 0.035 * Math.sin(breath + pt.ph) + 0.05 * hov
                     + stir * (0.05 + 0.03 * Math.sin(stirPh * 0.5 + pt.ph * 3))
                     + (s.reduceMotion ? 0 : 0.06 * (pt.prox || 0) + 0.08 * wave)
-                    + 0.09 * (F.inhale || 0));
+                    + 0.09 * (F.inhale || 0)
+                    + wG * (0.03 + 0.04 * Math.cos(wDir - pt.a - spin)));
         spine(pt, Math.min(1.12, open + 0.08 * (F.stretch || 0)), 0.30 * (F.stretch || 0) * outerF);
         var sway = s.reduceMotion ? 0
-                 : 0.028 * Math.sin(secs * CALM * T.hullBreath * 1.7 + pt.ph * 2.3)
-                 + 0.012 * Math.sin(secs * CALM * T.hullBreath * 3.1 + pt.ruf2);
+                 : 0.028 * (1 + 1.2 * wG) * Math.sin(ws * CALM * T.hullBreath * 1.7 + pt.ph * 2.3)
+                 + 0.012 * (1 + 2.0 * wF) * Math.sin(ws * CALM * T.hullBreath * 3.1 + pt.ruf2)
+                 + 0.010 * wF * Math.sin(ws * 2.3 * (0.7 + 0.6 * pt.vein) + pt.ph * 4.1)
+                 + 0.055 * wG * Math.sin(wDir - pt.a - spin);
         var drift = s.reduceMotion ? 0
-                  : secs * CALM * T.sweep * (0.6 + 0.4 * pt.vein) + stirPh * (0.5 + 0.5 * pt.vein);
+                  : ws * CALM * T.sweep * (0.6 + 0.4 * pt.vein) + stirPh * (0.5 + 0.5 * pt.vein);
         var a = pt.a + spin + trail[pt.w] + sway * (0.6 + 0.6 * outerF);
         var ca = Math.cos(a), sa = Math.sin(a);
         var W = pt.wid * (0.5 + 0.5 * own)
-              * (1 + (s.reduceMotion ? 0 : 0.04 * Math.sin(secs * CALM * T.hullBreath * 1.3 + pt.ruf1)));
+              * (1 + (s.reduceMotion ? 0 : 0.04 * Math.sin(ws * CALM * T.hullBreath * 1.3 + pt.ruf1)));
         var nE = 0;
         for (var side = 0; side < 2; side++) {
           for (var i = 0; i <= SPN; i++) {
@@ -314,8 +366,8 @@
             var ruffle = 1 + pt.rufA * (1 + 0.35 * stir) * u * u *
               (Math.sin(u * 9 + pt.ruf1 + drift + (side ? 2.1 : 0)) +
                0.6 * Math.sin(u * 17 + pt.ruf2 - drift * 0.7))
-              + (s.reduceMotion ? 0 : WAVE * u * u *
-                 Math.sin(u * 6.5 - secs * CALM * T.shimmer * (1.4 + 0.8 * pt.vein)
+              + (s.reduceMotion ? 0 : WAVE * (1 + 0.8 * wF) * u * u *
+                 Math.sin(u * 6.5 - ws * CALM * T.shimmer * (1.4 + 0.8 * pt.vein)
                           + pt.ph * 3 + (side ? 1.1 : 0)));
             var hw = W * halfW(u) * ruffle * (side ? -1 : 1);
             var r0 = spR[ii] * ruffle, h0 = spH[ii];
@@ -343,7 +395,7 @@
         var film = 0.5 + 0.5 * Math.sin(a * 2 + lean * 3 + pt.w * 0.7 + yaw * 4);
         var rimC = mix(ROSE, AQUA, film);
         var quiet = 1 - 0.30 * outerF;
-        var A = e * seen * (0.45 + 0.55 * own) * quiet * (0.70 + 0.30 * depth);
+        var A = e * seen * (0.45 + 0.55 * own) * quiet * (0.70 + 0.30 * depth) * (pt.ring ? own * (0.85 - 0.35 * pt.ring) : 1);
         var g = ctx.createLinearGradient(rootX, rootY, tipX, tipY);
         g.addColorStop(0, "rgba(" + PEARL.join(",") + ",0)");
         g.addColorStop(0.35, "rgba(" + mix(PEARL, ROSE, 0.25) + "," + (0.11 * A).toFixed(4) + ")");
@@ -555,6 +607,7 @@
     /* the whole entrance again, from the dark: a closed bud that opens and blooms past every edge */
     restart: function () { bornAt = 0; quick = false; skippedAt = 0; againAt = 0; fullNext = true; },
     /* the open flower blooms out over the whole screen and comes home */
+    windNow: function () { return { gust: windG, flutter: windF, dir: windDir }; },
     bloom: function () { if (!againAt) againAt = performance.now(); },
     resize: function (size) { C = size / 2; R = size / 2 * 0.86; },
     backdrop: function (ctx, s) {
@@ -564,6 +617,7 @@
       var cx = s.cx, cy = s.cy, rad = s.rad;
       var far = Math.hypot(Math.max(cx, s.vw - cx), Math.max(cy, s.vh - cy));
       BIG = SCRIBBLE ? REST : Math.max(REST, far / (rad * 0.86 * 0.80));
+      REACH = Math.min(3.4, Math.max(2, far / (rad * 0.86 * REST) * 1.15));
       var F = prep(s);
       ctx.save();
       ctx.globalCompositeOperation = "lighter";
@@ -571,7 +625,7 @@
       setView(F.lean, F.yaw);
       var LWb = (rad * 2 / 600) * Math.sqrt(F.zoom);
       if (!s.reduceMotion && SCRIBBLE) thread(ctx, s, F, LWb);
-      var q = Math.min(1, 1.25 / Math.max(1, F.zoom));
+      var q = 1 - 0.4 * (F.spread || 0);
       if (F.lite) q *= 0.75;
       q = Math.ceil(q * 8) / 8;
       if (q < 0.97) {
