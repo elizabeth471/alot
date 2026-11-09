@@ -35,8 +35,8 @@ async def run(p, name):
     lit = await bright(q); check(name + ' opens from black, then the light rises', dark < lit / 2 and lit > 12, (dark, lit))
     await wake(q)
     check(name + ' shows what is playing', await q.inner_text('#projName') == 'Run' and ' – ' in await q.inner_text('#projTrack'), await q.inner_text('#projTrack'))
-    check(name + ' three visuals offered', await q.locator('#projForms button').count() == 3)
-    for f in ['aurora', 'bloom', 'silk']:
+    check(name + ' four visuals offered', await q.locator('#projForms button').count() == 4)
+    for f in ['aurora', 'bloom', 'flower', 'silk']:
         await wake(q); await q.click(f'#projForms [data-id="{f}"]'); await q.wait_for_timeout(1200)
         check(name + ' visual ' + f + ' draws', await bright(q) > 8 and await q.get_attribute(f'#projForms [data-id="{f}"]', 'aria-pressed') == 'true', await bright(q))
     await wake(q)
