@@ -3647,7 +3647,7 @@
   var projData = {};          // analysis base url -> { lv, beats, strength, moments } or 'loading' or null
   var projLevels = [0, 0, 0]; // bass, mids, highs: fast to rise, slow to fade
   var projSlow = [0, 0];      // bass and mids over seconds: they steer zoom and pace, which must never jump
-  var projSwell = 0, projBreath = 0, projLift = 0, projDeep = 0, projTurn = 0, projDim = 0, projSpeed = 0, projFlash = 0;
+  var projSwHist = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], projSwArr = new Float32Array(6), projSwell = 0, projBreath = 0, projLift = 0, projDeep = 0, projTurn = 0, projDim = 0, projSpeed = 0, projFlash = 0;
   var projColors = null, projFreq = null, projPrevBass = 0, projModeShown = null, projLiveBeat = 0, projMood = 0;
   function projHue(c, deg, light) { // turn a color around the colour wheel, keeping its brightness
     var a = deg * Math.PI / 180, co = Math.cos(a), si = Math.sin(a);
@@ -3685,7 +3685,8 @@
   var PROJ_VERT = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
   var PROJ_FRAG = [
     'precision mediump float;',
-    'uniform vec2 r;uniform float t,form,swell,breath,dim,flash;uniform vec3 e;uniform vec2 sl;uniform vec3 c1,c2,c3;',
+    'uniform vec2 r;uniform float t,form,breath,dim,flash;uniform float sw[6];uniform vec3 e;uniform vec2 sl;uniform vec3 c1,c2,c3;',
+    'float swell=0.;',
     'float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
     'float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);',
     ' return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+1.),f.x),f.y);}',
@@ -3730,7 +3731,10 @@
     ' return col;}',
     'void main(){',
     ' vec2 uv=(gl_FragCoord.xy-.5*r)/r.y*(1.-.035*breath);',     // the picture breathes once a bar
+    ' float rd=clamp(length(uv)*.9,0.,1.)*5.;',                    // the beat leaves the centre and travels out: further = later
+    ' for(int i=0;i<6;i++)swell+=sw[i]*max(0.,1.-abs(rd-float(i)));',
     ' vec3 col=form<.5?silk(uv):form<1.5?aurora(uv):bloom(uv);',
+    ' col=clamp(col,0.,1.);col=mix(col,col*col*(3.-2.*col),.45);',   // deeper darks, brighter peaks, same softness
     ' col+=c3*flash*.32;',                                          // sync test: a clear flash on each beat
     ' col*=(1.-.45*dot(uv,uv))*dim;',
     ' gl_FragColor=vec4(col,1.);',
@@ -3760,7 +3764,7 @@
     var loc = gl.getAttribLocation(prog, 'a');
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    ['r', 't', 'form', 'swell', 'breath', 'dim', 'flash', 'e', 'sl', 'c1', 'c2', 'c3'].forEach(function (k) { projU[k] = gl.getUniformLocation(prog, k); });
+    ['r', 't', 'form', 'sw', 'breath', 'dim', 'flash', 'e', 'sl', 'c1', 'c2', 'c3'].forEach(function (k) { projU[k] = gl.getUniformLocation(prog, k); });
     projGl = gl;
     return true;
   }
@@ -3921,7 +3925,9 @@
     gl.uniform2f(projU.r, projCanvas.width, projCanvas.height);
     gl.uniform1f(projU.t, projTime);
     gl.uniform1f(projU.form, PROJ_FORMS.indexOf(projForm()));
-    gl.uniform1f(projU.swell, projSwell);
+    projSwHist.push(projSwell); projSwHist.shift();
+    for (var si = 0; si < 6; si++) projSwArr[si] = projSwHist[17 - si * 3]; // now, 0.1 s ago, 0.2 s ago ... 0.5 s ago
+    gl.uniform1fv(projU.sw, projSwArr);
     gl.uniform1f(projU.breath, calm ? projBreath * 0.4 : projBreath);
     gl.uniform1f(projU.dim, projDim);
     gl.uniform1f(projU.flash, projFlash);
