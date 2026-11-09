@@ -401,6 +401,14 @@
       }
       o.y += 0.04 * Math.sin(ws * 0.27); o.x += 0.15 * Math.sin(ws * 0.045);
     }
+    /* AS LIKE THE FLOWER AS IT CAN BE (Ely: "as similar to the style of the flower please"). Each petal keeps its own
+       character from the flower: how upright it stands and how its tip curls back (so its rim catches the light the
+       same way), its own size mixed into the part's, and full light. Only where it sits and points is the creature's. */
+    o.rise = pt.rise * 0.75 + o.rise * 0.25;
+    o.curl = pt.curl * 0.7 + o.curl * 0.3;
+    o.len = o.len * 0.6 + pt.len * 0.4 * (o.len / 0.35);
+    o.wid = o.wid * 0.6 + pt.wid * 0.4 * (o.wid / 0.2);
+    o.vis = Math.min(1, o.vis / 0.9);
     return o;
   }
   function blendPose(o, A, B, m, tw) {
@@ -424,7 +432,7 @@
     var C = CX;
       if (!COLLECT) {
       var hg = ctx.createRadialGradient(CX, CY, 0, CX, CY, R * 0.55);
-      var fw = F.flowerW == null ? 1 : F.flowerW;
+      var fw = 0.6 + 0.4 * (F.flowerW == null ? 1 : F.flowerW);
       hg.addColorStop(0, "rgba(" + HEART + "," + (0.13 * e * arrive * fw).toFixed(3) + ")");
       hg.addColorStop(0.4, "rgba(" + HEART + "," + (0.05 * e * arrive * fw).toFixed(3) + ")");
       hg.addColorStop(1, "rgba(" + HEART + ",0)");
