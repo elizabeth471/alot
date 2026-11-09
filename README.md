@@ -9,7 +9,7 @@ Open the link in a phone or computer browser. Nothing to install, no sign-in.
   - **Noise only** plays brown, pink or white noise on its own, one seamless hour-long loop per color.
   - **Sleep** is the Night Arc: music fading out over the first hour, then noise to six hours.
 - **Choose speaker** (top) opens the AirPlay list where the browser offers it. Every purpose is one stream, so it carries to Sonos through AirPlay.
-- **Projector** (top, on computers and large screens): full-screen light that follows the music. Three visuals (Silk, Aurora, Bloom), the purpose's mood colors with your accent color as the light. Esc exits, Space plays or stops, → skips a track.
+- **Projector** (top, on computers and large screens): full-screen light that follows the music. Four visuals (Silk, Aurora, Bloom, Flower: four whorls of translucent petals that open and close with the song's tempo, outer whorls a moment later), the purpose's mood colors with your accent color as the light. Esc exits, Space plays or stops, → skips a track.
   - **Sync:** AirPlay and Sonos play about 2 s late, so the picture waits for them. Nudge with the Sync slider, press **Tap to the beat** (or **T**) four times on the kick, or use **Flash beats** to compare by eye. Off with Less motion.
 - **Customize** opens the mixer: generated noise, a playlist with Shuffle, one Play for both. AirPlay carries one stream, so through a speaker the mixer's noise and music do not play together.
 - **Settings (gear):** background, accent color, **Layout** (home screen List, Tiles, Compact or Large; icons; button shape), sizes, sound and phone options.
