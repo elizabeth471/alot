@@ -213,7 +213,7 @@
       windLast = s.nowMs;
       windG += ((wd ? wd.gust : 0) - windG) * (1 - Math.exp(-wdt * 0.8));
       windF += ((wd ? wd.flutter : 0) - windF) * (1 - Math.exp(-wdt * 3));
-      wsecs += wdt * (1 + 1.6 * windG + 0.6 * windF);
+      wsecs += wdt * (1 + 0.7 * windG + 0.25 * windF);
       windDir = 0.9 * Math.sin(wsecs * 0.013) + 0.4 * Math.sin(wsecs * 0.031 + 1.7);
       /* the beat's swell, remembered for three seconds: a gust reaches each petal when the wind has carried it there */
       var kick = wd ? wd.kick : 0;
@@ -345,11 +345,11 @@
                     + stir * (0.05 + 0.03 * Math.sin(stirPh * 0.5 + pt.ph * 3))
                     + (s.reduceMotion ? 0 : 0.06 * (pt.prox || 0) + 0.08 * wave)
                     + 0.09 * (F.inhale || 0)
-                    + wG * 0.02);
+                    + wG * 0.01);
         spine(pt, Math.min(1.12, open + 0.08 * (F.stretch || 0)), 0.30 * (F.stretch || 0) * outerF);
         var sway = s.reduceMotion ? 0
-                 : 0.028 * (1 + 1.2 * wG) * Math.sin(ws * CALM * T.hullBreath * 1.7 + pt.ph * 2.3)
-                 + 0.012 * (1 + 2.0 * wF) * Math.sin(ws * CALM * T.hullBreath * 3.1 + pt.ruf2)
+                 : 0.028 * (1 + 0.5 * wG) * Math.sin(ws * CALM * T.hullBreath * 1.7 + pt.ph * 2.3)
+                 + 0.012 * (1 + 0.8 * wF) * Math.sin(ws * CALM * T.hullBreath * 3.1 + pt.ruf2)
 ;
         var drift = s.reduceMotion ? 0
                   : ws * CALM * T.sweep * (0.6 + 0.4 * pt.vein) + stirPh * (0.5 + 0.5 * pt.vein);
@@ -369,7 +369,7 @@
           var lagF = Math.max(0, Math.min(kickHist.length - 1, Math.round((along + reachW) / 3 * 30)));
           var gustHere = kickHist[lagF];
           var flut = wF * Math.sin(ws * (2.6 + 1.4 * pt.vein) + pt.ph * 5);
-          var bendT = s.reduceMotion ? 0 : flex * (0.035 * wG + 0.06 * gustHere + 0.010 * flut);
+          var bendT = s.reduceMotion ? 0 : flex * (0.018 * wG + 0.032 * gustHere + 0.005 * flut);
           var kS = 0.10 / flex, dS = 0.10 + 0.05 / flex;
           for (var bs = 0; bs < windSteps; bs++) {
             pt.bv = (pt.bv || 0) + (bendT - (pt.b || 0)) * kS - (pt.bv || 0) * dS;
@@ -388,7 +388,7 @@
             var ruffle = 1 + pt.rufA * (1 + 0.35 * stir) * u * u *
               (Math.sin(u * 9 + pt.ruf1 + drift + (side ? 2.1 : 0)) +
                0.6 * Math.sin(u * 17 + pt.ruf2 - drift * 0.7))
-              + (s.reduceMotion ? 0 : WAVE * (1 + 0.8 * wF) * u * u *
+              + (s.reduceMotion ? 0 : WAVE * (1 + 0.35 * wF) * u * u *
                  Math.sin(u * 6.5 - ws * CALM * T.shimmer * (1.4 + 0.8 * pt.vein)
                           + pt.ph * 3 + (side ? 1.1 : 0)));
             var hw = W * halfW(u) * ruffle * (side ? -1 : 1);
