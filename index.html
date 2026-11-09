@@ -600,7 +600,8 @@
     #projector[hidden] { display: none; }
     #projector { transition: opacity 0.7s ease; }
     #projector.closing { opacity: 0; pointer-events: none; }
-    #projCanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    #projCanvas, #projPetals { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    #projPetals[hidden] { display: none; }
     #projector.idle { cursor: none; }
     .proj-ui { position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px;
       padding: 28px 32px calc(28px + env(safe-area-inset-bottom)); background: linear-gradient(transparent, rgba(0,0,0,0.55)); transition: opacity 0.6s; }
@@ -687,6 +688,7 @@
 
 <div id="projector" role="dialog" aria-modal="true" data-t-aria="projector" hidden>
   <canvas id="projCanvas" aria-hidden="true"></canvas>
+  <canvas id="projPetals" aria-hidden="true" hidden></canvas>
   <div class="proj-ui" id="projUi">
     <div class="proj-now"><span class="proj-name" id="projName"></span><span class="proj-track" id="projTrack"></span></div>
     <div class="proj-controls">
@@ -3801,6 +3803,64 @@
     projCanvas.height = Math.max(2, Math.round(h));
     if (projGl) projGl.viewport(0, 0, projCanvas.width, projCanvas.height);
   }
+  /* Flower: a flower of light drawn in canvas 2D (visuals/petals.js) on its own
+     layer above the shader, which then stops drawing. Loaded only the first time Flower is shown; until then the shader's
+     own flower stands in. Same 30 frames a second; the layer is emptied when the projector closes. */
+  var petalsCanvas = document.getElementById('projPetals'), petalsCtx = null, petalsLoading = false, petalsDpr = 1;
+  var petalsFresh = true, petalsNext = 0, PETALS_EVERY = 120000; // the whole entrance on being chosen, then a full-screen bloom every two minutes
+  var petalsPtr = { x: 0, y: 0, seen: -1e9 }, petalsTap = { x: 0, y: 0, at: 0 };
+  var PETALS_TEMPO = { dayTurn: 0.0000727, sweep: 0.085, climb: 0.021, hullBreath: 0.130, shimmer: 0.340, settle: 0.930, ease: 0.090,
+    now: function (still) { return still ? 0 : performance.now() / 1000; } };
+  var petalsOffset = -new Date().getTimezoneOffset();
+  function petalsHour(off) { var D = 86400000; return ((((Date.now() + off * 60000) % D) + D) % D) / 3600000; }
+  function petalsGeom() { // the flower's resting circle, in page pixels
+    var w = projEl.clientWidth, h = projEl.clientHeight;
+    return { w: w, h: h, cx: w / 2, cy: h / 2, rad: Math.min(w, h) * 0.42 };
+  }
+  projEl.addEventListener('pointermove', function (e) { petalsPtr.x = e.clientX; petalsPtr.y = e.clientY; petalsPtr.seen = performance.now(); });
+  projEl.addEventListener('pointerdown', function (e) { petalsTap.x = e.clientX; petalsTap.y = e.clientY; petalsTap.at = performance.now(); });
+  function petalsFrame(nowMs) {
+    if (!window.ALOT_PETALS) {
+      if (!petalsLoading) {
+        petalsLoading = true;
+        var sc = document.createElement('script');
+        sc.src = 'visuals/petals.js';
+        sc.onerror = function () { petalsLoading = false; };
+        document.head.appendChild(sc);
+      }
+      return false;
+    }
+    var gm = petalsGeom(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var cw = Math.round(gm.w * dpr), ch = Math.round(gm.h * dpr);
+    if (!petalsCtx || petalsCanvas.width !== cw || petalsCanvas.height !== ch) {
+      petalsCanvas.width = cw; petalsCanvas.height = ch;
+      petalsCtx = petalsCanvas.getContext('2d');
+    }
+    petalsDpr = dpr;
+    if (petalsFresh) { petalsFresh = false; window.ALOT_PETALS.restart(); petalsNext = nowMs + PETALS_EVERY; }
+    else if (nowMs > petalsNext) { window.ALOT_PETALS.bloom(); petalsNext = nowMs + PETALS_EVERY; }
+    petalsCanvas.hidden = false;
+    var ctx = petalsCtx, still = bnReducedMotion;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = '#07090d';
+    ctx.fillRect(0, 0, gm.w, gm.h);
+    var size = gm.rad * 2, ox = gm.cx - gm.rad, oy = gm.cy - gm.rad; // the pointer, as the flower's own square sees it
+    window.ALOT_PETALS.backdrop(ctx, {
+      size: size, dpr: dpr, t: Date.now(), nowMs: nowMs, frameMs: 33, exposure: projDim, reduceMotion: still,
+      vw: gm.w, vh: gm.h, cx: gm.cx, cy: gm.cy, rad: gm.rad, tempo: PETALS_TEMPO,
+      myOffset: petalsOffset, localHour: petalsHour, dragOff: 0, hover: false, inhale: 0,
+      pointer: { x: petalsPtr.x - ox, y: petalsPtr.y - oy, seen: petalsPtr.seen },
+      tap: { x: petalsTap.x - ox, y: petalsTap.y - oy, at: petalsTap.at }
+    });
+    return true;
+  }
+  function petalsHide() {
+    if (petalsCanvas.hidden) return;
+    petalsCanvas.hidden = true;
+    petalsCanvas.width = petalsCanvas.height = 1; // hand the memory back
+    petalsCtx = null;
+  }
   function projDataFor(file) {
     var base = file.replace(/\/(modes|arcs)\/([a-z0-9-]+)\.m4a$/, '/modes/env/$2.v3');
     var d = projData[base];
@@ -3949,6 +4009,10 @@
     // Gentle, and never with reduced motion: beats sit below the 3-a-second rate that troubles light-sensitive people, and the flash is soft.
     if (projFlashUntil > now && src.beat && !calm) flash = Math.exp(-src.beat.since * 9);
     projFlash = flash;
+    var shown = (modeCurrent ? modeCurrent.id : '') + '|' + (modeChapter ? modeChapter.id : '') + '|' + modeColor + '|' + projWireless();
+    if (shown !== projModeShown) { projModeShown = shown; projLabels(); }
+    if (projForm() === 'flower' && petalsFrame(now)) return; // the 2D flower drew this frame; the shader rests
+    petalsHide();
     var gl = projGl;
     gl.uniform2f(projU.r, projCanvas.width, projCanvas.height);
     gl.uniform1f(projU.t, projTime);
@@ -3966,8 +4030,6 @@
     gl.uniform3fv(projU.c2, projColors[1]);
     gl.uniform3fv(projU.c3, projColors[2]);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
-    var shown = (modeCurrent ? modeCurrent.id : '') + '|' + (modeChapter ? modeChapter.id : '') + '|' + modeColor + '|' + projWireless();
-    if (shown !== projModeShown) { projModeShown = shown; projLabels(); }
   }
   function projChips(rowId, items, label, pressed, onPick) {
     var row = document.getElementById(rowId);
@@ -3995,7 +4057,7 @@
       function (id) { return !!modeCurrent && modeCurrent.id === id; },
       function (id) { var mode = MODES.filter(function (m) { return m.id === id; })[0]; if (modeCurrent === mode) modeStop(); else modeStart(mode); });
     projChips('projForms', PROJ_FORMS, function (id) { return t('proj.' + id); }, function (id) { return projForm() === id; },
-      function (id) { projStore.form = id; projSave(); projLabels(); });
+      function (id) { if (id === 'flower') petalsFresh = true; projStore.form = id; projSave(); projLabels(); });
     var sync = document.getElementById('projSync');
     sync.value = Math.round(projOffset() * 100);
     if (typeof rangeText === 'function') rangeText();
@@ -4057,6 +4119,7 @@
     if (!projSetup()) { projEl.hidden = true; toast(t('err.play'), 'error'); return; }
     projOn = true;
     projDim = 0;
+    petalsFresh = true;
     projEl.classList.remove('closing');
     projSize();
     projModeShown = null;
@@ -4084,6 +4147,7 @@
     var lose = projGl && projGl.getExtension('WEBGL_lose_context');
     if (lose) lose.loseContext();
     projGl = null; projU = {};
+    setTimeout(function () { if (!projOn) petalsHide(); }, 700); // after the fade
     // A lost context cannot be revived on the same canvas, so the next opening gets a fresh one.
     var fresh = document.createElement('canvas');
     fresh.id = 'projCanvas';
