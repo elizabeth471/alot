@@ -169,7 +169,7 @@
   /* WIND, IF THE WIND WERE MUSIC. The host passes s.wind = { gust, flutter, kick }: how loud the music is over seconds,
      its high notes, and the beat's swell. Loudness is how hard it blows, a beat is a gust that reaches the heart first and
      the outer whorls a moment later, high notes make the edges flutter. The wind's direction wanders slowly. */
-  var windG = 0, windF = 0, wsecs = 0, windLast = 0, windDir = 0, kickHist = new Float32Array(16), kickPrev = 0;
+  var windG = 0, windF = 0, wsecs = 0, windLast = 0, windDir = 0, kickHist = new Float32Array(90), kickPrev = 0, windSteps = 1;
   var F = { at: -1 }, skippedAt = 0, inhale = 0, stretchS = 0, quick = false;
   var LITE = false, lastNow = 0, frameEMA = 16, slowFor = 0, OFF = null, OFFX = null;
   function prep(s) {
@@ -215,16 +215,16 @@
       windF += ((wd ? wd.flutter : 0) - windF) * (1 - Math.exp(-wdt * 3));
       wsecs += wdt * (1 + 1.6 * windG + 0.6 * windF);
       windDir = 0.9 * Math.sin(wsecs * 0.013) + 0.4 * Math.sin(wsecs * 0.031 + 1.7);
-      var kick = wd ? wd.kick : 0, gustIn = Math.max(0, kick - kickPrev); kickPrev = kick;
+      /* the beat's swell, remembered for three seconds: a gust reaches each petal when the wind has carried it there */
+      var kick = wd ? wd.kick : 0;
       for (var kh = kickHist.length - 1; kh > 0; kh--) kickHist[kh] = kickHist[kh - 1];
-      kickHist[0] = gustIn;
+      kickHist[0] = kick;
       var K = T.ease * 0.25, D = 1 - T.settle;
-      var steps = Math.max(1, Math.round((s.frameMs || 16) / 16.7));
+      var steps = Math.max(1, Math.round((s.frameMs || 16) / 16.7)); windSteps = steps;
       for (var w = 0; w < WHORLS; w++) {
         var hang = 0.25 + 0.95 * (w / (WHORLS - 1));
-        var gst = kickHist[Math.min(kickHist.length - 1, w * 3)] * 0.010 * hang * (windDir >= 0 ? 1 : -1);
         for (var st = 0; st < steps; st++) {
-          tvel[w] += -K * trail[w] - D * tvel[w] - (st ? 0 : dv * hang * 0.55) + (st ? 0 : gst);
+          tvel[w] += -K * trail[w] - D * tvel[w] - (st ? 0 : dv * hang * 0.55);
           trail[w] += tvel[w];
         }
         if (s.reduceMotion) { trail[w] = 0; tvel[w] = 0; }
@@ -345,17 +345,39 @@
                     + stir * (0.05 + 0.03 * Math.sin(stirPh * 0.5 + pt.ph * 3))
                     + (s.reduceMotion ? 0 : 0.06 * (pt.prox || 0) + 0.08 * wave)
                     + 0.09 * (F.inhale || 0)
-                    + wG * (0.03 + 0.04 * Math.cos(wDir - pt.a - spin)));
+                    + wG * 0.02);
         spine(pt, Math.min(1.12, open + 0.08 * (F.stretch || 0)), 0.30 * (F.stretch || 0) * outerF);
         var sway = s.reduceMotion ? 0
                  : 0.028 * (1 + 1.2 * wG) * Math.sin(ws * CALM * T.hullBreath * 1.7 + pt.ph * 2.3)
                  + 0.012 * (1 + 2.0 * wF) * Math.sin(ws * CALM * T.hullBreath * 3.1 + pt.ruf2)
-                 + 0.010 * wF * Math.sin(ws * 2.3 * (0.7 + 0.6 * pt.vein) + pt.ph * 4.1)
-                 + 0.055 * wG * Math.sin(wDir - pt.a - spin);
+;
         var drift = s.reduceMotion ? 0
                   : ws * CALM * T.sweep * (0.6 + 0.4 * pt.vein) + stirPh * (0.5 + 0.5 * pt.vein);
         var a = pt.a + spin + trail[pt.w] + sway * (0.6 + 0.6 * outerF);
         var ca = Math.cos(a), sa = Math.sin(a);
+        /* BENT BY THE WIND, NOT TURNED. A petal is held at its root and bends along its length, the tip most (u squared).
+           The wind blows across the screen from one side: a gust reaches the upwind petals first and the far side a
+           moment later, at about three flower radii a second. Light petals (outer, long, the rings) give more and settle
+           slower; the heavy inner ones are stiff and quick. Each petal is its own small spring, so it sways back a
+           little past where it was and comes to rest. High notes add a quick flutter at the tips. */
+        var wx = Math.cos(wDir), wy = Math.sin(wDir);
+        var flex = (0.45 + 0.75 * Math.min(1, outerF) + (pt.ring ? 0.5 : 0)) * (0.8 + 0.4 * pt.vein);
+        if (!COLLECT) {
+          var midR = pt.root + pt.len * 0.5;
+          var along = (ca * wx + sa * wy) * midR;                         // where the petal sits along the wind
+          var reachW = sp > 0.002 ? REACH : 1.1;
+          var lagF = Math.max(0, Math.min(kickHist.length - 1, Math.round((along + reachW) / 3 * 30)));
+          var gustHere = kickHist[lagF];
+          var flut = wF * Math.sin(ws * (2.6 + 1.4 * pt.vein) + pt.ph * 5);
+          var bendT = s.reduceMotion ? 0 : flex * (0.035 * wG + 0.06 * gustHere + 0.010 * flut);
+          var kS = 0.10 / flex, dS = 0.10 + 0.05 / flex;
+          for (var bs = 0; bs < windSteps; bs++) {
+            pt.bv = (pt.bv || 0) + (bendT - (pt.b || 0)) * kS - (pt.bv || 0) * dS;
+            pt.b = (pt.b || 0) + pt.bv;
+          }
+        }
+        var cross = Math.sin(wDir - a) * (pt.b || 0), downW = Math.cos(wDir - a) * (pt.b || 0);
+        var bx = -sa * cross, by = ca * cross;                             // across the petal, so its length holds
         var W = pt.wid * (0.5 + 0.5 * own)
               * (1 + (s.reduceMotion ? 0 : 0.04 * Math.sin(ws * CALM * T.hullBreath * 1.3 + pt.ruf1)));
         var nE = 0;
@@ -372,7 +394,8 @@
             var hw = W * halfW(u) * ruffle * (side ? -1 : 1);
             var r0 = spR[ii] * ruffle, h0 = spH[ii];
             var hh = h0 + Math.abs(hw) * 0.35;
-            var x = ca * r0 - sa * hw, y = sa * r0 + ca * hw;
+            var x = ca * r0 - sa * hw + bx * u * u, y = sa * r0 + ca * hw + by * u * u;
+            hh -= downW * u * u * 0.6;                                     // blown outward it lies lower, blown back it lifts
             project(x, y, hh, R);
             EX[nE] = P.x; EY[nE] = P.y; nE++;
           }
@@ -381,7 +404,7 @@
           for (var cq = 0; cq < nE; cq++) COLLECT.push(EX[cq], EY[cq]);
           continue;
         }
-        project(ca * spR[SPN] , sa * spR[SPN], spH[SPN], R);
+        project(ca * spR[SPN] + bx, sa * spR[SPN] + by, spH[SPN] - downW * 0.6, R);
         var tipX = P.x, tipY = P.y, tipK = P.k;
         if (!COLLECT) {
           pt.tx = (tipX + EX[0]) / 2; pt.ty = (tipY + EY[0]) / 2;
@@ -459,8 +482,8 @@
             for (var vi = 2; vi <= SPN - 2; vi++) {
               var vu = vi / SPN;
               var vw = vn * W * 0.45 * halfW(vu) * Math.sin(Math.PI * vu);
-              var vx = ca * spR[vi] - sa * vw, vy = sa * spR[vi] + ca * vw;
-              project(vx, vy, spH[vi] + Math.abs(vw) * 0.3, R);
+              var vx = ca * spR[vi] - sa * vw + bx * vu * vu, vy = sa * spR[vi] + ca * vw + by * vu * vu;
+              project(vx, vy, spH[vi] + Math.abs(vw) * 0.3 - downW * vu * vu * 0.6, R);
               if (vi === 2) ctx.moveTo(P.x, P.y); else ctx.lineTo(P.x, P.y);
             }
             ctx.stroke();
