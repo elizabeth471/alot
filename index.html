@@ -3807,7 +3807,7 @@
      layer above the shader, which then stops drawing. Loaded only the first time Flower is shown; until then the shader's
      own flower stands in. Same 30 frames a second; the layer is emptied when the projector closes. */
   var petalsCanvas = document.getElementById('projPetals'), petalsCtx = null, petalsLoading = false, petalsDpr = 1;
-  var petalsFresh = true, petalsNext = 0, PETALS_EVERY = 120000; // the whole entrance on being chosen, then a full-screen bloom every two minutes
+  var petalsFresh = true, petalsNext = 0, PETALS_EVERY = 18000; // the whole entrance on being chosen, then on and on: a screen full of petals (13 s), folding back to just the flower for a few seconds, and out again
   var petalsPtr = { x: 0, y: 0, seen: -1e9 }, petalsTap = { x: 0, y: 0, at: 0 };
   var PETALS_TEMPO = { dayTurn: 0.0000727, sweep: 0.085, climb: 0.021, hullBreath: 0.130, shimmer: 0.340, settle: 0.930, ease: 0.090,
     now: function (still) { return still ? 0 : performance.now() / 1000; } };
