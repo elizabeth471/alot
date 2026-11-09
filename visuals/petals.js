@@ -38,7 +38,7 @@
     return v * (x - e / 2);
   }
   function easeOut(x) { x = clamp(x, 0, 1); return 1 - Math.pow(1 - x, 3); }
-  var petals = [], rings = [], grownFor = null, REACH = 3;
+  var petals = [], rings = [], grownFor = null, REACH = 3, NALL = 196;
   function grow(dayIdx) {
     var rnd = seeded(dayIdx * 7919 + 17);
     var counts = COUNTS.slice();
@@ -90,6 +90,16 @@
       }
     }
     rings.sort(function (p, q) { return q.ring - p.ring; });
+    /* every petal gets a place in each new shape: a shuffled slot and three randoms of its own */
+    var all = petals.concat(rings), order = [];
+    for (var oi = 0; oi < petals.length; oi++) order.push(oi);
+    for (oi = order.length - 1; oi > 0; oi--) { var oj = Math.floor(rnd() * (oi + 1)); var ot = order[oi]; order[oi] = order[oj]; order[oj] = ot; }
+    for (oi = 0; oi < all.length; oi++) {
+      var pp = all[oi];
+      pp.slot = oi < order.length ? order[oi] : -1; pp.r1 = rnd(); pp.r2 = rnd(); pp.r3 = rnd();
+      if (pp.late == null) pp.late = rnd();
+    }
+    NALL = petals.length;
   }
   var cL = 1, sL = 0, cY = 1, sY = 0;
   function setView(lean, yaw) {
@@ -153,7 +163,7 @@
   var COLLECT = null;
   var REST = 1.2;
   var BIG = 0;
-  var BLOOM_UP = 6200, BLOOM_HOLD = 1400, BLOOM_DOWN = 5200;
+  var BLOOM_UP = 6200, BLOOM_HOLD = 1400, BLOOM_DOWN = 6200, MORPH = 9000;
   var EX = [], EY = [];
   function smoothPath(ctx, a, b, closed) {
     ctx.moveTo(closed ? (EX[a] + EX[b - 1]) / 2 : EX[a],
@@ -165,7 +175,17 @@
                                      (EX[a] + EX[b - 1]) / 2, (EY[a] + EY[b - 1]) / 2);
     else ctx.lineTo(EX[b - 1], EY[b - 1]);
   }
-  var againAt = 0, fullNext = false;
+  var fullNext = false;
+  /* THE FLOWER OPENS, CLOSES, AND BECOMES SOMETHING ELSE (Ely, 2026-11-09). Two movements, taking turns:
+     · open: from the heart outward more and more petals open, the flower's own whorls moving out and ring after ring
+       beyond them, until the screen is full of petals and the very centre is bare; then exactly the same, backwards.
+     · become: with no warning and no fill, the flower's own forty petals drift, each on its own time, into a new
+       creature (a fish, a jellyfish, a ray), swim there a while, and drift back into the flower.
+     The order: open, become a fish, flower, open, a jellyfish, flower, open, a ray, flower, and round again. */
+  var SCENES = ["flower", "fish", "jellyfish", "ray"];
+  var STEPS = [["open", 0], ["become", 1], ["become", 0], ["open", 0], ["become", 2], ["become", 0], ["open", 0], ["become", 3], ["become", 0]];
+  var scene = 0, trFrom = 0, trTo = 0, trAt = 0, trKind = "open", step = 0;
+  var PA = { root: 0 }, PB = { root: 0 }, PQ = { root: 0 };
   /* WIND, IF THE WIND WERE MUSIC. The host passes s.wind = { gust, flutter, kick }: how loud the music is over seconds,
      its high notes, and the beat's swell. Loudness is how hard it blows, a beat is a gust that reaches the heart first and
      the outer whorls a moment later, high notes make the edges flutter. The wind's direction wanders slowly. */
@@ -186,9 +206,11 @@
           if (seenDay === dayKey && !fullNext) { bornAt = s.nowMs - (FLOWER_AT + SCRIB); quick = true; }
           localStorage.setItem("alot.petals-day", dayKey);
         } catch (err) {}
+        /* the entrance: the bud opens, the screen fills with petals, and they fold home into the flower */
+        if (!quick && !s.reduceMotion) { scene = 0; trFrom = 0; trTo = 0; trKind = "open"; step = 1; trAt = bornAt + FLOWER_AT + SCRIB + BUD_MS * 0.6; }
         var skip = function () {
           var done = FLOWER_AT + SCRIB + LET_GO + UNFURL_MS + BLOOM_UP + BLOOM_HOLD + BLOOM_DOWN + 2000;
-          if (performance.now() - bornAt < done) { bornAt = performance.now() - done; skippedAt = performance.now(); }
+          if (performance.now() - bornAt < done) { bornAt = performance.now() - done; skippedAt = performance.now(); if (trFrom === 0 && trTo === 0) trAt = 0; }
           removeEventListener("pointerdown", skip, true);
           removeEventListener("keydown", skip, true);
         };
@@ -249,19 +271,25 @@
       var up = gentle(tz / BLOOM_UP), down = gentle((tz - BLOOM_UP - BLOOM_HOLD) / BLOOM_DOWN);
       zoom = 1 + (REST - 1) * gentle(tz / 2600);
       if (tz < 0) zoom = 1;
-      if (!quick && tz > 0) spread = up * (1 - down);
+
       rest = quick ? gentle((tz - 2600) / 900)
                    : gentle((tz - BLOOM_UP - BLOOM_HOLD - BLOOM_DOWN * 0.6) / 900);
-      /* again: from its resting size out past every edge, a held breath, and slowly home */
-      if (againAt) {
-        var ta = s.nowMs - againAt;
-        if (ta > BLOOM_UP + BLOOM_HOLD + BLOOM_DOWN) againAt = 0;
-        else {
-          var sA = gentle(ta / BLOOM_UP) * (1 - gentle((ta - BLOOM_UP - BLOOM_HOLD) / BLOOM_DOWN));
-          if (sA > spread) spread = sA;
-        }
+    }
+    var trOn = false, p1 = 0, p2 = 0;
+    if (s.reduceMotion) { scene = 0; trAt = 0; }
+    if (trAt) {
+      var ta = s.nowMs - trAt, len = trKind === "open" ? BLOOM_UP + BLOOM_HOLD + BLOOM_DOWN : MORPH;
+      if (ta >= len) { scene = trTo; trAt = 0; }
+      else if (ta >= 0) {
+        trOn = true;
+        if (trKind === "open") { p1 = ta / BLOOM_UP; p2 = (ta - BLOOM_UP - BLOOM_HOLD) / BLOOM_DOWN; spread = gentle(p1) * (1 - gentle(p2)); }
+        else p1 = ta / MORPH;
       }
     }
+    F.trOn = trOn; F.trKind = trKind; F.p1 = p1; F.p2 = p2; F.trFrom = trFrom; F.trTo = trTo; F.scene = scene;
+    F.useRings = trOn && trKind === "open";
+    F.flowerW = !trOn ? (scene === 0 ? 1 : 0)
+              : trKind === "open" ? 1 : (trFrom === 0 ? 1 - gentle(p1) : gentle(p1));
     F.scribT = scribT;
     if (skippedAt) e *= easeOut((s.nowMs - skippedAt) / 700);
     var BR = null, want = s.inhale || 0;
@@ -288,6 +316,107 @@
     F.breath = breath; F.spin = spin; F.zoom = zoom; F.rest = rest; F.spread = spread;
     return F;
   }
+  /* where a petal is in a shape: its root (x, y) on the plane, the way it points, its size, how it stands, and how
+     open (own) and how lit (vis) it is. Flower radii; y toward the bottom of the screen. */
+  function flowerPose(o, pt, F, field, ownMain, mods) {
+    var root, len, wid, own, vis;
+    if (pt.ring) {
+      var rc = 0.85 + (REACH - 0.85) * pt.ring, gap = (REACH - 0.85) / 6;
+      len = gap * 2.3 * pt.lenJ;
+      root = Math.max(0.3, rc - len * 0.5 - gap * 0.4 * pt.rootJ);
+      wid = (TAU * rc / pt.n) * 0.62 * pt.widJ;
+      own = field ? 1 : 0; vis = field ? 0.85 - 0.35 * pt.ring : 0;
+    } else {
+      var of = pt.w / (WHORLS - 1);
+      root = pt.root + (field ? 0.42 + 0.30 * of : 0); len = pt.len; wid = pt.wid; own = ownMain; vis = 1;
+    }
+    var A = pt.a + F.spin + trail[pt.w];
+    o.x = Math.cos(A) * root; o.y = Math.sin(A) * root; o.a = A;
+    o.len = len; o.wid = wid; o.rise = field && !pt.ring ? pt.rise * 0.35 : pt.rise; o.curl = pt.curl; o.own = own; o.vis = vis; o.open = own * mods;
+    return o;
+  }
+  function shapePose(o, pt, id, F, mods) {
+    var ws = F.wsecs || F.secs, k = pt.slot, r1 = pt.r1, r2 = pt.r2, r3 = pt.r3;
+    o.own = 1; o.vis = 0.9; o.open = mods;
+    if (k < 0) { o.x = 0; o.y = 0; o.a = 0; o.len = 0.1; o.wid = 0.05; o.rise = 0.3; o.curl = 0.2; o.vis = 0; return o; }
+    if (id === 1) {
+      /* a fish, swimming slowly: overlapping scales down its body, a fanned tail that sways, two fins above, two below */
+      var swim = Math.sin(ws * 1.4), fx = 0.18 * Math.sin(ws * 0.05), fy = 0.05 * Math.sin(ws * 0.31);
+      if (k < 24) {
+        var col = k % 6, row = Math.floor(k / 6), bx = 0.62 - col * 0.23;
+        var hb = 0.40 * Math.sqrt(Math.max(0.05, 1 - Math.pow((bx - 0.06) / 0.72, 2)));
+        o.x = bx; o.y = ((row - 1.5) / 1.5) * hb * 0.78;
+        o.a = Math.PI + (r1 - 0.5) * 0.25 + 0.12 * swim * (0.62 - bx);
+        o.len = 0.30 + 0.05 * r2; o.wid = 0.19 + 0.05 * r3; o.rise = 0.35; o.curl = 0.25;
+      } else if (k < 32) {
+        /* a forked tail: two lobes, each of four long petals fanning out, swaying together */
+        var lobe = k < 28 ? -1 : 1, li = (k % 4) / 3;
+        o.x = -0.56 - 0.05 * li; o.y = lobe * 0.05;
+        o.a = Math.PI + lobe * (0.45 + 0.60 * li) + 0.28 * swim; o.len = 0.66 + 0.12 * r1 - 0.10 * li; o.wid = 0.10 + 0.03 * r2;
+        o.rise = 0.2; o.curl = 0.45; o.vis = 0.55;
+      } else if (k < 36) {
+        var up = k < 34, fi = k % 2;
+        o.x = up ? 0.20 - fi * 0.22 : 0.30 - fi * 0.35; o.y = up ? -0.30 : 0.26;
+        o.a = up ? -Math.PI * 0.62 - fi * 0.25 : Math.PI * 0.68 + fi * 0.2 + 0.15 * swim;
+        o.len = 0.34 + 0.06 * r1; o.wid = 0.15; o.rise = 0.35; o.curl = 0.5;
+      } else {
+        /* the head: a rounded nose of four petals laid back from the front */
+        var hi = (k - 36) / 3 - 0.5;
+        o.x = 0.86 - 0.08 * Math.abs(hi); o.y = hi * 0.22;
+        o.a = Math.PI + hi * 0.9; o.len = 0.34; o.wid = 0.20; o.rise = 0.4; o.curl = 0.3;
+      }
+      var und = 0.05 * Math.sin(o.x * 3.2 - ws * 1.8);
+      o.x += fx; o.y += fy + und;
+    } else if (id === 2) {
+      /* a jellyfish: a cupped bell of petals that slowly pulses, and four strands trailing, waving */
+      var pulse = 1 + 0.07 * Math.sin(ws * 0.9);
+      if (k < 18) {
+        var ph = -Math.PI * (0.08 + 0.84 * ((k % 9) + 0.5) / 9) + (r1 - 0.5) * 0.08, rb = (k < 9 ? 0.34 : 0.50) * pulse;
+        o.x = Math.cos(ph) * rb * 1.2; o.y = -0.25 + Math.sin(ph) * rb * 0.9;
+        o.a = ph; o.len = (0.34 + 0.10 * r2) * pulse; o.wid = 0.22 + 0.06 * r3; o.rise = 1.0; o.curl = 0.6;
+      } else {
+        var m = k - 18, j = m % 4, t = (Math.floor(m / 4) + 0.5) / 6;
+        var wv = Math.sin(t * 4.2 - ws * 0.7 + j * 1.4);
+        o.x = (-0.36 + 0.24 * j + (r1 - 0.5) * 0.04) * (1 - 0.3 * t) * pulse + 0.14 * t * wv;
+        o.y = -0.18 + t * 1.15;
+        o.a = Math.PI / 2 + 0.45 * t * Math.cos(t * 4.2 - ws * 0.7 + j * 1.4);
+        o.len = 0.30 + 0.05 * r2; o.wid = 0.045 + 0.02 * r3; o.rise = 0.25; o.curl = 0.1; o.vis = 0.9 - 0.4 * t;
+      }
+    } else {
+      /* a ray, seen from above as it glides: two wide wings that slowly lift and fall, a narrow body, a long tail */
+      var flap = Math.sin(ws * 0.8);
+      if (k < 32) {
+        var side = k < 16 ? -1 : 1, q = k % 16, rowR = Math.floor(q / 4), cR = (q % 4 + 0.5) / 4;
+        var span = 0.18 + 1.30 * cR * (1 - 0.15 * rowR);
+        o.x = side * span; o.y = -0.22 + rowR * 0.13 + 0.34 * cR * cR;
+        o.a = (side > 0 ? 0 : Math.PI) + side * (0.35 + 0.25 * rowR) * 0.6;
+        o.len = (0.36 - 0.14 * cR) + 0.05 * r1; o.wid = 0.17 + 0.04 * r2;
+        o.rise = 0.22 + 0.40 * flap * cR; o.curl = 0.35;
+      } else if (k < 36) {
+        o.x = 0; o.y = -0.30 + (k - 32) * 0.13; o.a = Math.PI / 2; o.len = 0.26; o.wid = 0.20; o.rise = 0.6; o.curl = 0.3;
+      } else {
+        var tt = (k - 36) / 4;
+        o.x = 0.04 * Math.sin(ws * 0.9 + tt * 3); o.y = 0.25 + tt * 0.34; o.a = Math.PI / 2 + 0.1 * Math.sin(ws * 0.9 + tt * 3);
+        o.len = 0.36; o.wid = 0.05; o.rise = 0.2; o.curl = 0.05;
+      }
+      o.y += 0.04 * Math.sin(ws * 0.27); o.x += 0.15 * Math.sin(ws * 0.045);
+    }
+    return o;
+  }
+  function blendPose(o, A, B, m, tw) {
+    var im = 1 - m;
+    var x = A.x * im + B.x * m, y = A.y * im + B.y * m;
+    var da = B.a - A.a; da = ((da + Math.PI) % TAU + TAU) % TAU - Math.PI;
+    var t = tw * Math.sin(Math.PI * m), ct = Math.cos(t), st = Math.sin(t);
+    o.x = x * ct - y * st; o.y = x * st + y * ct; o.a = A.a + da * m + t;
+    o.len = A.len * im + B.len * m; o.wid = A.wid * im + B.wid * m; o.rise = A.rise * im + B.rise * m;
+    o.curl = A.curl * im + B.curl * m; o.own = A.own * im + B.own * m; o.vis = A.vis * im + B.vis * m;
+    o.open = A.open * im + B.open * m;
+    return o;
+  }
+  function poseIn(o, pt, id, F, field, ownMain, mods) {
+    return id === 0 || field ? flowerPose(o, pt, F, field, ownMain, mods) : shapePose(o, pt, id, F, mods);
+  }
   function flowerOn(ctx, s, F, LW) {
     var e = F.e, secs = F.secs, T = F.T, seen = F.seen, arrive = F.arrive;
     var ws = F.wsecs || secs, wG = s.reduceMotion ? 0 : (F.windG || 0), wF = s.reduceMotion ? 0 : (F.windF || 0), wDir = F.windDir || 0;
@@ -295,30 +424,20 @@
     var C = CX;
       if (!COLLECT) {
       var hg = ctx.createRadialGradient(CX, CY, 0, CX, CY, R * 0.55);
-      hg.addColorStop(0, "rgba(" + HEART + "," + (0.13 * e * arrive).toFixed(3) + ")");
-      hg.addColorStop(0.4, "rgba(" + HEART + "," + (0.05 * e * arrive).toFixed(3) + ")");
+      var fw = F.flowerW == null ? 1 : F.flowerW;
+      hg.addColorStop(0, "rgba(" + HEART + "," + (0.13 * e * arrive * fw).toFixed(3) + ")");
+      hg.addColorStop(0.4, "rgba(" + HEART + "," + (0.05 * e * arrive * fw).toFixed(3) + ")");
       hg.addColorStop(1, "rgba(" + HEART + ",0)");
       ctx.fillStyle = hg;
       ctx.beginPath(); ctx.arc(CX, CY, R * 0.55, 0, TAU); ctx.fill();
       }
       var sp = s.reduceMotion ? 0 : (F.spread || 0);
-      var list = sp > 0.002 ? rings.concat(petals) : petals;
+      var list = F.useRings && !s.reduceMotion ? rings.concat(petals) : petals;
       var crowded = list.length;
       for (var pi = 0; pi < crowded; pi++) {
         var pt = list[pi];
         var outerF = pt.w / (WHORLS - 1);
-        var own;
-        if (pt.ring) {
-          /* each ring opens once the one inside it is under way, and closes before it; each petal a little on its own */
-          own = gentle((sp - pt.ring * 0.62 - pt.late * 0.08 + 0.10) / 0.36);
-          if (own < 0.01) continue;
-          var rc = 0.85 + (REACH - 0.85) * pt.ring;           // the ring's middle, in flower radii
-          var gap = (REACH - 0.85) / 6;
-          pt.len = gap * 2.3 * pt.lenJ;
-          pt.root = Math.max(0.3, rc - pt.len * 0.5 - gap * 0.4 * pt.rootJ);
-          pt.wid = (TAU * rc / pt.n) * 0.62 * pt.widJ;
-        } else own = s.reduceMotion ? 1
-                : easeOut((arrive - (1 - outerF) * 0.25) / 0.75);
+        var ownMain = s.reduceMotion ? 1 : easeOut((arrive - (1 - outerF) * 0.25) / 0.75);
         var near2 = 0, wave = 0;
         if (!COLLECT) {
           var oxv = CX - s.size / 2, oyv = CY - s.size / 2;
@@ -340,20 +459,37 @@
           }
         }
         pt.wave = wave;
-        var open = clamp(own, 0, 1)
-                 * (1 + 0.035 * Math.sin(breath + pt.ph) + 0.05 * hov
+        var mods = (1 + 0.035 * Math.sin(breath + pt.ph) + 0.05 * hov
                     + stir * (0.05 + 0.03 * Math.sin(stirPh * 0.5 + pt.ph * 3))
                     + (s.reduceMotion ? 0 : 0.06 * (pt.prox || 0) + 0.08 * wave)
                     + 0.09 * (F.inhale || 0)
                     + wG * 0.01);
-        spine(pt, Math.min(1.12, open + 0.08 * (F.stretch || 0)), 0.30 * (F.stretch || 0) * outerF);
+        /* the pose: in one shape, or on the way between two through the screen full of petals */
+        var pz;
+        if (!F.trOn) pz = poseIn(PQ, pt, F.scene, F, false, ownMain, mods);
+        else if (F.trKind === "open") {
+          /* from the heart outward, and then exactly backwards */
+          var d1 = pt.ring ? 0.30 + 0.70 * pt.ring : 0.22 * outerF;
+          d1 = d1 * 0.9 + pt.late * 0.1;
+          var pp = F.p2 > 0 ? 1 - F.p2 : F.p1;
+          var m1 = gentle((pp - d1 * 0.6) / 0.4);
+          pz = blendPose(PQ, poseIn(PA, pt, 0, F, false, ownMain, mods), poseIn(PB, pt, 0, F, true, ownMain, mods), m1, 0);
+        } else {
+          /* becoming: each petal sets off on its own time and drifts on a gentle curve */
+          var m2 = gentle((F.p1 - pt.late * 0.4) / 0.6);
+          pz = blendPose(PQ, poseIn(PA, pt, F.trFrom, F, false, ownMain, mods), poseIn(PB, pt, F.trTo, F, false, ownMain, mods), m2,
+                         0.25 * (pt.r3 - 0.5));
+        }
+        if (pz.vis < 0.005) continue;
+        var own = pz.own, open = pz.open, ox = pz.x, oy = pz.y;
+        spine(pz, Math.min(1.12, open + 0.08 * (F.stretch || 0)), 0.30 * (F.stretch || 0) * outerF);
         var sway = s.reduceMotion ? 0
                  : 0.028 * (1 + 0.5 * wG) * Math.sin(ws * CALM * T.hullBreath * 1.7 + pt.ph * 2.3)
                  + 0.012 * (1 + 0.8 * wF) * Math.sin(ws * CALM * T.hullBreath * 3.1 + pt.ruf2)
 ;
         var drift = s.reduceMotion ? 0
                   : ws * CALM * T.sweep * (0.6 + 0.4 * pt.vein) + stirPh * (0.5 + 0.5 * pt.vein);
-        var a = pt.a + spin + trail[pt.w] + sway * (0.6 + 0.6 * outerF);
+        var a = pz.a + sway * (0.6 + 0.6 * outerF);
         var ca = Math.cos(a), sa = Math.sin(a);
         /* BENT BY THE WIND, NOT TURNED. A petal is held at its root and bends along its length, the tip most (u squared).
            The wind blows across the screen from one side: a gust reaches the upwind petals first and the far side a
@@ -363,9 +499,8 @@
         var wx = Math.cos(wDir), wy = Math.sin(wDir);
         var flex = (0.45 + 0.75 * Math.min(1, outerF) + (pt.ring ? 0.5 : 0)) * (0.8 + 0.4 * pt.vein);
         if (!COLLECT) {
-          var midR = pt.root + pt.len * 0.5;
-          var along = (ca * wx + sa * wy) * midR;                         // where the petal sits along the wind
-          var reachW = sp > 0.002 ? REACH : 1.1;
+          var along = (ox + ca * pz.len * 0.5) * wx + (oy + sa * pz.len * 0.5) * wy;   // where the petal sits along the wind
+          var reachW = F.useRings ? REACH : 1.1;
           var lagF = Math.max(0, Math.min(kickHist.length - 1, Math.round((along + reachW) / 3 * 30)));
           var gustHere = kickHist[lagF];
           var flut = wF * Math.sin(ws * (2.6 + 1.4 * pt.vein) + pt.ph * 5);
@@ -378,7 +513,7 @@
         }
         var cross = Math.sin(wDir - a) * (pt.b || 0), downW = Math.cos(wDir - a) * (pt.b || 0);
         var bx = -sa * cross, by = ca * cross;                             // across the petal, so its length holds
-        var W = pt.wid * (0.5 + 0.5 * own)
+        var W = pz.wid * (0.5 + 0.5 * own)
               * (1 + (s.reduceMotion ? 0 : 0.04 * Math.sin(ws * CALM * T.hullBreath * 1.3 + pt.ruf1)));
         var nE = 0;
         for (var side = 0; side < 2; side++) {
@@ -394,7 +529,7 @@
             var hw = W * halfW(u) * ruffle * (side ? -1 : 1);
             var r0 = spR[ii] * ruffle, h0 = spH[ii];
             var hh = h0 + Math.abs(hw) * 0.35;
-            var x = ca * r0 - sa * hw + bx * u * u, y = sa * r0 + ca * hw + by * u * u;
+            var x = ox + ca * r0 - sa * hw + bx * u * u, y = oy + sa * r0 + ca * hw + by * u * u;
             hh -= downW * u * u * 0.6;                                     // blown outward it lies lower, blown back it lifts
             project(x, y, hh, R);
             EX[nE] = P.x; EY[nE] = P.y; nE++;
@@ -404,21 +539,21 @@
           for (var cq = 0; cq < nE; cq++) COLLECT.push(EX[cq], EY[cq]);
           continue;
         }
-        project(ca * spR[SPN] + bx, sa * spR[SPN] + by, spH[SPN] - downW * 0.6, R);
+        project(ox + ca * spR[SPN] + bx, oy + sa * spR[SPN] + by, spH[SPN] - downW * 0.6, R);
         var tipX = P.x, tipY = P.y, tipK = P.k;
         if (!COLLECT) {
           pt.tx = (tipX + EX[0]) / 2; pt.ty = (tipY + EY[0]) / 2;
         }
-        project(ca * spR[0], sa * spR[0], spH[0], R);
+        project(ox + ca * spR[0], oy + sa * spR[0], spH[0], R);
         var rootX = P.x, rootY = P.y;
         var face = Math.abs(Math.sin(a + 0.4 * yaw) * sL * 0.8 +
-                            Math.cos(Math.min(1.4, pt.rise * (1 - 0.6 * open))) * cL * 0.6);
+                            Math.cos(Math.min(1.4, pz.rise * (1 - 0.6 * open))) * cL * 0.6);
         var fres = clamp(1 - face, 0.15, 1);
         var depth = clamp((tipK - 0.80) / 0.40, 0, 1);
         var film = 0.5 + 0.5 * Math.sin(a * 2 + lean * 3 + pt.w * 0.7 + yaw * 4);
         var rimC = mix(ROSE, AQUA, film);
         var quiet = 1 - 0.30 * outerF;
-        var A = e * seen * (0.45 + 0.55 * own) * quiet * (0.70 + 0.30 * depth) * (pt.ring ? own * (0.85 - 0.35 * pt.ring) : 1);
+        var A = e * seen * (0.45 + 0.55 * own) * quiet * (0.70 + 0.30 * depth) * pz.vis;
         var g = ctx.createLinearGradient(rootX, rootY, tipX, tipY);
         g.addColorStop(0, "rgba(" + PEARL.join(",") + ",0)");
         g.addColorStop(0.35, "rgba(" + mix(PEARL, ROSE, 0.25) + "," + (0.11 * A).toFixed(4) + ")");
@@ -473,7 +608,7 @@
             ctx.stroke();
           }
         }
-        if (pt.w < WHORLS - 1 && !F.lite) {
+        if (pt.w < WHORLS - 1 && !F.lite && !pt.ring) {
           var vA = A * 0.11 * pt.vein;
           ctx.strokeStyle = "rgba(" + mix(PEARL, ROSE, 0.4) + "," + vA.toFixed(4) + ")";
           ctx.lineWidth = 0.5 * LW;
@@ -482,7 +617,7 @@
             for (var vi = 2; vi <= SPN - 2; vi++) {
               var vu = vi / SPN;
               var vw = vn * W * 0.45 * halfW(vu) * Math.sin(Math.PI * vu);
-              var vx = ca * spR[vi] - sa * vw + bx * vu * vu, vy = sa * spR[vi] + ca * vw + by * vu * vu;
+              var vx = ox + ca * spR[vi] - sa * vw + bx * vu * vu, vy = oy + sa * spR[vi] + ca * vw + by * vu * vu;
               project(vx, vy, spH[vi] + Math.abs(vw) * 0.3 - downW * vu * vu * 0.6, R);
               if (vi === 2) ctx.moveTo(P.x, P.y); else ctx.lineTo(P.x, P.y);
             }
@@ -628,10 +763,11 @@
   window.ALOT_PETALS = {
     id: "petals",
     /* the whole entrance again, from the dark: a closed bud that opens and blooms past every edge */
-    restart: function () { bornAt = 0; quick = false; skippedAt = 0; againAt = 0; fullNext = true; },
+    restart: function () { bornAt = 0; quick = false; skippedAt = 0; scene = 0; trAt = 0; step = 0; fullNext = true; },
     /* the open flower blooms out over the whole screen and comes home */
     windNow: function () { return { gust: windG, flutter: windF, dir: windDir }; },
-    bloom: function () { if (!againAt) againAt = performance.now(); },
+    bloom: function (at) { if (!trAt) { var st = STEPS[step % STEPS.length]; step++; trKind = st[0]; trFrom = scene; trTo = st[1]; trAt = at || performance.now(); } },
+    sceneNow: function () { return { scene: SCENES[scene], moving: !!trAt, kind: trKind, to: SCENES[trTo] }; },
     resize: function (size) { C = size / 2; R = size / 2 * 0.86; },
     backdrop: function (ctx, s) {
       var e = Math.min(1, s.exposure == null ? 1 : s.exposure);
